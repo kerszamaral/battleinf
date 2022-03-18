@@ -1,14 +1,15 @@
 # raylib compiled with
 # make OS=Windows_NT CC=x86_64-w64-mingw32-gcc
 
-APPNAME=main
+APPNAME=game
 
 LDFLAGS:=-L../raylib/src -lm -lraylib  -pthread -lopengl32 -lgdi32 -lwinmm
 
 CFLAGS:= -g -Wfatal-errors -pedantic -Wall -Wextra -Werror
 CFLAGS+= -std=c99 -I ./include -I ../raylib/src
 
-SRC:=$(wildcard *.c)
+SRC:=$(wildcard *.c) \
+	 $(wildcard src/*.c)
 OBJ:=$(SRC:src/%.c=obj/%.o)
 INC:=$(wildcard include/*.h)
 
