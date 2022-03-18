@@ -31,7 +31,8 @@
             "linux": {
               "miDebuggerPath": "/usr/bin/gdb",
             },
-            "preLaunchTask": "build debug"
+            "preLaunchTask": "build debug",
+            "miDebuggerArgs": "-q -ex quit; wait() { fg >/dev/null; }; /bin/gdb -q --interpreter=mi"
           },
           {
             "name": "Run",
@@ -54,7 +55,8 @@
             "linux": {
               "miDebuggerPath": "/usr/bin/gdb"
             },
-            "preLaunchTask": "build release"
+            "preLaunchTask": "build release",
+            "miDebuggerArgs": "-q -ex quit; wait() { fg >/dev/null; }; /bin/gdb -q --interpreter=mi"
           }
         ]
       }
