@@ -19,7 +19,7 @@
 *
 ********************************************************************************************/
 
-#include "/home/kerszamaral/raylib/src/raylib.h"
+#include "include/raylib.h"
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
