@@ -52,12 +52,12 @@ int rot(int rot)
 
 int jogo(void)
 {
-    int pscore = 0;
+    int pscore = 0; //Numero de score do player
     int pospx = 360, pospy = 100, rotp = 0; //Initial player position and rotation for testing
     int health = 3; //Player Health
-    int fase = 1;
+    int fase = 1; //Numero da fase no display
     
-    Texture2D healthimg = LoadTexture("resources/images/health.png");
+    Texture2D healthimg = LoadTexture("resources/images/health.png"); //Load imagem da vida
     Texture2D tankplayer = LoadTexture("resources/images/player.png");//Load imagem do tanque do player
     Rectangle screenSizerec = {0, 0, SCREENWIDTH, SCREENHEIGHT}; //Retangulo para a borda do jogo
     Rectangle sourcePlayer = { 0, 0, TAMPLAYERX, TAMPLAYERY}; //Retangulo do tamanho da image com posição 00
@@ -68,23 +68,25 @@ int jogo(void)
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
+
+        //Interface text
         DrawRectangle(0, 0, SCREENWIDTH, 40, DARKGRAY);
         DrawText(TextFormat("Fase %d", fase), SCREENWIDTH/2 - 6*10 , 0, 40, YELLOW);
         DrawRectangleLinesEx(screenSizerec, 5, DARKGRAY);
-
-        //Retangulo movel do player, precisa estar aqui pois caso contrario não conseguimos mover
-        Rectangle destPlayer = {pospx, pospy, TAMPLAYERX / 10.0, TAMPLAYERY / 10.0 }; // tamanho da imagem escalado para 10%
+        DrawText(TextFormat("Score: %i", pscore), SCREENWIDTH / 2 + 215, 5, 32, RED);
 
         pospx = movex(pospx);
         pospy = movey(pospy);
         rotp = rot(rotp);
 
-        DrawText(TextFormat("Score: %i", pscore), SCREENWIDTH / 2 + 215, 5, 32, RED);
-        DrawTexturePro(tankplayer, sourcePlayer, destPlayer, centroPlayer, rotp, WHITE);
-        for (int i = 0, healthx = 5; i < health; i++, healthx += 30)
-        {
+        //Player drawing
+        //Retangulo movel do player, precisa estar aqui pois caso contrario não conseguimos mover
+        Rectangle destPlayer = {pospx, pospy, TAMPLAYERX / 10.0, TAMPLAYERY / 10.0 }; // tamanho da imagem escalado para 10%
+        DrawTexturePro(tankplayer, sourcePlayer, destPlayer, centroPlayer, rotp, WHITE); //Draws player tank
+
+        //Draws health for health number
+        for (int i = 0, healthx = 5; i < health; i++, healthx += 30) 
             DrawTextureEx(healthimg,(Vector2){healthx,5} , 0 , 0.025, WHITE);//Essa imagem é mto grande, achar uma menor escala está ridicula
-        }
         
         //Variaveis de teste
         if (IsKeyPressed(KEY_H)) //Teste game over por vida
