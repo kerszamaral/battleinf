@@ -16,7 +16,7 @@ typedef struct
     int score;
 } Plr;
 
-Plr player = {360, 100, 3, 0, 0};
+Plr player = {0, 0, 0, 0, 0};
 
 void move(void) //Function for moving the player with WASD or Arrow keys
 {
@@ -52,11 +52,15 @@ int jogo(void)
 {
     int fase = 1; //Numero da fase no display
     player.health = 3; //To solve infinite loop bug caused by struct
+    player.score = 0; //To solve score not reseting
+    player.rot = 0; //To solve rotation not reseting
+    player.x = GetRandomValue(BORDER + (TAMPLAYERX/20.0), SCREENWIDTH - BORDER - (TAMPLAYERX/20.0)); //To start player in random position inbounds
+    player.y = GetRandomValue(40 + BORDER + (TAMPLAYERY/20.0), SCREENHEIGHT - BORDER - (TAMPLAYERY/20.0)); //To start player in random position inbounds
 
     Texture2D healthimg = LoadTexture("resources/images/health.png"); //Load imagem da vida
     Texture2D tankplayer = LoadTexture("resources/images/player.png");//Load imagem do tanque do player
     Rectangle screenSizerec = {0, 0, SCREENWIDTH, SCREENHEIGHT}; //Retangulo para a borda do jogo
-    Rectangle sourcePlayer = { 0, 0, TAMPLAYERX, TAMPLAYERY}; //Retangulo do tamanho da image com posição 00
+    Rectangle sourcePlayer = { 0, 0, TAMPLAYERX, TAMPLAYERY}; //Retangulo do tamanho da image com posição 0
     Vector2 centroPlayer = {TAMPLAYERX / 20.0, TAMPLAYERY / 20.0}; //Vetor para achar o centro da imagem do player escalada a 10%
     
     while (!WindowShouldClose() && player.health !=0)
@@ -84,6 +88,8 @@ int jogo(void)
         //Variaveis de teste
         if (IsKeyPressed(KEY_H)) //Teste game over por vida
             player.health -= 1;
+        if (IsKeyPressed(KEY_K)) //Kill player
+            player.health = 0;
         if (IsKeyPressed(KEY_ENTER)) //Teste de score
             player.score += 1;
 
