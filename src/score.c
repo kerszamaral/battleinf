@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "score.h"
 
-#define MAX_INPUT_CHARS     9
+#define MAX_INPUT_CHARS 9
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 450
 
@@ -9,10 +9,8 @@ void nome(int pscore)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
-    pscore *= 2;
     Rectangle textBox = { SCREENWIDTH/2.0f - 100, 180, 225, 50 };
 
-    SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
@@ -42,29 +40,31 @@ void nome(int pscore)
 
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
-            DrawText("PLACE MOUSE OVER INPUT BOX!", 240, 140, 20, GRAY);
+            DrawText("Digite seu nome para registrar sua Pontuação!", 180, SCREENHEIGHT / 4 - 50, 20, GRAY);
+            DrawText(TextFormat("Seu Score foi: %i", pscore), SCREENWIDTH / 2 - 150, SCREENHEIGHT / 4, 40, GRAY);
 
             DrawRectangleRec(textBox, LIGHTGRAY);
 
             DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
 
-            DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, MAX_INPUT_CHARS), 315, 250, 20, DARKGRAY);
+            DrawText(TextFormat("Caracteres restantes: %i/%i", letterCount, MAX_INPUT_CHARS), 275, 250, 20, DARKGRAY);
 
             if (letterCount < MAX_INPUT_CHARS)
             {
                 DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
             }
-            else DrawText("Press BACKSPACE to delete chars...", 230, 300, 20, GRAY);
-
+            else DrawText("Pressione BACKSPACE para deletar", 230, 300, 20, GRAY);
+            if (IsKeyPressed(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
+            {
+                //write to file "name", remove last place
+                break;
+            }
+            
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+    
 }
 
 // Check if any key is pressed

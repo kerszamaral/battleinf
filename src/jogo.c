@@ -35,7 +35,7 @@ int jogo(void)
     int health = 3; //Player Health
 
     Font fontTtf = LoadFontEx("resources/fonts/Roboto-Regular.ttf", 32, 0, 250); //Load da fonte roboto
-    while (!WindowShouldClose()&& health !=0)
+    while (!WindowShouldClose() && health !=0)
     {
         BeginDrawing();
 
@@ -47,9 +47,9 @@ int jogo(void)
         DrawTextEx(fontTtf, "testing font", (Vector2){ SCREENWIDTH/2 - 40, SCREENHEIGHT/2 }, (float)fontTtf.baseSize, 2, LIME);
         DrawRectangle(pospx, pospy, 80, 80, RED);
 
-        if (IsKeyDown(KEY_ENTER))
+        if (IsKeyPressed(KEY_ENTER))
         {
-            health -= 1;
+            pscore += 1;
         }
 
         EndDrawing();
