@@ -12,7 +12,7 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    int score = 0, lscore = -1;
+    int score = 0, lscore = 5;
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetTargetFPS(60);
 
