@@ -4,6 +4,7 @@ BattleInf Jogo de tanquezinho lá do NES
 */
 #include "raylib.h"
 #include "jogo.h"
+#include "score.h"
 
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 450
@@ -14,7 +15,7 @@ int main(void)
     SetTargetFPS(60);
     
     jogo();
-    //nome();
+    nome();
     
     CloseWindow();
     return 0;
