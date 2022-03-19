@@ -6,6 +6,7 @@ BattleInf Jogo de tanquezinho lá do NES
 #include "jogo.h"
 #include "score.h"
 #include "start.h"
+#include "end.h"
 
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 450
@@ -16,12 +17,15 @@ int main(void)
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetTargetFPS(60);
 
-    select = startscreen();
-    if (select == 0)
+    
+    while (select == 0)
     {
+        select = startscreen();
         score = jogo();
         if (score > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
             nome(score);
+
+        select = endscreen();
     }
     
     CloseWindow();
