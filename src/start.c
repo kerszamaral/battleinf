@@ -16,15 +16,15 @@ int startscreen(void)
 
         DrawText("BATTLEINF", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 - 50, 40, LIME);
         
-        if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && select < 2)
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 2)
             select += 1;
-        if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && select > 0)
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0)
             select -= 1;
 
         if (select == 0)
         {
             DrawText("Start", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE))
+            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
             {
                 break;
             }
@@ -36,7 +36,7 @@ int startscreen(void)
         if (select == 1)
         {
             DrawText("High Scores", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE))
+            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
             {
                 /* code */
             }
@@ -47,7 +47,7 @@ int startscreen(void)
         if (select == 2)
         {
             DrawText("Quit", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE))
+            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
             {
                 break;
             } 

@@ -56,7 +56,7 @@ void nome(int pscore)
                 DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
             }
             else DrawText("Pressione BACKSPACE para deletar", 230, 300, 20, GRAY);
-            if (IsKeyPressed(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
+            if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
             {
                 //write to file "name", remove last place
                 break;

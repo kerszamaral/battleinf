@@ -51,13 +51,14 @@ void move(void) //Function for moving the player with WASD or Arrow keys
 int jogo(void)
 {
     int fase = 1; //Numero da fase no display
-    
+    player.health = 3; //To solve infinite loop bug caused by struct
+
     Texture2D healthimg = LoadTexture("resources/images/health.png"); //Load imagem da vida
     Texture2D tankplayer = LoadTexture("resources/images/player.png");//Load imagem do tanque do player
     Rectangle screenSizerec = {0, 0, SCREENWIDTH, SCREENHEIGHT}; //Retangulo para a borda do jogo
     Rectangle sourcePlayer = { 0, 0, TAMPLAYERX, TAMPLAYERY}; //Retangulo do tamanho da image com posição 00
     Vector2 centroPlayer = {TAMPLAYERX / 20.0, TAMPLAYERY / 20.0}; //Vetor para achar o centro da imagem do player escalada a 10%
-
+    
     while (!WindowShouldClose() && player.health !=0)
     {
         BeginDrawing();
@@ -69,6 +70,9 @@ int jogo(void)
         DrawText(TextFormat("Fase %d", fase), SCREENWIDTH/2 - 6*10 , 0, 40, YELLOW);
         DrawRectangleLinesEx(screenSizerec, 5, DARKGRAY);
         DrawText(TextFormat("Score: %i", player.score), SCREENWIDTH / 2 + 215, 5, 32, RED);
+        //Draws health for health number
+        for (int i = 0, healthx = 5; i < player.health; i++, healthx += 30) 
+            DrawTextureEx(healthimg,(Vector2){healthx,5} , 0 , 0.025, WHITE);//Essa imagem é mto grande, achar uma menor escala está ridicula
 
         move();
 
@@ -76,10 +80,6 @@ int jogo(void)
         //Retangulo movel do player, precisa estar aqui pois caso contrario não conseguimos mover
         Rectangle destPlayer = {player.x, player.y, TAMPLAYERX / 10.0, TAMPLAYERY / 10.0 }; // tamanho da imagem escalado para 10%
         DrawTexturePro(tankplayer, sourcePlayer, destPlayer, centroPlayer, player.rot, WHITE); //Draws player tank
-
-        //Draws health for health number
-        for (int i = 0, healthx = 5; i < player.health; i++, healthx += 30) 
-            DrawTextureEx(healthimg,(Vector2){healthx,5} , 0 , 0.025, WHITE);//Essa imagem é mto grande, achar uma menor escala está ridicula
         
         //Variaveis de teste
         if (IsKeyPressed(KEY_H)) //Teste game over por vida
@@ -89,5 +89,7 @@ int jogo(void)
 
         EndDrawing();
     }
+    UnloadTexture(healthimg);
+    UnloadTexture(tankplayer);
     return player.score;
 }
