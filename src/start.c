@@ -4,61 +4,58 @@
 #define SCREENHEIGHT 450
 
 
-void startscreen(void)
+int startscreen(void)
 {
     int select = 0;
-    Font fontTtf = LoadFontEx("resources/fonts/Roboto-Regular.ttf", 32, 0, 250); //Load da fonte roboto
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
 
         ClearBackground(BLACK);
 
-        DrawTextEx(fontTtf, "BATTLEINF", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 - 50 }, 40, 2, LIME);
+        DrawText("BATTLEINF", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 - 50, 40, LIME);
         
-        if (IsKeyPressed(KEY_DOWN) && select < 2)
+        if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && select < 2)
             select += 1;
-        if (IsKeyPressed(KEY_UP) && select > 0)
+        if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && select > 0)
             select -= 1;
 
         if (select == 0)
         {
-            DrawTextEx(fontTtf, "Start", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 }, 20, 2, YELLOW);
+            DrawText("Start", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4, 20, YELLOW);
             if (IsKeyPressed(KEY_SPACE)||IsKeyPressed(KEY_ENTER))
             {
                 break;
             }
         }
         else
-            DrawTextEx(fontTtf, "Start", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 }, 20, 2, RAYWHITE);
+            DrawText("Start", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4, 20, RAYWHITE);
 
 
         if (select == 1)
         {
-            DrawTextEx(fontTtf, "Continue", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50 }, 20, 2, YELLOW);
+            DrawText("High Scores", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, YELLOW);
             if (IsKeyPressed(KEY_SPACE)||IsKeyPressed(KEY_ENTER))
             {
                 /* code */
             }
-            
         }
         else
-            DrawTextEx(fontTtf, "Continue", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50 }, 20, 2, RAYWHITE);
+            DrawText("Continue", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, RAYWHITE);
 
         if (select == 2)
         {
-            DrawTextEx(fontTtf, "Quit", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100 }, 20, 2, YELLOW);
+            DrawText("Quit", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100, 20, YELLOW);
             if (IsKeyPressed(KEY_SPACE)||IsKeyPressed(KEY_ENTER))
             {
-                UnloadFont(fontTtf);
-                CloseWindow();
-            }
-            
+                break;
+            } 
         }
         else
-            DrawTextEx(fontTtf, "Quit", (Vector2){ SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100 }, 20, 2, RAYWHITE);
+            DrawText("Quit", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100, 20, RAYWHITE);
         
         EndDrawing();
     }
-    UnloadFont(fontTtf);
+    return select;
 }

@@ -1,6 +1,6 @@
 #ifndef start_H_
 #define start_H_
 
-void startscreen(void);
+int startscreen(void);
 
 #endif
