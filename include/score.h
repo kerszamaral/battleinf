@@ -1,7 +1,7 @@
 #ifndef score_H_
 #define score_H_
 
-int nome(void);
+void nome(int pscore);
 
 bool IsAnyKeyPressed();
 

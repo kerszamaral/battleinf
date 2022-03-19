@@ -5,6 +5,6 @@ int movey(int y);
 
 int movex(int x);
 
-void jogo(void);
+int jogo(void);
 
 #endif

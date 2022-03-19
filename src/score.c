@@ -5,11 +5,11 @@
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 450
 
-int nome(void)
+void nome(int pscore)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
-
+    pscore *= 2;
     Rectangle textBox = { SCREENWIDTH/2.0f - 100, 180, 225, 50 };
 
     SetTargetFPS(60);
@@ -65,8 +65,6 @@ int nome(void)
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
-
-    return 0;
 }
 
 // Check if any key is pressed

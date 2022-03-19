@@ -28,9 +28,9 @@ int movex(int x)
     return x;
 }
 
-void jogo(void)
+int jogo(void)
 {
-
+    int pscore = 0;
     int pospx = 360, pospy = 100; //Initial player position for testing
     int health = 3; //Player Health
 
@@ -55,4 +55,5 @@ void jogo(void)
         EndDrawing();
     }
     UnloadFont(fontTtf);
+    return pscore;
 }
