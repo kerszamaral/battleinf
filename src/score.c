@@ -2,15 +2,15 @@
 #include "score.h"
 
 #define MAX_INPUT_CHARS     9
+#define SCREENWIDTH 800
+#define SCREENHEIGHT 450
 
 int nome(void)
 {
-    const int screenWidth = 800;
-
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
 
-    Rectangle textBox = { screenWidth/2.0f - 100, 180, 225, 50 };
+    Rectangle textBox = { SCREENWIDTH/2.0f - 100, 180, 225, 50 };
 
     SetTargetFPS(60);
 
