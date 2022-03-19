@@ -42,7 +42,7 @@ int startscreen(void)
             }
         }
         else
-            DrawText("Continue", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, RAYWHITE);
+            DrawText("High Scores", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, RAYWHITE);
 
         if (select == 2)
         {
