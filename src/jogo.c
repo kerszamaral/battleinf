@@ -56,7 +56,8 @@ int jogo(void)
     int pospx = 360, pospy = 100, rotp = 0; //Initial player position and rotation for testing
     int health = 3; //Player Health
     int fase = 1;
-
+    
+    Texture2D healthimg = LoadTexture("resources/images/health.png");
     Texture2D tankplayer = LoadTexture("resources/images/player.png");//Load imagem do tanque do player
     Rectangle screenSizerec = {0, 0, SCREENWIDTH, SCREENHEIGHT}; //Retangulo para a borda do jogo
     Rectangle sourcePlayer = { 0, 0, TAMPLAYERX, TAMPLAYERY}; //Retangulo do tamanho da image com posição 00
@@ -80,11 +81,16 @@ int jogo(void)
 
         DrawText(TextFormat("Score: %i", pscore), SCREENWIDTH / 2 + 215, 5, 32, RED);
         DrawTexturePro(tankplayer, sourcePlayer, destPlayer, centroPlayer, rotp, WHITE);
-        
-        if (IsKeyPressed(KEY_ENTER))
+        for (int i = 0, healthx = 5; i < health; i++, healthx += 30)
         {
-            pscore += 1;
+            DrawTextureEx(healthimg,(Vector2){healthx,5} , 0 , 0.025, WHITE);//Essa imagem é mto grande, achar uma menor escala está ridicula
         }
+        
+        //Variaveis de teste
+        if (IsKeyPressed(KEY_H)) //Teste game over por vida
+            health -= 1;
+        if (IsKeyPressed(KEY_ENTER)) //Teste de score
+            pscore += 1;
 
         EndDrawing();
     }
