@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "jogo.h"
+#include <stdio.h>
 
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
@@ -20,6 +21,7 @@ typedef struct //struct for the interactable objects in the game
 
 int jogo(void)
 {
+    SetTargetFPS(60);
     /********************** PLAYER VARIABELS *******************************/
     //              pos      x   y              IMG x     IMG Y       health   score   speed 
     Obj player = {(Vector2){ 0 , 0 }, (Vector2){ 348/20.0 , 457/20.0 }, 3 , 0 , 0 , 0 , 5 , true };
@@ -28,18 +30,29 @@ int jogo(void)
     player.pos.x = GetRandomValue( BORDER*2 + player.cen.x , SCREENWIDTH - BORDER*2 - player.cen.x ); //To start player in random position inbounds
     player.pos.y = GetRandomValue( 40 + BORDER*2 + player.cen.y , SCREENHEIGHT - BORDER*2 - player.cen.y ); //To start player in random position inbounds
     //Textures
-    Texture2D tankplayer = LoadTexture( "resources/images/player.png" );//Load imagem do tanque do player
+    Texture2D tankplayer = LoadTexture( "resources/images/player.png" );//Load player image
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
-    Rectangle sourcePlayer = { 0 , 0 , 348 , 457 }; //Retangulo do tamanho da image com posição 0
+    Rectangle sourcePlayer = { 0 , 0 , 348 , 457 }; //Rectangle with size of original image
 
     /********************** BULLET VARIABELS *******************************/
     //              pos      x   y              IMG x       IMG Y       health   score   speed 
     Obj bullet = {(Vector2){ 0 , 0 }, (Vector2){ 394/100.0 , 500/100.0 }, 0 , 0 , 0 , 0 , 6 , false };
     //                                   cen        x          y             rot     time     ammo
     //Textures
-    Texture2D bulletimg = LoadTexture( "resources/images/bullet.png" ); //Load imagem da vida
+    Texture2D bulletplayer = LoadTexture( "resources/images/bullet.png" ); //Load bullet image
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
-    Rectangle sourceBullet = { 0 , 0 , 394 , 500 }; //Retangulo do tamanho da image com posição 0
+    Rectangle sourceBulletplayer = { 0 , 0 , 394 , 500 }; //Rectangle with size of original image
+
+    /********************** ENEMY VARIABELS *******************************/
+    //             pos           x              y                     IMG x       IMG Y   health   score   speed 
+    Obj enemy = {(Vector2){ SCREENWIDTH , SCREENHEIGHT }, (Vector2){ 383/20.0 , 497/20.0 }, 0 , 0 , 0 , 0 , 6 , false };
+    //          Bullets spawn 0,0 conflict enemy spawn      cen         x          y           rot     time     ammo
+    //Textures
+    Texture2D tankenemy = LoadTexture( "resources/images/enemy.png" ); //Load enemy image
+    //Texture2D bulletenemy = LoadTexture( "resources/images/bullet.png" );//Load bullet image
+    //Rectangles for collision and drawing (dest rectangles need to be in while loop)
+    Rectangle sourceEnemy = { 0 , 0 , 383 , 497 }; //Rectangle with size of original image
+    //Rectangle sourceBulletenemy = { 0 , 0 , 394 , 500 }; //Rectangle with size of original image
 
     /********************** MENU VARIABELS *******************************/
     int level = 1; //Number of level on display
@@ -101,7 +114,7 @@ int jogo(void)
             }
         }
         
-        /********************** BULLET SHOOTING *******************************/
+        /********************** PLAYER BULLET SHOOTING *******************************/
         if (IsKeyReleased(KEY_SPACE) && player.ammo == true) //Verify if player has ammo
         {
             //Shooting setup
@@ -122,12 +135,11 @@ int jogo(void)
             if (bullet.rot == 270)
                 bullet.pos.x -= player.cen.x;
         }
+        Rectangle destBullet = {bullet.pos.x, bullet.pos.y, bullet.cen.x*2, bullet.cen.y*2 };
+        //Because bullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         if (bullet.ammo == true) //test to see if should draw bullet
         {
-            Rectangle destBullet = {bullet.pos.x, bullet.pos.y, bullet.cen.x*2, bullet.cen.y*2 };
-            //Because bullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
-
-            if (bullet.time == 60*1 || CheckCollisionRecs(destBullet,topMenurec)) //Kills bullet if 1 sec passes or it collides 
+            if (bullet.time == 60*1 || !CheckCollisionRecs(destBullet,playspaceSizerec) || CheckCollisionRecs(destBullet,topMenurec)) //Kills bullet if 1 sec passes or it collides with border
             {   //Reverts the states change when firing bullet to neutral
                 player.ammo = true;
                 bullet.ammo = false;
@@ -145,11 +157,33 @@ int jogo(void)
                 bullet.pos.x -= bullet.speed;
 
             //Draws bullet
-            DrawTexturePro(bulletimg, sourceBullet, destBullet, bullet.cen, bullet.rot, WHITE);
+            DrawTexturePro(bulletplayer, sourceBulletplayer, destBullet, bullet.cen, bullet.rot, WHITE);
             //Stores the time the bullet is alive based on fps, 1 second = 60
             bullet.time++;
         }
-        
+
+        /********************** ENEMY SPAWNING *******************************/
+        Rectangle destEnemy = { enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
+        //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
+        if (enemy.health == 1) //Test to see if enemy is alive
+            DrawTexturePro( tankenemy , sourceEnemy , destEnemy , enemy.cen , enemy.rot , WHITE ); //Draws enemy tank
+        if (enemy.health == 0) //if not, starts couting
+            enemy.time++;
+        if (enemy.time > 60*5 && enemy.health == 0) //If enemy is dead and 5 seconds have passed spawns enemy at random position
+        {
+            enemy.health = 1;
+            enemy.pos.x = GetRandomValue( BORDER*2 + enemy.cen.x , SCREENWIDTH - BORDER*2 - enemy.cen.x ); //To spawn enemy in random position inbounds
+            enemy.pos.y = GetRandomValue( 40 + BORDER*2 + enemy.cen.y , SCREENHEIGHT - BORDER*2 - enemy.cen.y ); //To spawn enemy in random position inbounds
+        }
+        if (CheckCollisionRecs(destBullet,destEnemy)) //if Player bullet collides with enemy, kills enemy
+        {   //Reverts the states change when enemy alive to neutral
+            enemy.health = 0;
+            bullet.ammo = false;
+            player.ammo = true;
+            enemy.time = 0;
+            enemy.pos.x = SCREENWIDTH;
+            enemy.pos.y = SCREENHEIGHT;
+        }
 
         /********************** TESTING VARIABLES *******************************/
         if (IsKeyPressed(KEY_H)) //Test lives counter
@@ -165,6 +199,6 @@ int jogo(void)
     /********************** UNLOADING AREA *******************************/
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
-    UnloadTexture(bulletimg);
+    UnloadTexture(bulletplayer);
     return player.score;
 }
