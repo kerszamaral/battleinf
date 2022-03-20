@@ -1,5 +1,5 @@
-#include "raylib.h"
 #include "jogo.h"
+#include "core.h"
 #include "raymath.h"
 #include <stdio.h>
 
@@ -9,20 +9,6 @@ const int TOPBORDER = SCREENHEIGHT/10; //Menu border
 const int BORDER = SCREENHEIGHT/90;
 //#define TOPBORDER 50 //Menu border
 //#define BORDER 5 //Game border
-
-typedef struct //struct for the interactable objects in the game
-{
-    Vector2 pos; //Vector2 for position, has x and y
-    float ratio; //How much the height is more than the widht
-    Vector2 cen; //Vector2 for center position, has x and y
-    Vector2 draw; //Vector 2 for drawing position, has x and y
-    int health; //Int for health, for player
-    int rot; //Int for object rotation
-    int score; //int for game score, for player 
-    int time; //Int for time, for bullets and enemys
-    float speed; //int for speed, defines the speed objects move
-    bool ammo; //bool for defining if the object can shoot or is alive
-} Obj;
 
 int jogo(void)
 {
