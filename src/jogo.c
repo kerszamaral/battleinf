@@ -45,7 +45,7 @@ int jogo(void)
 
     /********************** ENEMY VARIABELS *******************************/
     //             pos           x              y                     IMG x       IMG Y   health   score   speed 
-    Obj enemy = {(Vector2){ SCREENWIDTH , SCREENHEIGHT }, (Vector2){ 383/20.0 , 497/20.0 }, 0 , 0 , 0 , 0 , 6 , false };
+    Obj enemy = {(Vector2){ SCREENWIDTH , SCREENHEIGHT }, (Vector2){ 383/20.0 , 497/20.0 }, 0 , 0 , 0 , 0 , 3 , false };
     //          Bullets spawn 0,0 conflict enemy spawn      cen         x          y           rot     time     ammo
     //Textures
     Texture2D tankenemy = LoadTexture( "resources/images/enemy.png" ); //Load enemy image
@@ -183,7 +183,47 @@ int jogo(void)
             enemy.time = 0;
             enemy.pos.x = SCREENWIDTH;
             enemy.pos.y = SCREENHEIGHT;
+            player.score += 800;
         }
+        /********************** ENEMY MOVEMENT *******************************/
+        
+        if (enemy.score != 2)
+        {
+            if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , 0}, player.cen.x*2))
+            {
+                enemy.pos.y -= enemy.speed;
+                enemy.rot = 0; //Sets enemy rotation to up
+                enemy.score = 1;
+            }
+            else if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , SCREENHEIGHT}, player.cen.x*2))
+            {
+                enemy.pos.y += enemy.speed;
+                enemy.rot = 180; //Sets enemy rotation to up
+                enemy.score = 1;
+            }
+            else
+            {
+                enemy.score = 0;
+            }
+        }
+        if(enemy.score != 1)
+        {
+            if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ 0, enemy.pos.y}, player.cen.y*2))
+            {
+                enemy.pos.x -= enemy.speed;
+                enemy.rot = 270; //Sets enemy rotation to up
+            }
+            if(CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ SCREENWIDTH , enemy.pos.y }, player.cen.y*2))
+            {
+                enemy.pos.x += enemy.speed;
+                enemy.rot = 90; //Sets enemy rotation to up
+            }
+        }
+        /*}
+        else
+        {
+            //andar aleatorio
+        }*/
 
         /********************** TESTING VARIABLES *******************************/
         if (IsKeyPressed(KEY_H)) //Test lives counter
@@ -200,5 +240,6 @@ int jogo(void)
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
     UnloadTexture(bulletplayer);
+    UnloadTexture(tankenemy);
     return player.score;
 }
