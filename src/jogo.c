@@ -1,6 +1,7 @@
 #include "jogo.h"
 #include "core.h"
 #include "raymath.h"
+#include <stdio.h>
 
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
@@ -9,6 +10,7 @@ const int BORDER = SCREENHEIGHT/90;
 
 int jogo(void)
 {
+    int k = 1;
     /********************** PLAYER VARIABELS *******************************/
     //Textures (for getting width and height)
     Texture2D tankplayer = LoadTexture( "resources/images/player.png" );//Load player image
@@ -24,7 +26,7 @@ int jogo(void)
     Texture2D bullet = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
     //Objects
     //              pos     x y                       ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2               draw   x y  health rot  score time  speed  ammo
-    Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false };
+    Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  3  , false };
     //              pos     x y                       ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2               draw   x y  health rot  score time  speed  ammo
     Obj enemybullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*enemybullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false };
     
@@ -73,31 +75,41 @@ int jogo(void)
         Rectangle sourcePlayer = { 0 , 0 , tankplayer.width , tankplayer.height }; //Rectangle with size of original image
         player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y }; //Sets player.draw to be player.pos + offset
         Rectangle drawPlayer = { player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; //Rectangle resized and offset for player drawing
+        //For detecting player boundary distance
+        Vector2 UP = { player.draw.x , TOPBORDER };
+        Vector2 DP = { player.draw.x , SCREENHEIGHT - BORDER };
+        Vector2 LP = { BORDER , player.draw.y };
+        Vector2 RP = { SCREENWIDTH - BORDER , player.draw.y };
         //Player collision rectangle
         Rectangle colPlayer = { player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         DrawTexturePro( tankplayer , sourcePlayer , drawPlayer , player.cen , player.rot , WHITE ); //Draws player tank
-
+    
         /********************** ENEMY COLLISION *******************************/
         //Source rectangle, draw position and draw rectangle
         Rectangle sourceEnemy = { 0 , 0 , tankenemy.width , tankenemy.height }; //Rectangle with size of original image
         enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; //Sets enemy.draw to be enemy.pos + offset
         Rectangle drawEnemy = { enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };//Rectangle resized and offset for enemy drawing
+        //For detecting enemy boundary distance
+        Vector2 UE = { enemy.draw.x , TOPBORDER };
+        Vector2 DE = { enemy.draw.x , SCREENHEIGHT - BORDER };
+        Vector2 LE = { BORDER , enemy.draw.y };
+        Vector2 RE = { SCREENWIDTH - BORDER , enemy.draw.y };
         //Enemy collision rectangle
         Rectangle colEnemy = { enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
         //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
-    
+
 
         /********************** PLAYER MOVEMENT *******************************/
         //Movement logic 
         if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT)) 
         {   //For Tank like controls        
-            if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && !CheckCollisionRecs( colPlayer , topMenurec) ) 
+            if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y )
             {                                                   //Checks player position agains top border + correction with the margin of player center
                 player.pos.y -= player.speed;
                 player.rot = 0; //Sets players rotation to up
             }
-            if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && !CheckCollisionRecs( colPlayer , bottomMenurec) )
+            if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && Vector2Distance( player.draw , DP )>=player.speed + player.cen.y )
             {                                                   //Checks player position agains bottom border + correction with the margin of player center
                 player.pos.y += player.speed;
                 player.rot = 180; //Sets player rotation to down
@@ -105,12 +117,12 @@ int jogo(void)
         }
         if (!IsKeyDown(KEY_S) && !IsKeyDown(KEY_W)&& !IsKeyDown(KEY_DOWN) && !IsKeyDown(KEY_UP)) //For Tank like controls
         {
-            if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && !CheckCollisionRecs( colPlayer , leftMenurec) )
+            if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) &&  Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y )
             {                                                   //Checks player position agains left border + corretion with the margin of player center
                 player.pos.x -= player.speed;
                 player.rot = 270; //Sets player rotation to left
             }
-            if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && !CheckCollisionRecs( colPlayer , rightMenurec) )
+            if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) &&  Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y )
             {                                                   //Checks player position agains left border + corretion with the margin of player center
                 player.pos.x += player.speed;
                 player.rot = 90; //Sets player rotation to right
@@ -251,28 +263,37 @@ int jogo(void)
         } //Random movement
         if (enemy.score == 2 && !CheckCollisionRecs(colPlayer,colEnemy))
         {   //Test if its not detecting a player or colliding with the player
-            int x; //Variable to store the random value from 0-4 !CheckCollisionRecs( colPlayer , topMenurec)
-            if(player.time % 30 == 0 || CheckCollisionRecs( colEnemy , topMenurec) || CheckCollisionRecs( colEnemy , bottomMenurec) || CheckCollisionRecs( colEnemy , leftMenurec) || CheckCollisionRecs( colEnemy , rightMenurec) )  
+            int x, b = 0; //Variable to store the random value from 0-4 and the side it's colliding
+            if (Vector2Distance( enemy.draw , UE ) <= enemy.speed + enemy.cen.y)
+                b = 1;
+            if (Vector2Distance( enemy.draw , DE ) <= enemy.speed + enemy.cen.y)
+                b = 2;
+            if (Vector2Distance( enemy.draw , LE ) <= enemy.speed + enemy.cen.y)
+                b = 3;
+            if (Vector2Distance( enemy.draw , RE ) <= enemy.speed + enemy.cen.y)
+                b = 4;
+            
+            if( player.time % 30 == 0 )  
             {   //Only gets a new number every half a second
                 x = GetRandomValue(0,4);
                 player.time = 0;
-            } 
-            if (x == 0 && !CheckCollisionRecs( colEnemy , topMenurec))
+            }  
+            if ( x == 0 && b != 1 )
             {   //If the number is 0 and it's not going out of bounds, move in that direction
                 enemy.pos.y -= enemy.speed;
                 enemy.rot = 0; //Sets enemy rotation to up
             }
-            if (x == 1 && !CheckCollisionRecs( colEnemy , bottomMenurec))
+            if (x == 1 && b != 2 )
             {   //If the number is 1 and it's not going out of bounds, move in that direction
                 enemy.pos.y += enemy.speed;
                 enemy.rot = 180; //Sets enemy rotation to up
             }
-            if (x == 2 && !CheckCollisionRecs( colEnemy , leftMenurec))
+            if (x == 2 && b != 3 )
             {   //If the number is 2 and it's not going out of bounds, move in that direction
                 enemy.pos.x -= enemy.speed;
                 enemy.rot = 270; //Sets enemy rotation to up
             }
-            if (x == 3 && !CheckCollisionRecs( colEnemy , rightMenurec))
+            if (x == 3 && b != 4 )
             {   //If the number is 3 and it's not going out of bounds, move in that direction
                 enemy.pos.x += enemy.speed;
                 enemy.rot = 90; //Sets enemy rotation to up
@@ -374,9 +395,30 @@ int jogo(void)
             enemybullet.time++;
         }
         player.time++;
-
+        
         /********************** TESTING VARIABLES *******************************/
-            
+        if (IsKeyPressed(KEY_K))
+            k*=-1;
+        if (k==-1)
+            player.health = 3;
+        Vector2 testdist = {0,0};
+        int h = 0;
+        testdist = Vector2Subtract(player.draw,enemy.draw);
+        
+        if (testdist.y == -36.45)
+            h = 1;
+        if (testdist.y == 36.45 )
+            h = 2;
+        if (testdist.x == -36.45 )
+            h = 3;
+        if (testdist.x == 36.45)
+            h = 4;
+        if (IsKeyPressed(KEY_H))
+        {
+            printf(" x: %f\n y: %f\n side: %d\n",testdist.x,testdist.y,h);
+        }
+        
+
         EndDrawing();
     }
 
