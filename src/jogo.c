@@ -70,7 +70,7 @@ int jogo(void)
             DrawTextureEx( healthimg , (Vector2){ healthx , 5 } , 0 , 0.025 , WHITE );
         //                                           This image is too big, scaling factor needs to be very small
 
-        /********************** PLAYER DRAWING *******************************/
+        /********************** PLAYER COLLISION/DRAWING *******************************/
         //Source rectangle, draw position and draw rectangle
         Rectangle sourcePlayer = { 0 , 0 , tankplayer.width , tankplayer.height }; //Rectangle with size of original image
         player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y }; //Sets player.draw to be player.pos + offset
@@ -98,33 +98,56 @@ int jogo(void)
         //Enemy collision rectangle
         Rectangle colEnemy = { enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
         //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
+        
+        /********************** PLAYER/ENEMY COLLISION *******************************/
+        //To know which side the collision is happening
+        int colSidePE = 0;
+        //Subtracts the center position of the enemy from the center position of the player
+        Vector2 distPE = Vector2Subtract(player.draw,enemy.draw);
+        
+        //If distance of x is betwen a margin and distance y is 36.45 (in range because exact of causes flicker)
+        //The player is colliding vertically with the enemy, side is determined by output signal
+        if ( (distPE.x >= -35 && distPE.x <= 35) && (distPE.y <= -34 && distPE.y >= -38) )
+            colSidePE = 1; //If it's negative, the player is above the enemy
+        if ( (distPE.x >= -35 && distPE.x <= 35) && (distPE.y >= 34 && distPE.y <= 38) )
+            colSidePE = 2; //if it's positive, the player is below the enemy
 
+        //If distance of x is 36.45 (in range because exact causes flicker) and distance y is betwen a margin
+        //The player is colliding vertically with the enemy, side is determined by output signal
+        if ( (distPE.x <= -34 && distPE.x >= -38) && (distPE.y >= -35 && distPE.y <= 35))
+            colSidePE = 3; //If it's negative, the player is to the left of the enemy
+        if ( (distPE.x >= 34 && distPE.x <= 38) && (distPE.y >= -35 && distPE.y <= 35))
+            colSidePE = 4; //if it's positive, the player is to the right of the enemy
 
         /********************** PLAYER MOVEMENT *******************************/
         //Movement logic 
         if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT)) 
         {   //For Tank like controls        
-            if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) && Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y )
-            {                                                   //Checks player position agains top border + correction with the margin of player center
-                player.pos.y -= player.speed;
+            if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
+            {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
+                if(Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2)
+                    player.pos.y -= player.speed;
                 player.rot = 0; //Sets players rotation to up
             }
-            if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) && Vector2Distance( player.draw , DP )>=player.speed + player.cen.y )
-            {                                                   //Checks player position agains bottom border + correction with the margin of player center
-                player.pos.y += player.speed;
+            if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) )
+            {   //Checks player distance agains bottom border + correction with the margin of player center and contact with enemy tank
+                if(Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1)
+                    player.pos.y += player.speed;
                 player.rot = 180; //Sets player rotation to down
             }
         }
         if (!IsKeyDown(KEY_S) && !IsKeyDown(KEY_W)&& !IsKeyDown(KEY_DOWN) && !IsKeyDown(KEY_UP)) //For Tank like controls
         {
-            if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) &&  Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y )
-            {                                                   //Checks player position agains left border + corretion with the margin of player center
-                player.pos.x -= player.speed;
+            if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) )
+            {   //Checks player distance agains left border + correction with the margin of player center and contact with enemy tank
+                if(Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4)
+                    player.pos.x -= player.speed;
                 player.rot = 270; //Sets player rotation to left
             }
-            if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) &&  Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y )
-            {                                                   //Checks player position agains left border + corretion with the margin of player center
-                player.pos.x += player.speed;
+            if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) )
+            {   //Checks player distance agains right border + correction with the margin of player center and contact with enemy tank
+                if(Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3)
+                    player.pos.x += player.speed;
                 player.rot = 90; //Sets player rotation to right
             }
         }
@@ -198,20 +221,20 @@ int jogo(void)
         }
 
         /********************** ENEMY SPAWNING *******************************/
-        if (enemy.health >= 1) //Test to see if enemy is alive
+        if ( enemy.health >= 1 ) //Test to see if enemy is alive
         {
             DrawTexturePro( tankenemy , sourceEnemy , drawEnemy , enemy.cen , enemy.rot , WHITE ); //Draws Enemy tank
             globaltimeenemy = 0;
         }
-        if (enemy.health == 0) //if not, starts couting
+        if ( enemy.health == 0 ) //if not, starts counting
             globaltimeenemy++;
-        if (globaltimeenemy > 60*5 && enemy.health == 0) //If enemy is dead and 5 seconds have passed spawns enemy at random position
+        if ( globaltimeenemy > 60*5 && enemy.health == 0 ) //If enemy is dead and 5 seconds have passed spawns enemy at random position
         {
             enemy.health = 1;
             enemy.pos.x = GetRandomValue( BORDER*2 + enemy.cen.x , SCREENWIDTH - BORDER*2 - enemy.cen.x ); //To spawn enemy in random position inbounds
             enemy.pos.y = GetRandomValue( TOPBORDER + BORDER*2 + enemy.cen.y , SCREENHEIGHT - BORDER*2 - enemy.cen.y ); //To spawn enemy in random position inbounds
         }
-        if (CheckCollisionRecs(colBullet,colEnemy)) //if Player playbullet collides with enemy, kills enemy
+        if ( CheckCollisionRecs(colBullet,colEnemy) ) //if Player playbullet collides with enemy, kills enemy
         {   //Reverts the states change when enemy alive to neutral
             enemy.health--;
             playbullet.health--;
@@ -223,16 +246,16 @@ int jogo(void)
         /********************** ENEMY MOVEMENT *******************************/
         //Movement logic 
         //Chase logic
-        if (enemy.score != 3 && !CheckCollisionRecs(colPlayer,colEnemy))
+        if ( enemy.score != 3 )
         {   //Test if its not doing another movement or colliding with the player
-            if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , 0}, player.cen.x*2))
-            {   //Casts a ray up from the enemy, if it hits the player, move towards it
+            if ( colSidePE != 1 && CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , 0}, player.cen.x/2))
+            {   //Casts a ray up from the enemy, if it hits the player, move towards it                     Detection Range Size
                 enemy.pos.y -= enemy.speed;
                 enemy.rot = 0; //Sets enemy rotation to up
                 enemy.score = 1; //Sets enemy score to signal it's detecting a player in y
             }
-            else if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , SCREENHEIGHT}, player.cen.x*2))
-            {   //Casts a ray down from the enemy, if it hits the player, move towards it
+            else if ( colSidePE != 2 && CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){enemy.pos.x , SCREENHEIGHT}, player.cen.x/2))
+            {   //Casts a ray down from the enemy, if it hits the player, move towards it                                   Detection Range Size
                 enemy.pos.y += enemy.speed;
                 enemy.rot = 180; //Sets enemy rotation to down
                 enemy.score = 1; //Sets enemy score to signal it's detecting a player in y
@@ -242,16 +265,16 @@ int jogo(void)
                 enemy.score = 2; //Sets the enemy score to signal it's not detecting a player
             }
         }
-        if(enemy.score != 1 && !CheckCollisionRecs(colPlayer,colEnemy))
+        if( enemy.score != 1 )
         {   //Test if its not doing another movement or colliding with the player
-            if (CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ 0, enemy.pos.y}, player.cen.y*2))
-            {   //Casts a ray to the left from the enemy, if it hits the player, move towards it
+            if ( colSidePE != 3 && CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ 0, enemy.pos.y}, player.cen.y/2) )
+            {   //Casts a ray to the left from the enemy, if it hits the player, move towards it            Detection Range Size
                 enemy.pos.x -= enemy.speed;
                 enemy.rot = 270; //Sets enemy rotation to left
                 enemy.score = 3; //Sets enemy score to signal it's detecting a player in x
             }
-            else if(CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ SCREENWIDTH , enemy.pos.y }, player.cen.y*2))
-            {   //Casts a ray to the right from the enemy, if it hits the player, move towards it
+            else if( colSidePE != 4 && CheckCollisionPointLine(player.pos,enemy.pos, (Vector2){ SCREENWIDTH , enemy.pos.y }, player.cen.y/2) )
+            {   //Casts a ray to the right from the enemy, if it hits the player, move towards it                           Detection Range Size
                 enemy.pos.x += enemy.speed;
                 enemy.rot = 90; //Sets enemy rotation to right
                 enemy.score = 3; //Sets enemy score to signal it's detecting a player in x
@@ -261,7 +284,7 @@ int jogo(void)
                 enemy.score = 2; //Sets the enemy score to signal it's not detecting a player
             }
         } //Random movement
-        if (enemy.score == 2 && !CheckCollisionRecs(colPlayer,colEnemy))
+        if (enemy.score == 2 && colSidePE == 0)
         {   //Test if its not detecting a player or colliding with the player
             int x, b = 0; //Variable to store the random value from 0-4 and the side it's colliding
             if (Vector2Distance( enemy.draw , UE ) <= enemy.speed + enemy.cen.y)
@@ -273,27 +296,27 @@ int jogo(void)
             if (Vector2Distance( enemy.draw , RE ) <= enemy.speed + enemy.cen.y)
                 b = 4;
             
-            if( player.time % 30 == 0 )  
+            if( player.time % 30 == 0)  
             {   //Only gets a new number every half a second
                 x = GetRandomValue(0,4);
                 player.time = 0;
             }  
-            if ( x == 0 && b != 1 )
+            if ( x == 0 && b != 1)
             {   //If the number is 0 and it's not going out of bounds, move in that direction
                 enemy.pos.y -= enemy.speed;
                 enemy.rot = 0; //Sets enemy rotation to up
             }
-            if (x == 1 && b != 2 )
+            if (x == 1 && b != 2)
             {   //If the number is 1 and it's not going out of bounds, move in that direction
                 enemy.pos.y += enemy.speed;
                 enemy.rot = 180; //Sets enemy rotation to up
             }
-            if (x == 2 && b != 3 )
+            if (x == 2 && b != 3)
             {   //If the number is 2 and it's not going out of bounds, move in that direction
                 enemy.pos.x -= enemy.speed;
                 enemy.rot = 270; //Sets enemy rotation to up
             }
-            if (x == 3 && b != 4 )
+            if (x == 3 && b != 4)
             {   //If the number is 3 and it's not going out of bounds, move in that direction
                 enemy.pos.x += enemy.speed;
                 enemy.rot = 90; //Sets enemy rotation to up
@@ -401,27 +424,9 @@ int jogo(void)
             k*=-1;
         if (k==-1)
             player.health = 3;
-        Vector2 testdist = {0,0};
-        int h = 0;
-        testdist = Vector2Subtract(player.draw,enemy.draw);
-        
-        if (testdist.y == -36.45)
-            h = 1;
-        if (testdist.y == 36.45 )
-            h = 2;
-        if (testdist.x == -36.45 )
-            h = 3;
-        if (testdist.x == 36.45)
-            h = 4;
-        if (IsKeyPressed(KEY_H))
-        {
-            printf(" x: %f\n y: %f\n side: %d\n",testdist.x,testdist.y,h);
-        }
-        
 
         EndDrawing();
     }
-
     /********************** UNLOADING AREA *******************************/
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
