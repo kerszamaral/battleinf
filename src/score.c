@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "score.h"
+#include <stdio.h>
 
 #define MAX_INPUT_CHARS 9
 #define SCREENWIDTH 800
@@ -58,6 +59,7 @@ void nome(int pscore)
             else DrawText("Pressione BACKSPACE para deletar", 230, 300, 20, GRAY);
             if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
             {
+                printf("%s\n", name);
                 //write to file "name", remove last place
                 break;
             }
