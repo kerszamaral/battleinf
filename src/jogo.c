@@ -25,9 +25,9 @@ int jogo(void)
     //Textures (for getting width and height)
     Texture2D bullet = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
     //Objects
-    //              pos     x y                       ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2               draw   x y  health rot  score time  speed  ammo
+    //                  pos     x y                       ratio            cen             IMG X/scale*2                    IMG Y*ratio/scale*2       draw   x y  health rot  score time  speed  ammo
     Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  3  , false };
-    //              pos     x y                       ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2               draw   x y  health rot  score time  speed  ammo
+    //                   pos     x y                       ratio           cen             IMG X/scale*2                    IMG Y*ratio/scale*2         draw   x y  health rot  score time  speed  ammo
     Obj enemybullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*enemybullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false };
     
     /********************** ENEMY VARIABELS *******************************/
