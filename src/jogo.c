@@ -1,6 +1,7 @@
 #include "jogo.h"
 #include "core.h"
 #include "raymath.h"
+#include <stdio.h>
 
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
@@ -19,6 +20,15 @@ int jogo(void)
     //Random starting position
     player.pos.x = GetRandomValue( BORDER*2 + player.cen.x , SCREENWIDTH - BORDER*2 - player.cen.x ); //To start player in random position inbounds
     player.pos.y = GetRandomValue( 40 + BORDER*2 + player.cen.y , SCREENHEIGHT - BORDER*2 - player.cen.y ); //To start player in random position inbounds
+    //Source and Collision Rectangles creation, changed in the while loop
+    Rectangle sourcePlayer = { 0 , 0 , tankplayer.width , tankplayer.height }; //Rectangle with size of original image
+    Rectangle drawPlayer;
+    Rectangle colPlayer;
+    //Collision Vectors
+    Vector2 UP;
+    Vector2 DP;
+    Vector2 LP;
+    Vector2 RP;
 
     /********************** BULLET VARIABELS *******************************/
     //Textures (for getting width and height)
@@ -28,7 +38,15 @@ int jogo(void)
     Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  3  , false };
     //                   pos     x y                       ratio           cen             IMG X/scale*2                    IMG Y*ratio/scale*2         draw   x y  health rot  score time  speed  ammo
     Obj enemybullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*enemybullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false };
-    
+    //Source and Collision Rectangles creation, changed in the while loop
+    Rectangle sourceBullet = { 0 , 0 , bullet.width , bullet.height }; //Rectangle with size of original image
+    Rectangle drawBullet;
+    Rectangle colBullet;
+    Rectangle drawBulletenemy;
+    Rectangle colBulletenemy;
+    bool colBulletTerrain;
+    bool colBulletETerrain;
+
     /********************** ENEMY VARIABELS *******************************/
     //Textures (for getting width and height)
     Texture2D tankenemy = LoadTexture( "resources/images/enemy.png" ); //Load enemy image
@@ -36,6 +54,16 @@ int jogo(void)
     //              pos     x y                                     ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2       draw   x y  health rot  score time  speed  ammo
     Obj enemy = {(Vector2){SCREENWIDTH,SCREENHEIGHT}, (float)tankenemy.width/tankenemy.height ,(Vector2){ tankenemy.width/20.0 , (tankenemy.height*enemy.ratio)/20.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  1  , true };
     //          Bullets spawn 0,0 conflict enemy spawn
+    //Source and Collision Rectangles creation, changed in the while loop
+    Rectangle sourceEnemy = { 0 , 0 , tankenemy.width , tankenemy.height }; //Rectangle with size of original image
+    Rectangle drawEnemy;
+    Rectangle colEnemy;
+    //Collision Vectors;
+    Vector2 UE;
+    Vector2 DE;
+    Vector2 LE;
+    Vector2 RE;
+    Vector2 distPE;
 
     /********************** MENU VARIABELS *******************************/
     unsigned long globaltimeenemy = 0;
@@ -47,13 +75,80 @@ int jogo(void)
     Rectangle bottomMenurec = { 0 , SCREENHEIGHT - BORDER , SCREENWIDTH, BORDER}; //Rectangle for bottom border
     Rectangle leftMenurec = { 0 , 0 , BORDER, SCREENHEIGHT }; //Rectangle for left border
     Rectangle rightMenurec = { SCREENWIDTH - BORDER , 0 , SCREENWIDTH , SCREENHEIGHT};   //Rectangle for right border
-
+    
+    /********************** TERRAIN VARIABELS *******************************/
+    //Playspace is 800x400 / starts at 0x45 /ends 800x445 / We devide those in 50 by 50 cubes
+    //Textures
+    Texture2D wall = LoadTexture( "resources/images/wall.png" );
+    Rectangle sourceWall = { 0 , 0 , wall.width , wall.height }; //Rectangle with size of original image
+    int mapx = 16, mapy = 8;
+    ///Random Map Generator for testing, needs to be replaced by read file
+    char terrainspace [ mapy ][ mapx ];
+    for (int i = 0; i < mapy; i++)
+    {
+        for (int j = 0; j < mapx; j++)
+        {
+            switch (GetRandomValue(0,4))
+            {
+            case 0:
+                terrainspace[i][j] = '*';
+                break;
+            default:
+                terrainspace[i][j] = '-';
+                break;
+            }
+        }
+    }
+    //Prints map to console to know if everything lines up, can be removed when changed
+    for (int i = 0; i < mapy; i++)
+    {
+        for (int j = 0; j < mapx; j++)
+            printf("%c",terrainspace[i][j]);
+        printf("\n");
+    }
+    //Creates the Rectangles in the place it finds * in the array to display it in the game
+    //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
+    int terrainx = 0, terrainy = 0;
+    //We use an array to create 128 rectangles, they are all set to size and position 0 
+    //When it finds the * in sets the position and size for the rectangle on that place
+    Rectangle terrainarray[ 8 ][ 16 ] = { 0 };
+    for ( int i = 0 ; i < 8 ; i++ )
+    {
+        for ( int j = 0 ; j < 16 ; j++ )
+        {
+            if ( terrainspace[ i ][ j ] == '*' )
+                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + 45 , 50 , 50 };
+            terrainx += 50;
+        }
+        terrainx = 0;
+        terrainy +=50;
+    }
+    
     //Main game loop
     while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
     {
         BeginDrawing();
 
         ClearBackground( RAYWHITE );
+        
+        /********************** TERRAIN creation *******************************/
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 16; j++)
+            {
+                if (terrainspace[i][j] == '*')
+                {   //All collision checks with terrain need to be done here.
+                    if (colBulletTerrain == false)
+                        colBulletTerrain = CheckCollisionRecs(colBullet, terrainarray[i][j]);
+                    if (colBulletETerrain == false)
+                        colBulletETerrain = CheckCollisionRecs(colBulletenemy,terrainarray[i][j]);
+                    DrawTexturePro(wall,sourceWall,terrainarray[i][j],(Vector2){0,0},0,WHITE);
+                }
+                terrainx += 50;
+            }
+            terrainx = 0;
+            terrainy +=50;
+        }
 
         /********************** MENU CREATION *******************************/
         //Draws solid color rectangles
@@ -71,38 +166,37 @@ int jogo(void)
 
         /********************** PLAYER COLLISION/DRAWING *******************************/
         //Source rectangle, draw position and draw rectangle
-        Rectangle sourcePlayer = { 0 , 0 , tankplayer.width , tankplayer.height }; //Rectangle with size of original image
         player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y }; //Sets player.draw to be player.pos + offset
-        Rectangle drawPlayer = { player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; //Rectangle resized and offset for player drawing
+        drawPlayer = (Rectangle){ player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; //Rectangle resized and offset for player drawing
         //For detecting player boundary distance
-        Vector2 UP = { player.draw.x , TOPBORDER };
-        Vector2 DP = { player.draw.x , SCREENHEIGHT - BORDER };
-        Vector2 LP = { BORDER , player.draw.y };
-        Vector2 RP = { SCREENWIDTH - BORDER , player.draw.y };
+        UP = (Vector2){ player.draw.x , TOPBORDER };
+        DP = (Vector2){ player.draw.x , SCREENHEIGHT - BORDER };
+        LP = (Vector2){ BORDER , player.draw.y };
+        RP = (Vector2){ SCREENWIDTH - BORDER , player.draw.y };
         //Player collision rectangle
-        Rectangle colPlayer = { player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
+        colPlayer = (Rectangle){ player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         DrawTexturePro( tankplayer , sourcePlayer , drawPlayer , player.cen , player.rot , WHITE ); //Draws player tank
     
         /********************** ENEMY COLLISION *******************************/
         //Source rectangle, draw position and draw rectangle
-        Rectangle sourceEnemy = { 0 , 0 , tankenemy.width , tankenemy.height }; //Rectangle with size of original image
         enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; //Sets enemy.draw to be enemy.pos + offset
-        Rectangle drawEnemy = { enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };//Rectangle resized and offset for enemy drawing
+        drawEnemy = (Rectangle){ enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };//Rectangle resized and offset for enemy drawing
         //For detecting enemy boundary distance
-        Vector2 UE = { enemy.draw.x , TOPBORDER };
-        Vector2 DE = { enemy.draw.x , SCREENHEIGHT - BORDER };
-        Vector2 LE = { BORDER , enemy.draw.y };
-        Vector2 RE = { SCREENWIDTH - BORDER , enemy.draw.y };
+        UE = (Vector2){ enemy.draw.x , TOPBORDER };
+        DE = (Vector2){ enemy.draw.x , SCREENHEIGHT - BORDER };
+        LE = (Vector2){ BORDER , enemy.draw.y };
+        RE = (Vector2){ SCREENWIDTH - BORDER , enemy.draw.y };
         //Enemy collision rectangle
-        Rectangle colEnemy = { enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
+        colEnemy = (Rectangle){ enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
         //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         
         /********************** PLAYER/ENEMY COLLISION *******************************/
+        //Will be remove when new collision System is introduced
         //To know which side the collision is happening
         int colSidePE = 0;
         //Subtracts the center position of the enemy from the center position of the player
-        Vector2 distPE = Vector2Subtract(player.draw,enemy.draw);
+        distPE = Vector2Subtract(player.draw,enemy.draw);
         
         //If distance of x is betwen a margin and distance y is 36.45 (in range because exact of causes flicker)
         //The player is colliding vertically with the enemy, side is determined by output signal
@@ -122,25 +216,25 @@ int jogo(void)
         //Movement logic 
         if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
         {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
-            if(Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2)
+            if( (Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2))
                 player.pos.y -= player.speed;
             player.rot = 0; //Sets players rotation to up
         }
         else if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) )
         {   //Checks player distance agains bottom border + correction with the margin of player center and contact with enemy tank
-            if(Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1)
+            if( (Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1))
                 player.pos.y += player.speed;
             player.rot = 180; //Sets player rotation to down
         }
         else if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) )
         {   //Checks player distance agains left border + correction with the margin of player center and contact with enemy tank
-            if(Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4)
+            if( (Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4))
                 player.pos.x -= player.speed;
             player.rot = 270; //Sets player rotation to left
         }
         else if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) )
         {   //Checks player distance agains right border + correction with the margin of player center and contact with enemy tank
-            if(Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3)
+            if( (Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3))
                 player.pos.x += player.speed;
             player.rot = 90; //Sets player rotation to right
         }
@@ -179,21 +273,21 @@ int jogo(void)
         }
 
         //Source rectangle, draw position and draw rectangle
-        Rectangle sourceBulletplayer = { 0 , 0 , bullet.width , bullet.height }; //Rectangle with size of original image
         playbullet.draw = (Vector2){ playbullet.pos.x + playbullet.cen.x , playbullet.pos.y + playbullet.cen.y }; //Sets player.draw to be player.pos + offset
-        Rectangle drawBullet = { playbullet.draw.x, playbullet.draw.y, playbullet.cen.x*2 , playbullet.cen.y*2 }; //Rectangle resized and offset for player drawing
+        drawBullet = (Rectangle){ playbullet.draw.x, playbullet.draw.y, playbullet.cen.x*2 , playbullet.cen.y*2 }; //Rectangle resized and offset for player drawing
         //Bullet collision rectangle
-        Rectangle colBullet = {playbullet.pos.x, playbullet.pos.y, playbullet.cen.x*2, playbullet.cen.y*2 };
+        colBullet = (Rectangle){playbullet.pos.x, playbullet.pos.y, playbullet.cen.x*2, playbullet.cen.y*2 };
         //Because playbullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
 
         if (playbullet.health >= 1) //test to see if should draw playbullet
         {
-            if (playbullet.time == 60*1 || CheckCollisionRecs( colBullet , topMenurec) || CheckCollisionRecs( colBullet , bottomMenurec) || CheckCollisionRecs( colBullet , leftMenurec) || CheckCollisionRecs( colBullet , rightMenurec) ) //Kills playbullet if 1 sec passes or it collides with border
+            if (playbullet.time == 60*1 || CheckCollisionRecs( colBullet , topMenurec) || CheckCollisionRecs( colBullet , bottomMenurec) || CheckCollisionRecs( colBullet , leftMenurec) || CheckCollisionRecs( colBullet , rightMenurec)|| colBulletTerrain == true) //Kills playbullet if 1 sec passes or it collides with border
             {   //Reverts the states change when firing playbullet to neutral
                 player.ammo = true;
                 playbullet.pos = (Vector2){0,0};
                 playbullet.health = 0;
                 playbullet.time = 0;
+                colBulletTerrain = false;
             }
 
             //Moves playbullet based on position and speed
@@ -213,7 +307,7 @@ int jogo(void)
                 break;
             }
             //Draws playbullet
-            DrawTexturePro(bullet, sourceBulletplayer, drawBullet, playbullet.cen, playbullet.rot, WHITE);
+            DrawTexturePro(bullet, sourceBullet, drawBullet, playbullet.cen, playbullet.rot, WHITE);
             //Stores the time the playbullet is alive based on fps, 1 second = 60 frames
             playbullet.time++;
         }
@@ -364,21 +458,21 @@ int jogo(void)
         }
 
         //Source rectangle, draw position and draw rectangle
-        Rectangle sourceBulletenemy = { 0 , 0 , bullet.width , bullet.height }; //Rectangle with size of original image
         enemybullet.draw = (Vector2){ enemybullet.pos.x + enemybullet.cen.x , enemybullet.pos.y + enemybullet.cen.y }; //Sets player.draw to be player.pos + offset
-        Rectangle drawBulletenemy = { enemybullet.draw.x, enemybullet.draw.y, enemybullet.cen.x*2 , enemybullet.cen.y*2 }; //Rectangle resized and offset for player drawing
+        drawBulletenemy = (Rectangle){ enemybullet.draw.x, enemybullet.draw.y, enemybullet.cen.x*2 , enemybullet.cen.y*2 }; //Rectangle resized and offset for player drawing
         //Bullet collision rectangle
-        Rectangle colBulletenemy = {enemybullet.pos.x, enemybullet.pos.y, enemybullet.cen.x*2, enemybullet.cen.y*2 };
+        colBulletenemy = (Rectangle){ enemybullet.pos.x, enemybullet.pos.y, enemybullet.cen.x*2, enemybullet.cen.y*2 };
         //Because enemybullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
 
         if (enemybullet.health >= 1) //test to see if should draw enemybullet
         {
-            if (enemybullet.time == 60*1 || CheckCollisionRecs( colBulletenemy , topMenurec) || CheckCollisionRecs( colBulletenemy , bottomMenurec) || CheckCollisionRecs( colBulletenemy , leftMenurec) || CheckCollisionRecs( colBulletenemy , rightMenurec) ) //Kills enemybullet if 1 sec passes or it collides with border
+            if (enemybullet.time == 60*1 || CheckCollisionRecs( colBulletenemy , topMenurec) || CheckCollisionRecs( colBulletenemy , bottomMenurec) || CheckCollisionRecs( colBulletenemy , leftMenurec) || CheckCollisionRecs( colBulletenemy , rightMenurec) || colBulletETerrain == true ) //Kills enemybullet if 1 sec passes or it collides with border
             {   //Reverts the states change when firing enemybullet to neutral
                 enemy.ammo = true;
                 enemybullet.health = 0;
                 enemybullet.pos = (Vector2){SCREENWIDTH,SCREENHEIGHT};
                 enemybullet.time = 0;
+                colBulletETerrain = false;
             }
 
             //Moves enemybullet based on position and speed
@@ -418,7 +512,7 @@ int jogo(void)
                 player.health--;
             }
             //Draws enemybullet
-            DrawTexturePro(bullet, sourceBulletenemy, drawBulletenemy, enemybullet.cen, enemybullet.rot, WHITE);
+            DrawTexturePro(bullet, sourceBullet, drawBulletenemy, enemybullet.cen, enemybullet.rot, WHITE);
             //Stores the time the enemybullet is alive based on fps, 1 second = 60 frames
             enemybullet.time++;
         }
