@@ -6,11 +6,12 @@
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
 const int TOPBORDER = SCREENHEIGHT/10; //Menu border
-const int BORDER = SCREENHEIGHT/90;
+const int BORDER = SCREENHEIGHT/90; //Border around playspace
 
 int jogo(void)
 {
-    int k = 1;
+    int k = 1; //variable for testing
+    //When pointers are implemented all "VARIABELS" should be moved to another file and referenced through pointers
     /********************** PLAYER VARIABELS *******************************/
     //Textures (for getting width and height)
     Texture2D tankplayer = LoadTexture( "resources/images/player.png" );//Load player image
@@ -44,7 +45,7 @@ int jogo(void)
     Rectangle colBullet;
     Rectangle drawBulletenemy;
     Rectangle colBulletenemy;
-    bool colBulletTerrain;
+    bool colBulletTerrain; //To see bullet collision with terrain
     bool colBulletETerrain;
 
     /********************** ENEMY VARIABELS *******************************/
@@ -165,24 +166,24 @@ int jogo(void)
         //                                           This image is too big, scaling factor needs to be very small
 
         /********************** PLAYER COLLISION/DRAWING *******************************/
-        //Source rectangle, draw position and draw rectangle
+        //Draw position and draw rectangle update
         player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y }; //Sets player.draw to be player.pos + offset
         drawPlayer = (Rectangle){ player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; //Rectangle resized and offset for player drawing
-        //For detecting player boundary distance
+        //For detecting player boundary distance (will be removed with new collision system)
         UP = (Vector2){ player.draw.x , TOPBORDER };
         DP = (Vector2){ player.draw.x , SCREENHEIGHT - BORDER };
         LP = (Vector2){ BORDER , player.draw.y };
         RP = (Vector2){ SCREENWIDTH - BORDER , player.draw.y };
-        //Player collision rectangle
+        //Player collision rectangle update
         colPlayer = (Rectangle){ player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         DrawTexturePro( tankplayer , sourcePlayer , drawPlayer , player.cen , player.rot , WHITE ); //Draws player tank
     
         /********************** ENEMY COLLISION *******************************/
-        //Source rectangle, draw position and draw rectangle
+        //Draw position and draw rectangle update
         enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; //Sets enemy.draw to be enemy.pos + offset
         drawEnemy = (Rectangle){ enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };//Rectangle resized and offset for enemy drawing
-        //For detecting enemy boundary distance
+        //For detecting enemy boundary distance (will be removed with new collision system)
         UE = (Vector2){ enemy.draw.x , TOPBORDER };
         DE = (Vector2){ enemy.draw.x , SCREENHEIGHT - BORDER };
         LE = (Vector2){ BORDER , enemy.draw.y };
@@ -213,6 +214,7 @@ int jogo(void)
             colSidePE = 4; //if it's positive, the player is to the right of the enemy
 
         /********************** PLAYER MOVEMENT *******************************/
+        //When pointers are implemente, should be moved to move.c file and reference the data through pointers
         //Movement logic 
         if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
         {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
@@ -240,6 +242,7 @@ int jogo(void)
         }
         
         /********************** PLAYER BULLET SHOOTING *******************************/
+        //When pointers are implemented should be moved to "Shooting.c" function and data referenced through pointers
         if (IsKeyReleased(KEY_SPACE) && player.ammo == true) //Verify if player has ammo
         {
             //Shooting setup
@@ -272,7 +275,7 @@ int jogo(void)
             }
         }
 
-        //Source rectangle, draw position and draw rectangle
+        //Draw position and draw rectangle updates
         playbullet.draw = (Vector2){ playbullet.pos.x + playbullet.cen.x , playbullet.pos.y + playbullet.cen.y }; //Sets player.draw to be player.pos + offset
         drawBullet = (Rectangle){ playbullet.draw.x, playbullet.draw.y, playbullet.cen.x*2 , playbullet.cen.y*2 }; //Rectangle resized and offset for player drawing
         //Bullet collision rectangle
@@ -281,6 +284,7 @@ int jogo(void)
 
         if (playbullet.health >= 1) //test to see if should draw playbullet
         {
+            //Can be remove with new collision system, but this might be less CPU intensive because it doesn't need the direction it collides but idk
             if (playbullet.time == 60*1 || CheckCollisionRecs( colBullet , topMenurec) || CheckCollisionRecs( colBullet , bottomMenurec) || CheckCollisionRecs( colBullet , leftMenurec) || CheckCollisionRecs( colBullet , rightMenurec)|| colBulletTerrain == true) //Kills playbullet if 1 sec passes or it collides with border
             {   //Reverts the states change when firing playbullet to neutral
                 player.ammo = true;
@@ -313,6 +317,9 @@ int jogo(void)
         }
 
         /********************** ENEMY SPAWNING *******************************/
+        //When pointers are implemented should be moved to "EnemyLogic.c" function and data referenced through pointers
+        //Everything "enemy" based should be moved, enemys will be an array for multiple ones to spawn, each one with it's logic
+        //This function needs an in value to determine which enemy the logic should move
         switch (enemy.health)//Test to see if enemy is alive
         {
         case 0: //if not, starts counting
@@ -457,7 +464,7 @@ int jogo(void)
             }
         }
 
-        //Source rectangle, draw position and draw rectangle
+        //Draw position and draw rectangle updates
         enemybullet.draw = (Vector2){ enemybullet.pos.x + enemybullet.cen.x , enemybullet.pos.y + enemybullet.cen.y }; //Sets player.draw to be player.pos + offset
         drawBulletenemy = (Rectangle){ enemybullet.draw.x, enemybullet.draw.y, enemybullet.cen.x*2 , enemybullet.cen.y*2 }; //Rectangle resized and offset for player drawing
         //Bullet collision rectangle
