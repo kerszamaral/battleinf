@@ -30,24 +30,6 @@ Obj collision( Obj object , Rectangle colRec )
         (Vector2){ object.draw.x - object.cen.x - object.speed , object.draw.y - object.cen.y + object.speed }    //15  U L D   S: LEFT
     };
     short up = 0 , right = 0 , down = 0 , left = 0;
-    Color cor[16] = {
-        BLACK,
-        PURPLE,
-        ORANGE,
-        PINK,
-        LIME,
-        RED,
-        BLUE,
-        GREEN,
-        YELLOW,
-        MAROON,
-        VIOLET,
-        BROWN,
-        MAGENTA,
-        DARKBLUE,
-        GOLD,
-        DARKGRAY
-    };
 
     for (int i = 0; i < 16; i++)
     {
@@ -64,31 +46,15 @@ Obj collision( Obj object , Rectangle colRec )
              if(CheckCollisionPointRec(Points[i],colRec))
                 left++;
     }
+
     if (up >= 2)
-    {
         object.colSide.x = 1;
-        printf("up: %f\n",object.colSide.x);
-    }
     if (right >= 2)
-    {
         object.colSide.y = 1;
-        printf("right: %f\n",object.colSide.y);
-    }
     if (down >= 2)
-    {
         object.colSide.z = 1;
-        printf("down: %f\n",object.colSide.z);
-    }
     if (left >= 2)
-    {
         object.colSide.w = 1;
-        printf("left: %f\n",object.colSide.w);
-    }
-    for (int i = 0; i < 16; i++)
-    {
-        DrawPixelV(Points[i],cor[i]);
-    }
-    DrawRectangleRec(colRec, BLACK);
 
     return object;
     
