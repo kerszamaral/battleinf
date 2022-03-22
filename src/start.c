@@ -24,7 +24,7 @@ int startscreen(void)
         if (select == 0)
         {
             DrawText("Start", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
+            if ( IsKeyPressed(KEY_ENTER) )
             {
                 break;
             }
@@ -36,7 +36,7 @@ int startscreen(void)
         if (select == 1)
         {
             DrawText("High Scores", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 50, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
+            if ( IsKeyPressed(KEY_ENTER) )
             {
                 /* code */
             }
@@ -47,7 +47,7 @@ int startscreen(void)
         if (select == 2)
         {
             DrawText("Quit", SCREENWIDTH / 4 + 120, SCREENHEIGHT / 4 + 100, 20, YELLOW);
-            if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
+            if ( IsKeyPressed(KEY_ENTER) )
             {
                 break;
             } 

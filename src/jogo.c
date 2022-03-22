@@ -1,7 +1,6 @@
 #include "jogo.h"
 #include "core.h"
 #include "raymath.h"
-#include <stdio.h>
 
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
@@ -164,25 +163,24 @@ int jogo(void)
             playbullet.pos.y = player.draw.y; //Stores the player y postion when playbullet fires for next steps
 
             //Offsets for each rotation to fire from center and end of barrel
-            if (playbullet.rot == 0)
+            switch (playbullet.rot)
             {
+            case 0:
                 playbullet.pos.y -= player.cen.y;
                 playbullet.pos.x -= playbullet.cen.x;
-            }
-            if (playbullet.rot == 90)
-            {
+                break;
+            case 90:
                 playbullet.pos.x += player.cen.x;
                 playbullet.pos.y -= playbullet.cen.y;
-            }
-            if (playbullet.rot == 180)
-            {
+                break;
+            case 180:
                 playbullet.pos.y += player.cen.y;
                 playbullet.pos.x -= playbullet.cen.x;
-            }
-            if (playbullet.rot == 270)
-            {
+                break;
+            case 270:
                 playbullet.pos.x -= player.cen.x;
                 playbullet.pos.y -= playbullet.cen.y;
+                break;
             }
         }
 
@@ -205,15 +203,21 @@ int jogo(void)
             }
 
             //Moves playbullet based on position and speed
-            if (playbullet.rot == 0)
+            switch (playbullet.rot)
+            {
+            case 0:
                 playbullet.pos.y -= playbullet.speed;
-            if (playbullet.rot == 90)
+                break;
+            case 90:
                 playbullet.pos.x += playbullet.speed;
-            if (playbullet.rot == 180)
+                break;
+            case 180:
                 playbullet.pos.y += playbullet.speed;
-            if (playbullet.rot == 270)
+                break;
+            case 270:
                 playbullet.pos.x -= playbullet.speed;
-
+                break;
+            }
             //Draws playbullet
             DrawTexturePro(bullet, sourceBulletplayer, drawBullet, playbullet.cen, playbullet.rot, WHITE);
             //Stores the time the playbullet is alive based on fps, 1 second = 60 frames
@@ -221,13 +225,16 @@ int jogo(void)
         }
 
         /********************** ENEMY SPAWNING *******************************/
-        if ( enemy.health >= 1 ) //Test to see if enemy is alive
+        switch (enemy.health)//Test to see if enemy is alive
         {
+        case 0: //if not, starts counting
+            globaltimeenemy++;
+            break;
+        default:
             DrawTexturePro( tankenemy , sourceEnemy , drawEnemy , enemy.cen , enemy.rot , WHITE ); //Draws Enemy tank
             globaltimeenemy = 0;
+            break;
         }
-        if ( enemy.health == 0 ) //if not, starts counting
-            globaltimeenemy++;
         if ( globaltimeenemy > 60*5 && enemy.health == 0 ) //If enemy is dead and 5 seconds have passed spawns enemy at random position
         {
             enemy.health = 1;
@@ -382,15 +389,21 @@ int jogo(void)
             }
 
             //Moves enemybullet based on position and speed
-            if (enemybullet.rot == 0)
+            switch (enemybullet.rot)
+            {
+            case 0:
                 enemybullet.pos.y -= enemybullet.speed;
-            if (enemybullet.rot == 90)
+                break;
+            case 90:
                 enemybullet.pos.x += enemybullet.speed;
-            if (enemybullet.rot == 180)
+                break;
+            case 180:
                 enemybullet.pos.y += enemybullet.speed;
-            if (enemybullet.rot == 270)
+                break;
+            case 270:
                 enemybullet.pos.x -= enemybullet.speed;
-
+                break;
+            }
             if (CheckCollisionRecs( colBulletenemy , colBullet ))
             {
                 player.ammo = true;
@@ -411,7 +424,6 @@ int jogo(void)
                 enemybullet.pos = (Vector2){SCREENWIDTH,SCREENHEIGHT};
                 player.health--;
             }
-
             //Draws enemybullet
             DrawTexturePro(bullet, sourceBulletenemy, drawBulletenemy, enemybullet.cen, enemybullet.rot, WHITE);
             //Stores the time the enemybullet is alive based on fps, 1 second = 60 frames
@@ -424,7 +436,6 @@ int jogo(void)
             k*=-1;
         if (k==-1)
             player.health = 3;
-
         EndDrawing();
     }
     /********************** UNLOADING AREA *******************************/
