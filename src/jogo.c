@@ -342,25 +342,24 @@ int jogo(void)
             enemybullet.pos.y = enemy.draw.y; //Stores the enemy y postion when enemybullet fires for next steps
 
             //Offsets for each rotation to fire from center and end of barrel
-            if (enemybullet.rot == 0)
+            switch (enemybullet.rot)
             {
+            case 0:
                 enemybullet.pos.y -= enemy.cen.y;
                 enemybullet.pos.x -= enemybullet.cen.x;
-            }
-            if (enemybullet.rot == 90)
-            {
+                break;
+            case 90:
                 enemybullet.pos.x += enemy.cen.x;
                 enemybullet.pos.y -= enemybullet.cen.y;
-            }
-            if (enemybullet.rot == 180)
-            {
+                break;
+            case 180:
                 enemybullet.pos.y += enemy.cen.y;
                 enemybullet.pos.x -= enemybullet.cen.x;
-            }
-            if (enemybullet.rot == 270)
-            {
+                break;
+            case 270:
                 enemybullet.pos.x -= enemy.cen.x;
                 enemybullet.pos.y -= enemybullet.cen.y;
+                break;
             }
         }
 
