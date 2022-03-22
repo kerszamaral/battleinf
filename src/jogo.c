@@ -120,35 +120,29 @@ int jogo(void)
 
         /********************** PLAYER MOVEMENT *******************************/
         //Movement logic 
-        if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT)) 
-        {   //For Tank like controls        
-            if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
-            {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
-                if(Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2)
-                    player.pos.y -= player.speed;
-                player.rot = 0; //Sets players rotation to up
-            }
-            if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) )
-            {   //Checks player distance agains bottom border + correction with the margin of player center and contact with enemy tank
-                if(Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1)
-                    player.pos.y += player.speed;
-                player.rot = 180; //Sets player rotation to down
-            }
+        if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
+        {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
+            if(Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2)
+                player.pos.y -= player.speed;
+            player.rot = 0; //Sets players rotation to up
         }
-        if (!IsKeyDown(KEY_S) && !IsKeyDown(KEY_W)&& !IsKeyDown(KEY_DOWN) && !IsKeyDown(KEY_UP)) //For Tank like controls
-        {
-            if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) )
-            {   //Checks player distance agains left border + correction with the margin of player center and contact with enemy tank
-                if(Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4)
-                    player.pos.x -= player.speed;
-                player.rot = 270; //Sets player rotation to left
-            }
-            if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) )
-            {   //Checks player distance agains right border + correction with the margin of player center and contact with enemy tank
-                if(Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3)
-                    player.pos.x += player.speed;
-                player.rot = 90; //Sets player rotation to right
-            }
+        else if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) )
+        {   //Checks player distance agains bottom border + correction with the margin of player center and contact with enemy tank
+            if(Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1)
+                player.pos.y += player.speed;
+            player.rot = 180; //Sets player rotation to down
+        }
+        else if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) )
+        {   //Checks player distance agains left border + correction with the margin of player center and contact with enemy tank
+            if(Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4)
+                player.pos.x -= player.speed;
+            player.rot = 270; //Sets player rotation to left
+        }
+        else if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) )
+        {   //Checks player distance agains right border + correction with the margin of player center and contact with enemy tank
+            if(Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3)
+                player.pos.x += player.speed;
+            player.rot = 90; //Sets player rotation to right
         }
         
         /********************** PLAYER BULLET SHOOTING *******************************/
