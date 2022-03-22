@@ -1,6 +1,7 @@
 #include "jogo.h"
 #include "core.h"
 #include "raymath.h"
+#include "collision.h"
 #include <stdio.h>
 
 #define SCREENWIDTH 800 //Screen size x
@@ -17,7 +18,7 @@ int jogo(void)
     Texture2D tankplayer = LoadTexture( "resources/images/player.png" );//Load player image
     //Object
     //              pos     x y                     ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2       draw   x y  health rot  score time  speed  ammo
-    Obj player = {(Vector2){0,0}, (float)tankplayer.width/tankplayer.height ,(Vector2){ tankplayer.width/20.0 , (tankplayer.height*player.ratio)/20.0 }, (Vector2){0,0},  3  ,  0  ,  0  ,  0  ,  2  , true };
+    Obj player = {(Vector2){0,0}, (float)tankplayer.width/tankplayer.height ,(Vector2){ tankplayer.width/20.0 , (tankplayer.height*player.ratio)/20.0 }, (Vector2){0,0},  3  ,  0  ,  0  ,  0  ,  2  , true , (Rectangle){0,0,0,0}, (Rectangle){0,0,0,0} ,(Vector4){0,0,0,0}};
     //Random starting position
     player.pos.x = GetRandomValue( BORDER*2 + player.cen.x , SCREENWIDTH - BORDER*2 - player.cen.x ); //To start player in random position inbounds
     player.pos.y = GetRandomValue( 40 + BORDER*2 + player.cen.y , SCREENHEIGHT - BORDER*2 - player.cen.y ); //To start player in random position inbounds
@@ -36,9 +37,9 @@ int jogo(void)
     Texture2D bullet = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
     //Objects
     //                  pos     x y                       ratio            cen             IMG X/scale*2                    IMG Y*ratio/scale*2       draw   x y  health rot  score time  speed  ammo
-    Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  3  , false };
+    Obj playbullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  3  , false, (Rectangle){0,0,0,0}, (Rectangle){0,0,0,0} ,(Vector4){0,0,0,0} };
     //                   pos     x y                       ratio           cen             IMG X/scale*2                    IMG Y*ratio/scale*2         draw   x y  health rot  score time  speed  ammo
-    Obj enemybullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*enemybullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false };
+    Obj enemybullet = {(Vector2){0,0}, (float)bullet.width/bullet.height ,(Vector2){ bullet.width/100.0 , (bullet.height*enemybullet.ratio)/100.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  2  , false, (Rectangle){0,0,0,0}, (Rectangle){0,0,0,0} ,(Vector4){0,0,0,0} };
     //Source and Collision Rectangles creation, changed in the while loop
     Rectangle sourceBullet = { 0 , 0 , bullet.width , bullet.height }; //Rectangle with size of original image
     Rectangle drawBullet;
@@ -53,7 +54,7 @@ int jogo(void)
     Texture2D tankenemy = LoadTexture( "resources/images/enemy.png" ); //Load enemy image
     //Object
     //              pos     x y                                     ratio                        cen             IMG X/scale*2                    IMG Y*ratio/scale*2       draw   x y  health rot  score time  speed  ammo
-    Obj enemy = {(Vector2){SCREENWIDTH,SCREENHEIGHT}, (float)tankenemy.width/tankenemy.height ,(Vector2){ tankenemy.width/20.0 , (tankenemy.height*enemy.ratio)/20.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  1  , true };
+    Obj enemy = {(Vector2){SCREENWIDTH,SCREENHEIGHT}, (float)tankenemy.width/tankenemy.height ,(Vector2){ tankenemy.width/20.0 , (tankenemy.height*enemy.ratio)/20.0 }, (Vector2){0,0},  0  ,  0  ,  0  ,  0  ,  1  , true, (Rectangle){0,0,0,0}, (Rectangle){0,0,0,0} ,(Vector4){0,0,0,0} };
     //          Bullets spawn 0,0 conflict enemy spawn
     //Source and Collision Rectangles creation, changed in the while loop
     Rectangle sourceEnemy = { 0 , 0 , tankenemy.width , tankenemy.height }; //Rectangle with size of original image
@@ -218,25 +219,25 @@ int jogo(void)
         //Movement logic 
         if ( (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) )
         {   //Checks player distance agains top border + correction with the margin of player center and contact with enemy tank
-            if( (Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y && colSidePE!=2))
+            if( (Vector2Distance( player.draw , UP ) >= player.speed + player.cen.y))
                 player.pos.y -= player.speed;
             player.rot = 0; //Sets players rotation to up
         }
         else if ( (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) )
         {   //Checks player distance agains bottom border + correction with the margin of player center and contact with enemy tank
-            if( (Vector2Distance( player.draw , DP )>=player.speed + player.cen.y && colSidePE!=1))
+            if( (Vector2Distance( player.draw , DP )>=player.speed + player.cen.y ))
                 player.pos.y += player.speed;
             player.rot = 180; //Sets player rotation to down
         }
         else if ( (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) )
         {   //Checks player distance agains left border + correction with the margin of player center and contact with enemy tank
-            if( (Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y && colSidePE!=4))
+            if( (Vector2Distance( player.draw , LP ) >= player.speed + player.cen.y ))
                 player.pos.x -= player.speed;
             player.rot = 270; //Sets player rotation to left
         }
         else if ( (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) )
         {   //Checks player distance agains right border + correction with the margin of player center and contact with enemy tank
-            if( (Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y && colSidePE!=3))
+            if( (Vector2Distance( player.draw , RP ) >= player.speed + player.cen.y ))
                 player.pos.x += player.speed;
             player.rot = 90; //Sets player rotation to right
         }
@@ -530,6 +531,7 @@ int jogo(void)
             k*=-1;
         if (k==-1)
             player.health = 3;
+        player = collision(player,colEnemy);
         EndDrawing();
     }
     /********************** UNLOADING AREA *******************************/

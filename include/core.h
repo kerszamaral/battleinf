@@ -9,12 +9,15 @@ typedef struct  //struct for the interactable objects in the game
     float ratio; //How much the height is more than the widht
     Vector2 cen; //Vector2 for center position, has x and y
     Vector2 draw; //Vector 2 for drawing position, has x and y
-    int health; //Int for health, for player
+    int health; //Int for health
     int rot; //Int for object rotation
-    int score; //int for game score, for player 
-    int time; //Int for time, for bullets and enemys
+    int score; //int for game score
+    unsigned long time; //Unsinged long for object based time
     float speed; //int for speed, defines the speed objects move
-    bool ammo; //bool for defining if the object can shoot or is alive
+    bool ammo; //bool for defining if the object can shoot
+    Rectangle colRec; //Rectangle for object collision (Rectangle){0,0,0,0}
+    Rectangle drawRec; //Rectangle for drawing and object rotation ()
+    Vector4 colSide; //For collision detection algorithm
 } Obj;
 
 #endif
