@@ -2,6 +2,7 @@
 #define end_H_
 
 #include "raylib.h"
+#include <stdio.h>
 
 typedef struct  //struct for the interactable objects in the game
 {
@@ -13,6 +14,7 @@ typedef struct  //struct for the interactable objects in the game
     int rot; //Int for object rotation
     int score; //int for game score
     unsigned long time; //Unsinged long for object based time
+    unsigned long death; //Unsinged long for object based time (normally for how long it's been dead)
     float speed; //int for speed, defines the speed objects move
     bool ammo; //bool for defining if the object can shoot
     Rectangle sourceRec; //Rectangle for creating the source for textures
