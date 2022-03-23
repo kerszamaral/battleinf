@@ -30,6 +30,9 @@ Obj moveplayer(Obj player)
         player.rot = 90; //Sets player rotation to right
     }
 
+    if (IsKeyReleased(KEY_SPACE) && player.ammo == true) //Verify if player has ammo
+        
+
     return player;
 }
     

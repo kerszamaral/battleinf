@@ -2,7 +2,7 @@
 #include "core.h"
 #include "raymath.h"
 #include "collision.h"
-#include "playermove.h"
+#include "player.h"
 #include "enemy.h"
 
 #define SCREENWIDTH 800 //Screen size x
