@@ -6,9 +6,7 @@
 #include "enemy.h"
 #include "shooting.h"
 
-#define SCREENWIDTH 800 //Screen size x
-#define SCREENHEIGHT 450 //Screen size y
-const int TOPBORDER = SCREENHEIGHT/10; //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
+const int TOPBORDER = SCREENHEIGHT/12; //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
 const int BORDER = SCREENHEIGHT/90; //Border around playspace NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
 
 int jogo(void)
@@ -125,16 +123,15 @@ int jogo(void)
     };
     
     /********************** TERRAIN VARIABELS *******************************/
-    //Playspace is 800x400 / starts at 0x45 /ends 800x445 / We devide those in 50 by 50 cubes
+    //Playspace is 1000x600 / We devide those in 50 by 50 cubes
     //Textures
     Texture2D wall = LoadTexture( "resources/images/wall.png" );
     Rectangle sourceWall = { 0 , 0 , wall.width , wall.height }; //Rectangle with size of original image
-    int mapx = 16, mapy = 8;
     ///Random Map Generator for testing, needs to be replaced by read file
-    char terrainspace [ mapy ][ mapx ];
-    for (int i = 0; i < mapy; i++)
+    char terrainspace [ MAPY ][ MAPX ];
+    for (int i = 0; i < MAPY; i++)
     {
-        for (int j = 0; j < mapx; j++)
+        for (int j = 0; j < MAPX; j++)
         {
             switch (GetRandomValue(0,4))
             {
@@ -148,9 +145,9 @@ int jogo(void)
         }
     }
     //Prints map to console to know if everything lines up, can be removed when changed
-    for (int i = 0; i < mapy; i++)
+    for (int i = 0; i < MAPY; i++)
     {
-        for (int j = 0; j < mapx; j++)
+        for (int j = 0; j < MAPX; j++)
             printf("%c",terrainspace[i][j]);
         printf("\n");
     }
@@ -159,13 +156,13 @@ int jogo(void)
     int terrainx = 0, terrainy = 0;
     //We use an array to create 128 rectangles, they are all set to size and position 0 
     //When it finds the * in sets the position and size for the rectangle on that place
-    Rectangle terrainarray[ 8 ][ 16 ] = { 0 };
-    for ( int i = 0 ; i < 8 ; i++ )
+    Rectangle terrainarray[ MAPY ][ MAPX ] = { 0 };
+    for ( int i = 0 ; i < MAPY ; i++ )
     {
-        for ( int j = 0 ; j < 16 ; j++ )
+        for ( int j = 0 ; j < MAPX ; j++ )
         {
             if ( terrainspace[ i ][ j ] == '*' )
-                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + 45 , 50 , 50 };
+                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + TOPBORDER , 50 , 50 };
             terrainx += 50;
         }
         terrainx = 0;
@@ -182,8 +179,8 @@ int jogo(void)
         ClearBackground( RAYWHITE );
         
         /********************** TERRAIN CREATION *******************************/
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 16; j++)
+        for (int i = 0; i < MAPY; i++)
+            for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                 {
                     for (int k = 0; k < 1; k++)
@@ -220,11 +217,11 @@ int jogo(void)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text
-        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH/2 - 6*10 , 5 , 40 , YELLOW );
-        DrawText( TextFormat( "Score: %i", player.score ), SCREENWIDTH / 2 + 185 , 5 , 32 , RED );
+        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
+        DrawText( TextFormat( "Score: %i", player.score ), SCREENWIDTH / 2 + 185 , 13 , 32 , RED );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
-            DrawTextureEx( healthimg , (Vector2){ healthx , 5 } , 0 , 0.025 , WHITE );
+            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 , WHITE );
         //                                           This image is too big, scaling factor needs to be very small
 
         /********************** PLAYER DRAWING *******************************/
@@ -247,8 +244,8 @@ int jogo(void)
         //Tests collision with enemy
         player = collision( player , enemy.colRec );
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 16; j++)
+        for (int i = 0; i < MAPY; i++)
+            for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                     player = collision( player, terrainarray[i][j]);
         
@@ -298,8 +295,8 @@ int jogo(void)
         //Tests collision with player
         enemy = collision( enemy , player.colRec );
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 16; j++)
+        for (int i = 0; i < MAPY; i++)
+            for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                     enemy = collision( enemy , terrainarray[i][j]);
         //When map destruction is done need to lower enemy sight distance, very easy
@@ -362,6 +359,7 @@ int jogo(void)
             k*=-1;
         if (k==-1)
             player.health = 3;
+        DrawText(TextFormat("%d",GetFPS()),SCREENWIDTH/2,SCREENHEIGHT/2,32,LIME);
         EndDrawing();
     }
 

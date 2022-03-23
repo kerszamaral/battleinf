@@ -3,13 +3,9 @@
 BattleInf Jogo de tanquezinho lá do NES
 */
 #include "raylib.h"
+#include "core.h"
 #include "jogo.h"
-#include "score.h"
-#include "start.h"
-#include "end.h"
-
-#define SCREENWIDTH 800
-#define SCREENHEIGHT 450
+#include "menu.h"
 
 int main(void)
 {

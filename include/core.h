@@ -4,6 +4,12 @@
 #include "raylib.h"
 #include <stdio.h>
 
+#define SCREENWIDTH 1000 //Screen size x
+#define SCREENHEIGHT 600 //Screen size y
+
+#define MAPX 20
+#define MAPY 12
+
 typedef struct  //struct for the interactable objects in the game
 {
     Vector2 pos; //Vector2 for position, has x and y

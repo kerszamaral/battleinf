@@ -1,6 +1,5 @@
 #include "collision.h"
-
-#define SCREENHEIGHT 450 //Screen size y
+#include "core.h"
 
 //Uses shooter posint and rotation to start bullet shooting
 Obj shoot( Obj Shooter, Obj Bullet )
@@ -36,7 +35,7 @@ Obj shoot( Obj Shooter, Obj Bullet )
     return Bullet;
 }
 
-Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[8][16], Rectangle terrainarray[8][16] )
+Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -57,8 +56,8 @@ Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[8][16],
         //Tests collision against other bullets
         Bullet = collision( Bullet , Other.colRec );
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < 8; i++)
-            for (int j = 0; j < 16; j++)
+        for (int i = 0; i < MAPY; i++)
+            for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                     Bullet = collision( Bullet, terrainarray[i][j]);
         //Kills Bullet if 1 sec passes or it collides with border
