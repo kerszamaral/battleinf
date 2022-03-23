@@ -162,7 +162,35 @@ int jogo(void)
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 16; j++)
                 if (terrainspace[i][j] == '*')
+                {
+                    for (int k = 0; k < 1; k++)
+                    {
+                        collision( bullet[k] , terrainarray[i][j] );
+                        if (bullet[k].colSide.x && terrainarray[i][j].height > 0)
+                        {
+                            terrainarray[i][j].height -= 10;
+                        }
+                        if (bullet[k].colSide.y && terrainarray[i][j].width > 0)
+                        {
+                            terrainarray[i][j].x += 10;
+                            terrainarray[i][j].width -= 10;
+                        }
+                        if (bullet[k].colSide.z && terrainarray[i][j].height > 0)
+                        {
+                            terrainarray[i][j].y += 10;
+                            terrainarray[i][j].height -= 10;
+                        }
+                        if (bullet[k].colSide.w && terrainarray[i][j].width > 0)
+                        {
+                            terrainarray[i][j].width -= 10;
+                        }
+                        bullet[k].colSide.x = 0;
+                        bullet[k].colSide.y = 0;
+                        bullet[k].colSide.z = 0;
+                        bullet[k].colSide.w = 0;
+                    }
                     DrawTexturePro( wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
+                }
 
         /********************** MENU CREATION *******************************/
         //Draws solid color rectangles
