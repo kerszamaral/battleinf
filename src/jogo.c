@@ -35,7 +35,7 @@ int jogo(void)
     {
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) tankplayer.width / tankplayer.height, //ratio
-        (Vector2){ tankplayer.width / 20.0 , ( tankplayer.height *player.ratio ) / 20.0 }, //Vector2 center, x and y
+        (Vector2){ tankplayer.width / 20.0 , ( tankplayer.height * player.ratio ) / 20.0 }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         3, //Health
         0, //Object rotation
@@ -75,13 +75,17 @@ int jogo(void)
 
     /********************** BULLET VARIABELS *******************************/
     //Textures (for getting width and height)
-    Texture2D bullet = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
+    Texture2D bulletimg = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
     //Objects
-    Obj playbullet = 
+    Obj bullet[2]; //Declares the number of bullets used for the level
+    bullet->ratio = (float) bulletimg.width / bulletimg.height; //Fixes weird bug found by player that caused bullets to fill entire screen
+    for (int i = 0; i < 2; i++) //Fills in the variables for all bullets
     {
+        bullet[i] =
+        (Obj){
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
-        (float) bullet.width / bullet.height, //ratio
-        (Vector2){ bullet.width / 100.0 , ( bullet.height * playbullet.ratio ) / 100.0 }, //Vector2 center, x and y
+        (float) bulletimg.width / bulletimg.height, //ratio
+        (Vector2){ bulletimg.width / 100.0 , ( bulletimg.height * bullet->ratio ) / 100.0 }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         0, //Health
         0, //Object rotation
@@ -90,28 +94,11 @@ int jogo(void)
         0, //Death
         3, //Speed
         true, //Ammo
-        (Rectangle){ 0 , 0 , bullet.width , bullet.height }, //sourceRec
+        (Rectangle){ 0 , 0 , bulletimg.width , bulletimg.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
         (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
-    };
-    Obj enemybullet = 
-    {
-        (Vector2){ 0 , 0 }, //Vector2 pos, x and y
-        (float) bullet.width / bullet.height, //ratio
-        (Vector2){ bullet.width/100.0 , (bullet.height*playbullet.ratio)/100.0 }, //Vector2 center, x and y
-        (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
-        0, //Health
-        0, //Object rotation
-        0, //Score
-        0, //Time
-        0, //Death
-        2, //Speed
-        true, //Ammo
-        (Rectangle){ 0 , 0 , bullet.width , bullet.height }, //sourceRec
-        (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
-        (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
-        (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        };
     };
     
     /********************** TERRAIN VARIABELS *******************************/
@@ -216,6 +203,14 @@ int jogo(void)
         
         player = moveplayer(player);
 
+        /********************** PLAYER BULLET SHOOTING *******************************/
+        bullet[0] = playershoot( player, bullet[0] );
+        bullet[0] = shooting( bullet[0] , bullet[1], Menu , terrainspace, terrainarray );
+        if ( !bullet[0].ammo )
+        {   //Draws bullet[0]
+            DrawTexturePro( bulletimg , bullet[0].sourceRec , bullet[0].drawRec , bullet[0].cen , bullet[0].rot , WHITE );
+        }
+
         /********************** ENEMY HITBOX *******************************/
         //Draw position and draw rectangle update
         //Sets enemy.draw to be enemy.pos + offset
@@ -233,13 +228,13 @@ int jogo(void)
         if (enemy.health != 0)
             DrawTexturePro( tankenemy , enemy.sourceRec , enemy.drawRec , enemy.cen , enemy.rot , WHITE ); //Draws Enemy tank
         //Will be removed when bullet.c is done
-        if ( CheckCollisionRecs( playbullet.colRec, enemy.colRec ) ) //if playbullet collides with enemy, kills enemy
+        if ( CheckCollisionRecs( bullet[0].colRec, enemy.colRec ) ) //if player bullet collides with enemy, kills enemy
         {   //Reverts the states change when enemy alive to neutral
             enemy.health--;
-            playbullet.health--;
-            playbullet.ammo = true;
+            bullet[0].health--;
+            bullet[0].ammo = true;
             enemy.pos = (Vector2){ SCREENWIDTH , SCREENHEIGHT };
-            playbullet.pos = (Vector2){ 0 , SCREENHEIGHT };
+            bullet[0].pos = (Vector2){ 0 , SCREENHEIGHT };
             player.score += 800;
         }
 
@@ -259,33 +254,24 @@ int jogo(void)
         //When map destruction is done need to lower enemy sight distance, very easy
         if ( enemy.health >= 1 )
             enemy = enemymove(enemy, player);
-        
-        /********************** PLAYER BULLET SHOOTING *******************************/
-        //When pointers are implemented should be moved to "Shooting.c" function and data referenced through pointers
-        playbullet = playershoot(player, playbullet);
-        if ( !playbullet.ammo )
-        {
-            playbullet = shooting( playbullet , enemybullet, Menu , terrainspace, terrainarray );
-            //Draws playbullet
-            DrawTexturePro( bullet , playbullet.sourceRec , playbullet.drawRec , playbullet.cen , playbullet.rot , WHITE );
-        }
 
         /********************** ENEMY BULLET SHOOTING *******************************/
-        if (GetRandomValue(0,15) == 0 && enemybullet.ammo == true && enemy.health >= 1) //Verify if player has ammo
-            enemybullet = shoot( enemy, enemybullet );
+        if (GetRandomValue(0,15) == 0 && bullet[1].ammo == true && enemy.health >= 1) //Verify if enemy has ammo
+            bullet[1] = shoot( enemy, bullet[1] );
 
-        if ( !enemybullet.ammo )
+        bullet[1] = shooting( bullet[1] , bullet[0] , Menu, terrainspace, terrainarray );
+        
+        if ( !bullet[1].ammo )
         {
-            enemybullet = shooting( enemybullet , playbullet , Menu, terrainspace, terrainarray );
-            if (CheckCollisionRecs( player.colRec , enemybullet.colRec ))
+            if (CheckCollisionRecs( player.colRec , bullet[1].colRec ))
             {
-                enemybullet.ammo = true;
-                enemybullet.health = 0;
-                enemybullet.time = 0;
-                enemybullet.pos = (Vector2){ 0 , SCREENHEIGHT };
+                bullet[1].ammo = true;
+                bullet[1].health = 0;
+                bullet[1].time = 0;
+                bullet[1].pos = (Vector2){ 0 , SCREENHEIGHT };
                 player.health--;
             }
-            DrawTexturePro(bullet, enemybullet.sourceRec, enemybullet.drawRec, enemybullet.cen, enemybullet.rot, WHITE);
+            DrawTexturePro(bulletimg, bullet[1].sourceRec, bullet[1].drawRec, bullet[1].cen, bullet[1].rot, WHITE);
         }
         
         /********************** TESTING VARIABLES *******************************/
@@ -298,7 +284,7 @@ int jogo(void)
     /********************** UNLOADING AREA *******************************/
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
-    UnloadTexture(bullet);
+    UnloadTexture(bulletimg);
     UnloadTexture(tankenemy);
     return player.score;
 }
