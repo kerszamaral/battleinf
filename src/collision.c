@@ -42,7 +42,7 @@ Obj collision( Obj object , Rectangle colRec )
         if (i >= 8 && i <= 12)
              if(CheckCollisionPointRec(Points[i],colRec))
                 down++;
-        if ((i >= 12 && i <= 15)/* || i == 0 */)
+        if ((i >= 12 && i <= 15) || i == 0 )
              if(CheckCollisionPointRec(Points[i],colRec))
                 left++;
     }
