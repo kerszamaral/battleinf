@@ -48,9 +48,6 @@ int jogo(void)
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
         (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
     };
-    //Random starting position
-    player.pos.x = GetRandomValue( BORDER*2 + player.cen.x , SCREENWIDTH - BORDER*2 - player.cen.x ); //To start player in random position inbounds
-    player.pos.y = GetRandomValue( 40 + BORDER*2 + player.cen.y , SCREENHEIGHT - BORDER*2 - player.cen.y ); //To start player in random position inbounds
 
     /********************** ENEMY VARIABELS *******************************/
     //Textures (for getting width and height)
@@ -163,6 +160,8 @@ int jogo(void)
         terrainx = 0;
         terrainy +=50;
     }
+    //Random player starting position
+    player = spawn( player , terrainspace , terrainarray );
     
     //Main game loop
     while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
@@ -225,7 +224,7 @@ int jogo(void)
 
         /********************** ENEMY SPAWNING *******************************/
         //Spawn logic
-        enemy = enemyspawn(enemy);
+        enemy = enemyspawn( enemy, terrainspace , terrainarray );
         //Drawing needs to be done here else it causes a major bug
         if (enemy.health != 0)
             DrawTexturePro( tankenemy , enemy.sourceRec , enemy.drawRec , enemy.cen , enemy.rot , WHITE ); //Draws Enemy tank

@@ -1,5 +1,4 @@
 #include "core.h"
-#include <stdio.h>
 
 //Position given should be draw ones Size should be center ones
 Obj collision( Obj object , Rectangle colRec )

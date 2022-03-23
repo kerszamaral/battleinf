@@ -1,9 +1,33 @@
-#include "core.h"
+#include "collision.h"
 
 #define SCREENWIDTH 800 //Screen size x
 #define SCREENHEIGHT 450 //Screen size y
 
-Obj enemyspawn(Obj enemy)
+//Random starting position
+Obj spawn( Obj spawn , char terrainspace[8][16], Rectangle terrainarray[8][16] )
+{
+    do
+    {
+        spawn.colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
+        spawn.pos = (Vector2) //To start spawn in random position
+        {
+            GetRandomValue( 5 , SCREENWIDTH - 5*2 - spawn.cen.x*2 ), 
+            GetRandomValue( 45 , SCREENHEIGHT - 5 - spawn.cen.y*2 ) 
+        };
+
+        spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; //Updates draw position
+
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 16; j++)
+                if ( terrainspace[ i ][ j ] == '*' )
+                    spawn = collision( spawn, terrainarray[i][j] ); //Tests if it collides with terrain
+
+    } while ( spawn.colSide.x || spawn.colSide.y || spawn.colSide.z || spawn.colSide.w );
+    
+    return spawn;
+}
+
+Obj enemyspawn( Obj enemy , char terrainspace[8][16], Rectangle terrainarray[8][16] )
 {   switch (enemy.health)//Test to see if enemy is alive
     {
     case 0: //if not, starts counting
@@ -16,8 +40,7 @@ Obj enemyspawn(Obj enemy)
     if ( enemy.death > 60*5 && enemy.health == 0 ) //If enemy is dead and 5 seconds have passed spawns enemy at random position
     {
         enemy.health = 1;
-        enemy.pos.x = GetRandomValue( 5*2 + enemy.cen.x , SCREENWIDTH - 5*2 - enemy.cen.x ); //To spawn enemy in random position inbounds
-        enemy.pos.y = GetRandomValue( 45 + 5*2 + enemy.cen.y , SCREENHEIGHT - 5*2 - enemy.cen.y ); //To spawn enemy in random position inbounds
+        enemy = spawn( enemy , terrainspace , terrainarray );
     }
     
     return enemy;
@@ -86,4 +109,3 @@ Obj enemymove(Obj enemy, Obj player)
 
     return enemy;
 }
-    

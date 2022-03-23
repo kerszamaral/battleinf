@@ -3,7 +3,9 @@
 
 #include "core.h"
 
-Obj enemyspawn(Obj enemy);
+Obj spawn(Obj spawn , char terrainspace[8][16], Rectangle terrainarray[8][16]);
+
+Obj enemyspawn( Obj enemy , char terrainspace[8][16], Rectangle terrainarray[8][16] );
 
 Obj enemymove(Obj enemy, Obj player);
 
