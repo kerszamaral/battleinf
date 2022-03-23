@@ -100,6 +100,29 @@ int jogo(void)
         (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
         };
     };
+
+    /********************** ENERGY VARIABELS *******************************/
+    //Textures (for getting width and height)
+    Texture2D energyimg = LoadTexture( "resources/images/energy.png" );//Load energy image
+    //Object
+    Obj energy = 
+    {
+        (Vector2){ 0 , 0 }, //Vector2 pos, x and y
+        (float) energyimg.width / energyimg.height, //ratio
+        (Vector2){ energyimg.width / 20.0 , ( energyimg.height * energy.ratio ) / 20.0 }, //Vector2 center, x and y
+        (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
+        0, //Health
+        0, //Object rotation
+        0, //Score
+        0, //Time
+        0, //Death
+        0, //Speed
+        false, //Ammo
+        (Rectangle){ 0 , 0 , energyimg.width , energyimg.height }, //sourceRec
+        (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
+        (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
+        (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+    };
     
     /********************** TERRAIN VARIABELS *******************************/
     //Playspace is 800x400 / starts at 0x45 /ends 800x445 / We devide those in 50 by 50 cubes
@@ -302,6 +325,38 @@ int jogo(void)
             DrawTexturePro(bulletimg, bullet[1].sourceRec, bullet[1].drawRec, bullet[1].cen, bullet[1].rot, WHITE);
         }
         
+        /********************** ENERGY DRAWING/COLLISION *******************************/
+        //Energy Spawning
+        if ( energy.time >= 60*3 && !energy.health && GetRandomValue( 0 , 63 ) == 0 )
+        {
+            energy = spawn( energy , terrainspace , terrainarray );
+            energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
+            energy.health = 1;
+        }
+        else
+            energy.time++;
+        //Energy Drawing
+        if ( energy.health >= 1 )
+        {
+            DrawTexturePro( energyimg , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
+            energy = collision( energy , player.colRec );
+            energy.time = 0;
+            if ( energy.colSide.x || energy.colSide.y || energy.colSide.z || energy.colSide.w )
+            {   //Energy pickup
+                energy.health--;
+                player.speed *= 1.5;
+                bullet[0].speed *= 1.5;
+                energy.ammo = true;
+            }
+        }
+        //Energy falloff
+        if ( energy.time >= 60*3 && energy.ammo )
+        {
+            player.speed /= 1.5;
+            bullet[0].speed /= 1.5;
+            energy.ammo = false;
+        }
+
         /********************** TESTING VARIABLES *******************************/
         if (IsKeyPressed(KEY_K))
             k*=-1;
@@ -309,10 +364,13 @@ int jogo(void)
             player.health = 3;
         EndDrawing();
     }
+
     /********************** UNLOADING AREA *******************************/
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
     UnloadTexture(bulletimg);
     UnloadTexture(tankenemy);
+    UnloadTexture(energyimg);
+
     return player.score;
 }
