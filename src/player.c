@@ -1,6 +1,7 @@
 #include "core.h"
+#include "shooting.h"
 
-Obj moveplayer(Obj player)
+Obj moveplayer( Obj player )
 {
     /********************** PLAYER MOVEMENT *******************************/
     //When pointers are implemente, should be moved to move.c file and reference the data through pointers
@@ -30,9 +31,15 @@ Obj moveplayer(Obj player)
         player.rot = 90; //Sets player rotation to right
     }
 
-    if (IsKeyReleased(KEY_SPACE) && player.ammo == true) //Verify if player has ammo
-        
-
     return player;
 }
-    
+
+Obj playershoot( Obj player, Obj Bullet )
+{
+    if (IsKeyPressed(KEY_SPACE) && Bullet.ammo == true) //Verify if player(it's store on bullet) has ammo
+    {
+        Bullet = shoot(player,Bullet);
+        printf("PLAYER IS SHOOTING\n");
+    }
+    return Bullet;
+}
