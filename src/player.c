@@ -37,9 +37,7 @@ Obj moveplayer( Obj player )
 Obj playershoot( Obj player, Obj Bullet )
 {
     if (IsKeyPressed(KEY_SPACE) && Bullet.ammo == true) //Verify if player(it's store on bullet) has ammo
-    {
         Bullet = shoot(player,Bullet);
-        printf("PLAYER IS SHOOTING\n");
-    }
+        
     return Bullet;
 }
