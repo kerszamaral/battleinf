@@ -9,21 +9,21 @@ Obj spawn( Obj spawn , char terrainspace[8][16], Rectangle terrainarray[8][16] )
     do
     {
         spawn.colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
-        spawn.pos = (Vector2) //To start spawn in random position
+        spawn.pos = (Vector2) //Tries to get a random position to spawn
         {
             GetRandomValue( 5 , SCREENWIDTH - 5*2 - spawn.cen.x*2 ), 
             GetRandomValue( 45 , SCREENHEIGHT - 5 - spawn.cen.y*2 ) 
         };
-
-        spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; //Updates draw position
+        //Updates draw position
+        spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; 
 
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 16; j++)
                 if ( terrainspace[ i ][ j ] == '*' )
                     spawn = collision( spawn, terrainarray[i][j] ); //Tests if it collides with terrain
-
+    //Tests while it doesn't find a suitable match
     } while ( spawn.colSide.x || spawn.colSide.y || spawn.colSide.z || spawn.colSide.w );
-    
+    //If it does, returns to game with starting position
     return spawn;
 }
 

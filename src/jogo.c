@@ -190,8 +190,10 @@ int jogo(void)
 
         /********************** PLAYER DRAWING *******************************/
         //Draw position and draw rectangle update
-        player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y }; //Sets player.draw to be player.pos + offset
-        player.drawRec = (Rectangle){ player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; //Rectangle resized and offset for player drawing
+        //Sets player.draw to be player.pos + offset
+        player.draw = (Vector2){ player.pos.x + player.cen.x , player.pos.y + player.cen.y };
+        //Rectangle resized and offset for player drawing
+        player.drawRec = (Rectangle){ player.draw.x, player.draw.y, player.cen.x*2 , player.cen.y*2 }; 
         //Player collision rectangle update
         player.colRec = (Rectangle){ player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
@@ -214,10 +216,11 @@ int jogo(void)
         player = moveplayer(player);
 
         /********************** ENEMY HITBOX *******************************/
-        //Maybe we can move it to insed the enemy logic
         //Draw position and draw rectangle update
-        enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; //Sets enemy.draw to be enemy.pos + offset
-        enemy.drawRec = (Rectangle){ enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };//Rectangle resized and offset for enemy drawing
+        //Sets enemy.draw to be enemy.pos + offset
+        enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; 
+        //Rectangle resized and offset for enemy drawing
+        enemy.drawRec = (Rectangle){ enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };
         //Enemy collision rectangle
         enemy.colRec = (Rectangle){ enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
         //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
@@ -291,15 +294,16 @@ int jogo(void)
         }
 
         //Draw position and draw rectangle updates
-        playbullet.draw = (Vector2){ playbullet.pos.x + playbullet.cen.x , playbullet.pos.y + playbullet.cen.y }; //Sets player.draw to be player.pos + offset
-        playbullet.drawRec = (Rectangle){ playbullet.draw.x, playbullet.draw.y, playbullet.cen.x*2 , playbullet.cen.y*2 }; //Rectangle resized and offset for player drawing
+        //Sets player.draw to be player.pos + offset
+        playbullet.draw = (Vector2){ playbullet.pos.x + playbullet.cen.x , playbullet.pos.y + playbullet.cen.y };
+        //Rectangle resized and offset for player drawing
+        playbullet.drawRec = (Rectangle){ playbullet.draw.x, playbullet.draw.y, playbullet.cen.x*2 , playbullet.cen.y*2 };
         //Bullet collision rectangle
         playbullet.colRec = (Rectangle){playbullet.pos.x, playbullet.pos.y, playbullet.cen.x*2, playbullet.cen.y*2 };
         //Because playbullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
 
         if (playbullet.health >= 1) //test to see if should draw playbullet
         {
-            //Can be remove with new collision system, but this might be less CPU intensive because it doesn't need the direction it collides but idk
             //Resets collision detection
             playbullet.colSide = (Vector4){ 0 , 0 , 0 , 0 };
             //Tests collision with sides
@@ -312,8 +316,8 @@ int jogo(void)
                 for (int j = 0; j < 16; j++)
                     if (terrainspace[i][j] == '*')
                         playbullet = collision( playbullet, terrainarray[i][j]);
-
-            if ( playbullet.time == 60*1 || playbullet.colSide.x || playbullet.colSide.y || playbullet.colSide.z || playbullet.colSide.w ) //Kills playbullet if 1 sec passes or it collides with border
+            //Kills playbullet if 1 sec passes or it collides with border
+            if ( playbullet.time == 60*1 || playbullet.colSide.x || playbullet.colSide.y || playbullet.colSide.z || playbullet.colSide.w )
             {   //Reverts the states change when firing playbullet to neutral
                 player.ammo = true;
                 playbullet.pos = (Vector2){0,0};
@@ -377,8 +381,10 @@ int jogo(void)
         }
 
         //Draw position and draw rectangle updates
-        enemybullet.draw = (Vector2){ enemybullet.pos.x + enemybullet.cen.x , enemybullet.pos.y + enemybullet.cen.y }; //Sets player.draw to be player.pos + offset
-        enemybullet.drawRec = (Rectangle){ enemybullet.draw.x, enemybullet.draw.y, enemybullet.cen.x*2 , enemybullet.cen.y*2 }; //Rectangle resized and offset for player drawing
+        //Sets player.draw to be player.pos + offset
+        enemybullet.draw = (Vector2){ enemybullet.pos.x + enemybullet.cen.x , enemybullet.pos.y + enemybullet.cen.y };
+        //Rectangle resized and offset for player drawing
+        enemybullet.drawRec = (Rectangle){ enemybullet.draw.x, enemybullet.draw.y, enemybullet.cen.x*2 , enemybullet.cen.y*2 };
         //Bullet collision rectangle
         enemybullet.colRec = (Rectangle){ enemybullet.pos.x, enemybullet.pos.y, enemybullet.cen.x*2, enemybullet.cen.y*2 };
         //Because enemybullet cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
@@ -397,8 +403,8 @@ int jogo(void)
                 for (int j = 0; j < 16; j++)
                     if (terrainspace[i][j] == '*')
                         enemybullet = collision( enemybullet, terrainarray[i][j]);
-
-            if (enemybullet.time == 60*1 || enemybullet.colSide.x || enemybullet.colSide.y || enemybullet.colSide.z || enemybullet.colSide.w ) //Kills enemybullet if 1 sec passes or it collides with border
+            //Kills enemybullet if 1 sec passes or it collides with border
+            if (enemybullet.time == 60*1 || enemybullet.colSide.x || enemybullet.colSide.y || enemybullet.colSide.z || enemybullet.colSide.w )
             {   //Reverts the states change when firing enemybullet to neutral
                 enemy.ammo = true;
                 enemybullet.health = 0;

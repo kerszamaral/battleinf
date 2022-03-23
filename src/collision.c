@@ -1,6 +1,6 @@
 #include "core.h"
 
-//Position given should be draw ones Size should be center ones
+//Checks collision points for object against a rectangle
 Obj collision( Obj object , Rectangle colRec )
 {
     Vector2 Points[16] = {
@@ -28,8 +28,9 @@ Obj collision( Obj object , Rectangle colRec )
         (Vector2){ object.draw.x - object.cen.x - object.speed , object.draw.y + object.cen.y - object.speed },   //14  D L U   S: LEFT
         (Vector2){ object.draw.x - object.cen.x - object.speed , object.draw.y - object.cen.y + object.speed }    //15  U L D   S: LEFT
     };
+    //Used to see if it collides or is just passing
     short up = 0 , right = 0 , down = 0 , left = 0;
-
+    //Tests against all the points in the array, adds +1 if it's hitting
     for (int i = 0; i < 16; i++)
     {
         if (i <= 4)
@@ -45,7 +46,7 @@ Obj collision( Obj object , Rectangle colRec )
              if(CheckCollisionPointRec(Points[i],colRec))
                 left++;
     }
-
+    //If a side is hit on more than one point it is colliding with something
     if (up >= 2)
         object.colSide.x = 1;
     if (right >= 2)
