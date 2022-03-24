@@ -5,6 +5,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "shooting.h"
+#include "terrain.h"
 
 const int TOPBORDER = SCREENHEIGHT/12; //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
 const int BORDER = SCREENHEIGHT/90; //Border around playspace NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
@@ -183,32 +184,8 @@ int jogo(void)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                 {
-                    for (int k = 0; k < 1; k++)
-                    {
-                        collision( bullet[k] , terrainarray[i][j] );
-                        if (bullet[k].colSide.x && terrainarray[i][j].height > 0)
-                        {
-                            terrainarray[i][j].height -= 10;
-                        }
-                        if (bullet[k].colSide.y && terrainarray[i][j].width > 0)
-                        {
-                            terrainarray[i][j].x += 10;
-                            terrainarray[i][j].width -= 10;
-                        }
-                        if (bullet[k].colSide.z && terrainarray[i][j].height > 0)
-                        {
-                            terrainarray[i][j].y += 10;
-                            terrainarray[i][j].height -= 10;
-                        }
-                        if (bullet[k].colSide.w && terrainarray[i][j].width > 0)
-                        {
-                            terrainarray[i][j].width -= 10;
-                        }
-                        bullet[k].colSide.x = 0;
-                        bullet[k].colSide.y = 0;
-                        bullet[k].colSide.z = 0;
-                        bullet[k].colSide.w = 0;
-                    }
+                    for (int k = 0; k < 2; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
+                        terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j]);
                     DrawTexturePro( wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
 
@@ -240,14 +217,14 @@ int jogo(void)
         player.colSide = (Vector4){ 0 , 0 , 0 , 0 };
         //Tests collision with sides
         for (int i = 0; i < 4; i++)
-            player = collision( player , Menu[i]);
+            player = collision( player , Menu[i], 2 );
         //Tests collision with enemy
-        player = collision( player , enemy.colRec );
+        player = collision( player , enemy.colRec , 2 );
         //Tests collision with each rectangle of terrain
         for (int i = 0; i < MAPY; i++)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
-                    player = collision( player, terrainarray[i][j]);
+                    player = collision( player, terrainarray[i][j] , 2 );
         
         player = moveplayer(player);
 
@@ -291,14 +268,14 @@ int jogo(void)
         enemy.colSide = (Vector4){ 0 , 0 , 0 , 0 };
         //Tests collision with sides
         for (int i = 0; i < 4; i++)
-            enemy = collision( enemy , Menu[i] );
+            enemy = collision( enemy , Menu[i] , 2);
         //Tests collision with player
-        enemy = collision( enemy , player.colRec );
+        enemy = collision( enemy , player.colRec , 2);
         //Tests collision with each rectangle of terrain
         for (int i = 0; i < MAPY; i++)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
-                    enemy = collision( enemy , terrainarray[i][j]);
+                    enemy = collision( enemy , terrainarray[i][j] , 2 );
         //When map destruction is done need to lower enemy sight distance, very easy
         if ( enemy.health >= 1 )
             enemy = enemymove(enemy, player);
@@ -336,7 +313,7 @@ int jogo(void)
         if ( energy.health >= 1 )
         {
             DrawTexturePro( energyimg , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
-            energy = collision( energy , player.colRec );
+            energy = collision( energy , player.colRec , 2 );
             energy.time = 0;
             if ( energy.colSide.x || energy.colSide.y || energy.colSide.z || energy.colSide.w )
             {   //Energy pickup

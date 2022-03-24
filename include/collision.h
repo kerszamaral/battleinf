@@ -3,6 +3,6 @@
 
 #include "core.h"
 
-Obj collision( Obj object , Rectangle colRec );
+Obj collision( Obj object , Rectangle colRec , int sens);
 
 #endif

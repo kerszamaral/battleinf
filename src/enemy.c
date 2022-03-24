@@ -18,7 +18,7 @@ Obj spawn( Obj spawn , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAP
         for (int i = 0; i < MAPY; i++)
             for (int j = 0; j < MAPX; j++)
                 if ( terrainspace[ i ][ j ] == '*' )
-                    spawn = collision( spawn, terrainarray[i][j] ); //Tests if it collides with terrain
+                    spawn = collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
     //Tests while it doesn't find a suitable match
     } while ( spawn.colSide.x || spawn.colSide.y || spawn.colSide.z || spawn.colSide.w );
     //If it does, returns to game with starting position

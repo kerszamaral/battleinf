@@ -52,14 +52,14 @@ Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[MAPY][M
         Bullet.colSide = (Vector4){ 0 , 0 , 0 , 0 };
         //Tests collision with sides
         for (int i = 0; i < 4; i++)
-            Bullet = collision( Bullet , Menu[i] );
+            Bullet = collision( Bullet , Menu[i] , 2);
         //Tests collision against other bullets
-        Bullet = collision( Bullet , Other.colRec );
+        Bullet = collision( Bullet , Other.colRec , 2);
         //Tests collision with each rectangle of terrain
         for (int i = 0; i < MAPY; i++)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
-                    Bullet = collision( Bullet, terrainarray[i][j]);
+                    Bullet = collision( Bullet, terrainarray[i][j], 2);
         //Kills Bullet if 1 sec passes or it collides with border
         if (Bullet.time == 60*1 || Bullet.colSide.x || Bullet.colSide.y || Bullet.colSide.z || Bullet.colSide.w )
         {   //Reverts the states change when firing Bullet to neutral
