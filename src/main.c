@@ -9,7 +9,7 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Vector4 gamestate = { 0 , 0 , 1 , 0};
+    Vector4 gamestate = { 0 , 0 , 0 , 0};
     int lscore = 1600;
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetTargetFPS(60);
@@ -22,12 +22,12 @@ int main(void)
         {
         case 0:
             do{
-                gamestate = jogo(gamestate);
                 gamestate.z++;
+                gamestate = jogo(gamestate);
             }while ( gamestate.w == 1 ); 
             
             if (gamestate.y > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
-                nome(gamestate.y);
+                nome(gamestate.y, gamestate.z);
             gamestate.z = 1;
             gamestate.x = endscreen();
             break;

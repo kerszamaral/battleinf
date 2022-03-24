@@ -71,11 +71,11 @@ int startscreen(void)
 
 #define MAX_INPUT_CHARS 9
 
-void nome(int pscore)
+void nome(int pscore, int level)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
-    Rectangle textBox = { SCREENWIDTH/2.0f - 100, 220, 225, 50 };
+    Rectangle textBox = { SCREENWIDTH/2.0f - 100, 320, 225, 50 };
 
 
     while (!WindowShouldClose())
@@ -114,18 +114,21 @@ void nome(int pscore)
             DrawText(TextFormat("Seu Score foi: %i", pscore), SCREENWIDTH / 2 - 
             MeasureText("Seu Score foi: 10000", GetFontDefault().baseSize) * 2, SCREENHEIGHT / 4, 40, GRAY);
 
+            DrawText(TextFormat("Sua maior fase foi: %i", level), SCREENWIDTH / 2 - 
+            MeasureText("Sua maior fase foi: 100", GetFontDefault().baseSize) * 2, 220, 40, GRAY);
+
             DrawRectangleRec(textBox, LIGHTGRAY);
 
             DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
 
             DrawText(TextFormat("Caracteres restantes: %i/%i", letterCount, MAX_INPUT_CHARS), SCREENWIDTH / 2 - 
-            MeasureText("Caracteres restantes: 9/9", GetFontDefault().baseSize), 300, 20, DARKGRAY);
+            MeasureText("Caracteres restantes: 9/9", GetFontDefault().baseSize), 400, 20, DARKGRAY);
 
             if (letterCount < MAX_INPUT_CHARS)
             {
                 DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
             }
-            else DrawText("Pressione BACKSPACE para deletar", 230, 300, 20, GRAY);
+            else DrawText("Pressione BACKSPACE para deletar", 230, 400, 20, GRAY);
             if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
             {
                 printf("%s\n", name);

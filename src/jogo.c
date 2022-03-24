@@ -11,8 +11,9 @@
 
 Vector4 jogo(Vector4 gamestate)
 {
-    int k = 1; //variable for testing
+    int p = 1; //variable for testing
     /********************** MENU VARIABELS *******************************/
+    int level = gamestate.z;
     //Textures
     Texture2D healthimg = LoadTexture( "resources/images/health.png" ); //Load imagem da vida do player
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
@@ -50,32 +51,37 @@ Vector4 jogo(Vector4 gamestate)
     //Textures (for getting width and height)
     Texture2D tankenemy = LoadTexture( "resources/images/enemy.png" ); //Load enemy image
     //Object
-    Obj enemy = 
+    Obj enemy[ level ];
+    enemy->ratio = (float) tankenemy.width / tankenemy.height; //Fixes weird bug found to fill entire screen
+    for (int i = 0; i < level; i++)
     {
-        (Vector2){ SCREENWIDTH , SCREENHEIGHT }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
-        (float) tankenemy.width / tankenemy.height, //ratio
-        (Vector2){ tankenemy.width / 20.0 , ( tankenemy.height * enemy.ratio ) / 20.0 }, //Vector2 center, x and y
-        (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
-        0, //Health
-        0, //Object rotation
-        0, //Score
-        0, //Time
-        0, //Death
-        1, //Speed
-        false, //Ammo
-        (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
-        (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
-        (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
-        (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
-    };
+        enemy[i] = 
+        (Obj){
+            (Vector2){ SCREENWIDTH , SCREENHEIGHT }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
+            (float) tankenemy.width / tankenemy.height, //ratio
+            (Vector2){ tankenemy.width / 20.0 , ( tankenemy.height * enemy->ratio ) / 20.0 }, //Vector2 center, x and y
+            (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
+            0, //Health
+            0, //Object rotation
+            0, //Score
+            0, //Time
+            0, //Death
+            1, //Speed
+            false, //Ammo
+            (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
+            (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
+            (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
+            (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        };
+    }
 
     /********************** BULLET VARIABELS *******************************/
     //Textures (for getting width and height)
     Texture2D bulletimg = LoadTexture( "resources/images/bullet.png" ); //Load playbullet image
     //Objects
-    Obj bullet[2]; //Declares the number of bullets used for the level
+    Obj bullet[ 1 + level ]; //Declares the number of bullets used for the level
     bullet->ratio = (float) bulletimg.width / bulletimg.height; //Fixes weird bug found by player that caused bullets to fill entire screen
-    for (int i = 0; i < 2; i++) //Fills in the variables for all bullets
+    for (int i = 0; i < 1 + level ; i++) //Fills in the variables for all bullets
     {
         bullet[i] =
         (Obj){
@@ -132,7 +138,7 @@ Vector4 jogo(Vector4 gamestate)
     Rectangle terrainarray[ MAPY ][ MAPX ] = { 0 };
     terrainplace( terrainarray , terrainspace );
     //Random player starting position
-    player = spawn( player , &terrainspace , &terrainarray );
+    player = spawn( player , terrainspace , terrainarray );
     
     //Main game loop
     while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
@@ -156,7 +162,7 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text
-        DrawText( TextFormat( "Fase %g" , gamestate.z ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
+        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
         DrawText( TextFormat( "Score: %i", player.score ), SCREENWIDTH / 2 + 185 , 13 , 32 , RED );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
@@ -213,7 +219,8 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             player = collision( player , Menu[i], 2 );
         //Tests collision with enemy
-        player = collision( player , enemy.colRec , 2 );
+        for (int i = 0; i < level; i++)
+            player = collision( player , enemy[i].colRec , 2 );
         //Tests collision with each rectangle of terrain
         for (int i = 0; i < MAPY; i++)
             for (int j = 0; j < MAPX; j++)
@@ -231,76 +238,91 @@ Vector4 jogo(Vector4 gamestate)
         }
 
         /********************** ENEMY HITBOX *******************************/
-        //Draw position and draw rectangle update
-        //Sets enemy.draw to be enemy.pos + offset
-        enemy.draw = (Vector2){ enemy.pos.x + enemy.cen.x , enemy.pos.y + enemy.cen.y }; 
-        //Rectangle resized and offset for enemy drawing
-        enemy.drawRec = (Rectangle){ enemy.draw.x, enemy.draw.y, enemy.cen.x*2 , enemy.cen.y*2 };
-        //Enemy collision rectangle
-        enemy.colRec = (Rectangle){ enemy.pos.x , enemy.pos.y , enemy.cen.x*2 , enemy.cen.y*2 };
-        //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
+        for (int k = 0; k < level; k++)
+        {
+            //Draw position and draw rectangle update
+            //Sets enemy.draw to be enemy.pos + offset
+            enemy[k].draw = (Vector2){ enemy[k].pos.x + enemy[k].cen.x , enemy[k].pos.y + enemy[k].cen.y }; 
+            //Rectangle resized and offset for enemy[k] drawing
+            enemy[k].drawRec = (Rectangle){ enemy[k].draw.x, enemy[k].draw.y, enemy[k].cen.x*2 , enemy[k].cen.y*2 };
+            //Enemy collision rectangle
+            enemy[k].colRec = (Rectangle){ enemy[k].pos.x , enemy[k].pos.y , enemy[k].cen.x*2 , enemy[k].cen.y*2 };
+            //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
+        }
 
         /********************** ENEMY SPAWNING *******************************/
-        //Spawn logic
-        enemy = enemyspawn( enemy, terrainspace , terrainarray );
-        //Drawing needs to be done here else it causes a major bug
-        if (enemy.health != 0)
-            DrawTexturePro( tankenemy , enemy.sourceRec , enemy.drawRec , enemy.cen , enemy.rot , WHITE ); //Draws Enemy tank
-        //Will be removed when bullet.c is done
-        if ( CheckCollisionRecs( bullet[0].colRec, enemy.colRec ) ) //if player bullet collides with enemy, kills enemy
-        {   //Reverts the states change when enemy alive to neutral
-            enemy.health--;
-            bullet[0].health--;
-            bullet[0].ammo = true;
-            enemy.pos = (Vector2){ SCREENWIDTH , SCREENHEIGHT };
-            bullet[0].pos = (Vector2){ 0 , SCREENHEIGHT };
-            player.score += 800;
+        for (int k = 0; k < level; k++)
+        {
+            //Spawn logic
+            enemy[k] = enemyspawn( enemy[k], terrainspace , terrainarray );
+            //Drawing needs to be done here else it causes a major bug
+            if (enemy[k].health != 0)
+                DrawTexturePro( tankenemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , WHITE ); //Draws Enemy tank
+            //Will be removed when bullet.c is done
+            if ( CheckCollisionRecs( bullet[0].colRec, enemy[k].colRec ) ) //if player bullet collides with enemy[k], kills enemy[k]
+            {   //Reverts the states change when enemy[k] alive to neutral
+                enemy[k].health--;
+                bullet[0].health--;
+                bullet[0].ammo = true;
+                enemy[k].pos = (Vector2){ SCREENWIDTH , SCREENHEIGHT };
+                bullet[0].pos = (Vector2){ 0 , SCREENHEIGHT };
+                player.score += 800;
+            }
         }
 
         /********************** ENEMY COLLISION/MOVEMENT *******************************/
-        //Resets collision detection
-        enemy.colSide = (Vector4){ 0 , 0 , 0 , 0 };
-        //Tests collision with sides
-        for (int i = 0; i < 4; i++)
-            enemy = collision( enemy , Menu[i] , 2);
-        //Tests collision with player
-        enemy = collision( enemy , player.colRec , 2);
-        //Tests collision with each rectangle of terrain
-        for (int i = 0; i < MAPY; i++)
-            for (int j = 0; j < MAPX; j++)
-                if (terrainspace[i][j] == '*')
-                    enemy = collision( enemy , terrainarray[i][j] , 2 );
-        //When map destruction is done need to lower enemy sight distance, very easy
-        if ( enemy.health >= 1 )
-            enemy = enemymove(enemy, player);
+        for (int k = 0; k < level; k++)
+        {
+            //Resets collision detection
+            enemy[k].colSide = (Vector4){ 0 , 0 , 0 , 0 };
+            //Tests collision with sides
+            for (int i = 0; i < 4; i++)
+                enemy[k] = collision( enemy[k] , Menu[i] , 2);
+            //Tests collision with player
+            enemy[k] = collision( enemy[k] , player.colRec , 2);
+            //Tests collision with each rectangle of terrain
+            for (int i = 0; i < MAPY; i++)
+                for (int j = 0; j < MAPX; j++)
+                    if (terrainspace[i][j] == '*')
+                        enemy[k] = collision( enemy[k] , terrainarray[i][j] , 2 );
+            //When map destruction is done need to lower enemy[i] sight distance, very easy
+            if ( enemy[k].health >= 1 )
+                enemy[k] = enemymove(enemy[k], player);
+        }
+        
 
         /********************** ENEMY BULLET SHOOTING *******************************/
-        if (GetRandomValue(0,15) == 0 && bullet[1].ammo == true && enemy.health >= 1) //Verify if enemy has ammo
-            bullet[1] = shoot( enemy, bullet[1] );
-
-        bullet[1] = shooting( bullet[1] , bullet[0] , Menu, terrainspace, terrainarray );
-        
-        if ( !bullet[1].ammo )
+        for (int k = 0; k < level; k++)
         {
-            if (CheckCollisionRecs( player.colRec , bullet[1].colRec ))
+            if (GetRandomValue(0,15) == 0 && bullet[1 + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
+                bullet[1 + k] = shoot( enemy[k], bullet[1 + k] );
+
+            bullet[1 + k] = shooting( bullet[1 + k] , bullet[0] , Menu, terrainspace, terrainarray );
+            
+            if ( !bullet[1 + k].ammo )
             {
-                bullet[1].ammo = true;
-                bullet[1].health = 0;
-                bullet[1].time = 0;
-                bullet[1].pos = (Vector2){ 0 , SCREENHEIGHT };
-                player.health--;
+                if (CheckCollisionRecs( player.colRec , bullet[1 + k].colRec ))
+                {
+                    bullet[1 + k].ammo = true;
+                    bullet[1 + k].health = 0;
+                    bullet[1 + k].time = 0;
+                    bullet[1 + k].pos = (Vector2){ 0 , SCREENHEIGHT };
+                    player.health--;
+                }
+                DrawTexturePro(bulletimg, bullet[1 + k].sourceRec, bullet[1 + k].drawRec, bullet[1 + k].cen, bullet[1 + k].rot, WHITE);
             }
-            DrawTexturePro(bulletimg, bullet[1].sourceRec, bullet[1].drawRec, bullet[1].cen, bullet[1].rot, WHITE);
         }
+        
 
         /********************** TESTING VARIABLES *******************************/
         if (IsKeyPressed(KEY_K))
-            k*=-1;
-        if (k==-1)
+            p*=-1;
+        if (p==-1)
             player.health = 3;
-        if ( player.score >= gamestate.y + 800 * gamestate.z )
+        if ( player.score >= gamestate.y + 800 * level )
         {
             player.time++;
+            player.health = 3;
             DrawText( "LEVEL COMPLETE", SCREENWIDTH / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , SCREENHEIGHT / 2  , 40 , GOLD );
             if ( player.time == 60 * 2 )
             {

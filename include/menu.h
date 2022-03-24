@@ -3,7 +3,7 @@
 
 int startscreen(void);
 
-void nome(int pscore);
+void nome(int pscore, int level);
 
 bool IsAnyKeyPressed();
 
