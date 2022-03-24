@@ -131,7 +131,7 @@ void nome(int pscore, int level)
             else DrawText("Pressione BACKSPACE para deletar", 230, 400, 20, GRAY);
             if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
             {
-                printf("%s\n", name);
+                printf( "\nNome: %s    Pontuacao: %d     fase: %d\n\n", name , pscore , level );
                 //write to file "name", remove last place
                 break;
             }
@@ -173,7 +173,7 @@ int endscreen(void)
         if ( select == 0 )
         {
             DrawText("Restart", SCREENWIDTH / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyReleased(KEY_ENTER) )
             {
                 select = 0;
                 break;
@@ -185,7 +185,7 @@ int endscreen(void)
         if ( select == 1 )
         {
             DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4 + 100, 20, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyReleased(KEY_ENTER) )
             {
                 select = 5;
                 break;
