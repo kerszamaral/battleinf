@@ -11,7 +11,6 @@
 
 Vector4 jogo(Vector4 gamestate)
 {
-    int p = 1; //variable for testing
     /********************** MENU VARIABELS *******************************/
     int level = gamestate.z;
     //Textures
@@ -285,6 +284,9 @@ Vector4 jogo(Vector4 gamestate)
                 for (int j = 0; j < MAPX; j++)
                     if (terrainspace[i][j] == '*')
                         enemy[k] = collision( enemy[k] , terrainarray[i][j] , 2 );
+            //Tests collision against other enemys
+            for (int i = 0; i < level; i++)
+                enemy[k] = collision( enemy[k] , enemy[i].colRec , 2 );
             //When map destruction is done need to lower enemy[i] sight distance, very easy
             if ( enemy[k].health >= 1 )
                 enemy[k] = enemymove(enemy[k], player);
@@ -314,11 +316,7 @@ Vector4 jogo(Vector4 gamestate)
         }
         
 
-        /********************** TESTING VARIABLES *******************************/
-        if (IsKeyPressed(KEY_K))
-            p*=-1;
-        if (p==-1)
-            player.health = 3;
+        /********************** WINNING VARIABLES *******************************/
         if ( player.score >= gamestate.y + 800 * level )
         {
             player.time++;
