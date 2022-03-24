@@ -151,7 +151,7 @@ Vector4 jogo(Vector4 gamestate)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                 {
-                    for (int k = 0; k < level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
+                    for (int k = 0; k < 1 + level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
                         terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j]);
                     DrawTexturePro( wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }

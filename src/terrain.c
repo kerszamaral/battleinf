@@ -54,21 +54,27 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain )
     bullet.colSide.y = 0;
     bullet.colSide.z = 0;
     bullet.colSide.w = 0;
-    bullet = collision( bullet , terrain , 3);
-    if (bullet.colSide.x && terrain.height > 0)
-        terrain.height -= 10;
-    if (bullet.colSide.y && terrain.width > 0)
+    bullet = collision( bullet , terrain , 2);
+    if ( bullet.colSide.x || bullet.colSide.y || bullet.colSide.z || bullet.colSide.w )
     {
-        terrain.x += 10;
-        terrain.width -= 10;
-    }
-    if (bullet.colSide.z && terrain.height > 0)
-    {
-        terrain.y += 10;
-        terrain.height -= 10;
-    }
-    if (bullet.colSide.w && terrain.width > 0)
-        terrain.width -= 10;
+        switch (bullet.rot)
+        {
+        case 0:
+            terrain.height -= 10;
+            break;
+        case 90:
+            terrain.x += 10;
+            terrain.width -= 10;
+            break;
+        case 180:
+            terrain.y += 10;
+            terrain.height -= 10;
+            break;
+        case 270:
+            terrain.width -= 10;
+            break;
+        }
+    }    
 
     if (terrain.height < 10 || terrain.width < 10)
     {
