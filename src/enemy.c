@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Random starting position
-Obj spawn( Obj spawn , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] )
+Obj spawn( Obj spawn , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj enemy[level])
 {
     do
     {
@@ -19,13 +19,16 @@ Obj spawn( Obj spawn , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAP
             for (int j = 0; j < MAPX; j++)
                 if ( terrainspace[ i ][ j ] == '*' )
                     spawn = collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
+        spawn = collision(spawn, playerCol , 2);
+        for (int i = 0; i < level; i++)
+            spawn = collision( spawn , enemy[i].colRec , 2 );
     //Tests while it doesn't find a suitable match
     } while ( spawn.colSide.x || spawn.colSide.y || spawn.colSide.z || spawn.colSide.w );
     //If it does, returns to game with starting position
     return spawn;
 }
 
-Obj enemyspawn( Obj enemy , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] )
+Obj enemyspawn( Obj enemy , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj otherenemy[level] )
 {   switch (enemy.health)//Test to see if enemy is alive
     {
     case 0: //if not, starts counting
@@ -38,7 +41,7 @@ Obj enemyspawn( Obj enemy , char terrainspace[MAPY][MAPX], Rectangle terrainarra
     if ( enemy.death > 60*5 && enemy.health == 0 ) //If enemy is dead and 5 seconds have passed spawns enemy at random position
     {
         enemy.health = 1;
-        enemy = spawn( enemy , terrainspace , terrainarray );
+        enemy = spawn( enemy , level, terrainspace , terrainarray, playerCol, otherenemy );
     }
     
     return enemy;

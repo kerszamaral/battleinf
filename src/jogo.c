@@ -12,7 +12,7 @@
 Vector4 jogo(Vector4 gamestate)
 {
     /********************** MENU VARIABELS *******************************/
-    int level = gamestate.z;
+    int level = gamestate.z, score = gamestate.y;
     //Textures
     Texture2D healthimg = LoadTexture( "resources/images/health.png" ); //Load imagem da vida do player
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
@@ -137,7 +137,7 @@ Vector4 jogo(Vector4 gamestate)
     Rectangle terrainarray[ MAPY ][ MAPX ] = { 0 };
     terrainplace( terrainarray , terrainspace );
     //Random player starting position
-    player = spawn( player , terrainspace , terrainarray );
+    player = spawn( player , level , terrainspace , terrainarray , player.colRec , enemy);
     
     //Main game loop
     while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
@@ -151,7 +151,7 @@ Vector4 jogo(Vector4 gamestate)
             for (int j = 0; j < MAPX; j++)
                 if (terrainspace[i][j] == '*')
                 {
-                    for (int k = 0; k < 2; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
+                    for (int k = 0; k < level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
                         terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j]);
                     DrawTexturePro( wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
@@ -160,9 +160,11 @@ Vector4 jogo(Vector4 gamestate)
         //Draws solid color rectangles
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
-        //Text
-        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
-        DrawText( TextFormat( "Score: %i", player.score ), SCREENWIDTH / 2 + 185 , 13 , 32 , RED );
+        //Text 
+        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) , 10 , 40 , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", player.score ), SCREENWIDTH - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 , 13 , 32 , RED );
+        DrawText( TextFormat( "Inimigos restantes: %d/%d", level - (player.score - score) / 800 , level ),
+        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize) + 10 , 15 , 24 , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
             DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 , WHITE );
@@ -172,7 +174,7 @@ Vector4 jogo(Vector4 gamestate)
         //Energy Spawning
         if ( energy.time >= 60*3 && !energy.health && GetRandomValue( 0 , 63 ) == 0 )
         {
-            energy = spawn( energy , &terrainspace , &terrainarray );
+            energy = spawn( energy , level , terrainspace , terrainarray , player.colRec , enemy);
             energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
             energy.health = 1;
         }
@@ -253,7 +255,7 @@ Vector4 jogo(Vector4 gamestate)
         for (int k = 0; k < level; k++)
         {
             //Spawn logic
-            enemy[k] = enemyspawn( enemy[k], terrainspace , terrainarray );
+            enemy[k] = enemyspawn( enemy[k], level , terrainspace , terrainarray , player.colRec , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
                 DrawTexturePro( tankenemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , WHITE ); //Draws Enemy tank

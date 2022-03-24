@@ -29,6 +29,7 @@ int main(void)
             if (gamestate.y > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
                 nome(gamestate.y, gamestate.z);
             gamestate.z = 0;
+            gamestate.y = 0;
             gamestate.x = endscreen();
             break;
         default:

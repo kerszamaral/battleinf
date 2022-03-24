@@ -3,9 +3,9 @@
 
 #include "core.h"
 
-Obj spawn(Obj spawn , char terrainspace[8][16], Rectangle terrainarray[8][16]);
+Obj spawn( Obj spawn , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj enemy[level]);
 
-Obj enemyspawn( Obj enemy , char terrainspace[8][16], Rectangle terrainarray[8][16] );
+Obj enemyspawn( Obj enemy , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj otherenemy[level] );
 
 Obj enemymove(Obj enemy, Obj player);
 
