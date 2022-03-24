@@ -7,13 +7,11 @@
 #include "shooting.h"
 #include "terrain.h"
 
-const int TOPBORDER = SCREENHEIGHT/12; //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
-const int BORDER = SCREENHEIGHT/90; //Border around playspace NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
+
 
 int jogo(void)
 {
     int k = 1; //variable for testing
-    //Rectangle nullRec = { 0 , 0 , 0 , 0 };
     /********************** MENU VARIABELS *******************************/
     int level = 1; //Number of level on display
     //Textures
@@ -128,49 +126,14 @@ int jogo(void)
     //Textures
     Texture2D wall = LoadTexture( "resources/images/wall.png" );
     Rectangle sourceWall = { 0 , 0 , wall.width , wall.height }; //Rectangle with size of original image
-    ///Random Map Generator for testing, needs to be replaced by read file
+    //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ MAPY ][ MAPX ];
-    for (int i = 0; i < MAPY; i++)
-    {
-        for (int j = 0; j < MAPX; j++)
-        {
-            switch (GetRandomValue(0,4))
-            {
-            case 0:
-                terrainspace[i][j] = '*';
-                break;
-            default:
-                terrainspace[i][j] = '-';
-                break;
-            }
-        }
-    }
-    //Prints map to console to know if everything lines up, can be removed when changed
-    for (int i = 0; i < MAPY; i++)
-    {
-        for (int j = 0; j < MAPX; j++)
-            printf("%c",terrainspace[i][j]);
-        printf("\n");
-    }
-    //Creates the Rectangles in the place it finds * in the array to display it in the game
-    //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
-    int terrainx = 0, terrainy = 0;
-    //We use an array to create 128 rectangles, they are all set to size and position 0 
-    //When it finds the * in sets the position and size for the rectangle on that place
+    terraincreate(terrainspace);
+    //Creates the actual rectangles in the right place
     Rectangle terrainarray[ MAPY ][ MAPX ] = { 0 };
-    for ( int i = 0 ; i < MAPY ; i++ )
-    {
-        for ( int j = 0 ; j < MAPX ; j++ )
-        {
-            if ( terrainspace[ i ][ j ] == '*' )
-                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + TOPBORDER , 50 , 50 };
-            terrainx += 50;
-        }
-        terrainx = 0;
-        terrainy +=50;
-    }
+    terrainplace( terrainarray , terrainspace );
     //Random player starting position
-    player = spawn( player , terrainspace , terrainarray );
+    player = spawn( player , &terrainspace , &terrainarray );
     
     //Main game loop
     while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
@@ -200,6 +163,38 @@ int jogo(void)
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
             DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 , WHITE );
         //                                           This image is too big, scaling factor needs to be very small
+
+        /********************** ENERGY DRAWING/COLLISION *******************************/
+        //Energy Spawning
+        if ( energy.time >= 60*3 && !energy.health && GetRandomValue( 0 , 63 ) == 0 )
+        {
+            energy = spawn( energy , &terrainspace , &terrainarray );
+            energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
+            energy.health = 1;
+        }
+        else
+            energy.time++;
+        //Energy Drawing
+        if ( energy.health >= 1 )
+        {
+            DrawTexturePro( energyimg , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
+            energy = collision( energy , player.colRec , 2 );
+            energy.time = 0;
+            if ( energy.colSide.x || energy.colSide.y || energy.colSide.z || energy.colSide.w )
+            {   //Energy pickup
+                energy.health--;
+                player.speed *= 1.5;
+                bullet[0].speed *= 1.5;
+                energy.ammo = true;
+            }
+        }
+        //Energy falloff
+        if ( energy.time >= 60*3 && energy.ammo )
+        {
+            player.speed /= 1.5;
+            bullet[0].speed /= 1.5;
+            energy.ammo = false;
+        }
 
         /********************** PLAYER DRAWING *******************************/
         //Draw position and draw rectangle update
@@ -297,38 +292,6 @@ int jogo(void)
                 player.health--;
             }
             DrawTexturePro(bulletimg, bullet[1].sourceRec, bullet[1].drawRec, bullet[1].cen, bullet[1].rot, WHITE);
-        }
-        
-        /********************** ENERGY DRAWING/COLLISION *******************************/
-        //Energy Spawning
-        if ( energy.time >= 60*3 && !energy.health && GetRandomValue( 0 , 63 ) == 0 )
-        {
-            energy = spawn( energy , terrainspace , terrainarray );
-            energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
-            energy.health = 1;
-        }
-        else
-            energy.time++;
-        //Energy Drawing
-        if ( energy.health >= 1 )
-        {
-            DrawTexturePro( energyimg , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
-            energy = collision( energy , player.colRec , 2 );
-            energy.time = 0;
-            if ( energy.colSide.x || energy.colSide.y || energy.colSide.z || energy.colSide.w )
-            {   //Energy pickup
-                energy.health--;
-                player.speed *= 1.5;
-                bullet[0].speed *= 1.5;
-                energy.ammo = true;
-            }
-        }
-        //Energy falloff
-        if ( energy.time >= 60*3 && energy.ammo )
-        {
-            player.speed /= 1.5;
-            bullet[0].speed /= 1.5;
-            energy.ammo = false;
         }
 
         /********************** TESTING VARIABLES *******************************/

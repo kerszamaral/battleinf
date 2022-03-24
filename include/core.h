@@ -7,8 +7,12 @@
 #define SCREENWIDTH 1000 //Screen size x
 #define SCREENHEIGHT 600 //Screen size y
 
-#define MAPX 20
-#define MAPY 12
+#define TOPBORDER SCREENHEIGHT/12 //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
+#define BORDER SCREENHEIGHT/90 //Border around playspace NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
+
+#define TERRAINSIZE 50
+#define MAPX SCREENWIDTH/TERRAINSIZE
+#define MAPY SCREENHEIGHT/TERRAINSIZE
 
 typedef struct  //struct for the interactable objects in the game
 {
