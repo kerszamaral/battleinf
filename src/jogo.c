@@ -299,7 +299,7 @@ Vector4 jogo(Vector4 gamestate)
         /********************** ENEMY BULLET SHOOTING *******************************/
         for (int k = 0; k < level; k++)
         {
-            if (GetRandomValue(0,15) == 0 && bullet[1 + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
+            if (!GetRandomValue(0,15) && bullet[1 + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
                 bullet[1 + k] = shoot( enemy[k], bullet[1 + k] );
 
             bullet[1 + k] = shooting( bullet[1 + k] , bullet[0] , Menu, terrainspace, terrainarray );
