@@ -9,11 +9,10 @@
 
 
 
-int jogo(void)
+Vector4 jogo(Vector4 gamestate)
 {
     int k = 1; //variable for testing
     /********************** MENU VARIABELS *******************************/
-    int level = 1; //Number of level on display
     //Textures
     Texture2D healthimg = LoadTexture( "resources/images/health.png" ); //Load imagem da vida do player
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
@@ -36,7 +35,7 @@ int jogo(void)
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         3, //Health
         0, //Object rotation
-        0, //Score
+        gamestate.y, //Score
         0, //Time
         0, //Death
         2, //Speed
@@ -157,7 +156,7 @@ int jogo(void)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text
-        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
+        DrawText( TextFormat( "Fase %g" , gamestate.z ) , SCREENWIDTH/2 - 6*10 , 10 , 40 , YELLOW );
         DrawText( TextFormat( "Score: %i", player.score ), SCREENWIDTH / 2 + 185 , 13 , 32 , RED );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
@@ -299,16 +298,29 @@ int jogo(void)
             k*=-1;
         if (k==-1)
             player.health = 3;
-        DrawText(TextFormat("%d",GetFPS()),SCREENWIDTH/2,SCREENHEIGHT/2,32,LIME);
+        if ( player.score >= gamestate.y + 800 * gamestate.z )
+        {
+            player.time++;
+            DrawText( "LEVEL COMPLETE", SCREENWIDTH / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , SCREENHEIGHT / 2  , 40 , GOLD );
+            if ( player.time == 60 * 2 )
+            {
+                gamestate.w = 1;
+                break;
+            }
+        }else
+            gamestate.w = 0;
+        
         EndDrawing();
     }
 
     /********************** UNLOADING AREA *******************************/
+    gamestate.y = player.score;
+
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
     UnloadTexture(bulletimg);
     UnloadTexture(tankenemy);
     UnloadTexture(energyimg);
 
-    return player.score;
+    return gamestate;
 }

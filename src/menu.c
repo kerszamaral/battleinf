@@ -57,6 +57,7 @@ int startscreen(void)
             DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25, SCREENHEIGHT / 4 + 150, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
+                select = 5;
                 break;
             } 
         }
@@ -161,7 +162,7 @@ int endscreen(void)
 
         DrawText("GAME OVER", SCREENWIDTH / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, SCREENHEIGHT / 4 - 75, 40, LIME);
         
-        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 2 )
+        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 1 )
             select += 1;
         if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0 )
             select -= 1;
@@ -170,27 +171,22 @@ int endscreen(void)
         {
             DrawText("Restart", SCREENWIDTH / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
+            {
+                select = 0;
                 break;
+            }
         }
         else
             DrawText("Restart", SCREENWIDTH / 2 - MeasureText("Restart", GetFontDefault().baseSize) , SCREENHEIGHT / 4, 20, RAYWHITE);
 
         if ( select == 1 )
         {
-            DrawText("Credits", SCREENWIDTH / 2 - MeasureText("Credits", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4 + 50, 20, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
-            {
-                /* code */
-            }
-        }
-        else
-            DrawText("Credits", SCREENWIDTH / 2 - MeasureText("Credits", GetFontDefault().baseSize) , SCREENHEIGHT / 4 + 50, 20, RAYWHITE);
-
-        if ( select == 2 )
-        {
             DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4 + 100, 20, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
+            {
+                select = 5;
                 break;
+            }
         }
         else
             DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) , SCREENHEIGHT / 4 + 100, 20, RAYWHITE);
