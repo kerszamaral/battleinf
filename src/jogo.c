@@ -140,7 +140,7 @@ Vector4 jogo(Vector4 gamestate)
     player = spawn( player , level , terrainspace , terrainarray , player.colRec , enemy);
     
     //Main game loop
-    while( !WindowShouldClose() && player.health != 0 ) //End if you press esc or player.health gets to 0
+    while( !WindowShouldClose() ) //End if you press esc or player.health gets to 0
     {
         BeginDrawing();
 
@@ -211,7 +211,8 @@ Vector4 jogo(Vector4 gamestate)
         //Player collision rectangle update
         player.colRec = (Rectangle){ player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
-        DrawTexturePro( tankplayer , player.sourceRec , player.drawRec , player.cen , player.rot , WHITE ); //Draws player tank
+        if (player.health > 0)
+            DrawTexturePro( tankplayer , player.sourceRec , player.drawRec , player.cen , player.rot , WHITE ); //Draws player tank
 
         /********************** PLAYER COLLISION/MOVEMENT *******************************/
         //Resets collision detection
@@ -331,6 +332,14 @@ Vector4 jogo(Vector4 gamestate)
             }
         }else
             gamestate.w = 0;
+        if(player.health <= 0)
+        {
+            player.time++;
+            DrawText( "VOCE MORREU", SCREENWIDTH / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , SCREENHEIGHT / 2  , 40 , RED );
+            if ( player.time == 60 * 2 )
+                break;
+        }
+
         
         EndDrawing();
     }
