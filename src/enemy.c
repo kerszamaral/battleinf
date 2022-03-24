@@ -9,8 +9,8 @@ Obj spawn( Obj spawn , int level , char terrainspace[MAPY][MAPX], Rectangle terr
         spawn.colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
         spawn.pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( SCREENHEIGHT/90 , SCREENWIDTH - SCREENHEIGHT/90*2 - spawn.cen.x*2 ), 
-            GetRandomValue( SCREENHEIGHT/10 , SCREENHEIGHT - SCREENHEIGHT/90 - spawn.cen.y*2 ) 
+            GetRandomValue( BORDER , SCREENWIDTH - BORDER*2 - spawn.cen.x*2 ), 
+            GetRandomValue( TOPBORDER , SCREENHEIGHT - BORDER - spawn.cen.y*2 ) 
         };
         //Updates draw position
         spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; 
