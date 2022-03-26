@@ -252,6 +252,8 @@ int settingscreen(void)
                     DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
                     if ( IsKeyPressed(KEY_ENTER) )
                     {
+                        if (IsWindowFullscreen())
+                            ToggleFullscreen();
                         SetWindowSize(1000,600);
                     }
                 }
@@ -263,6 +265,8 @@ int settingscreen(void)
                     DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
                     if ( IsKeyPressed(KEY_ENTER) )
                     {
+                        if (IsWindowFullscreen())
+                            ToggleFullscreen();
                         SetWindowSize(800,450);
                     }
                 }
