@@ -7,7 +7,7 @@
 #define SCREENWIDTH 1000 //Screen size x 1000
 #define SCREENHEIGHT 600 //Screen size y 600
 
-#define TERRAINSIZE 50 //Size for the terrain blocks
+//#define (GetScreenHeight()/12) 50 //Size for the terrain blocks
 
 typedef struct  //struct for the interactable objects in the game
 {

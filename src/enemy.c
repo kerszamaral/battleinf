@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Random starting position
-Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE], Rectangle terrainarray[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE] , Rectangle playerCol , Obj enemy[level])
+Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj enemy[level])
 {
     do
     {
@@ -15,8 +15,8 @@ Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/TERRAINSI
         //Updates draw position
         spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; 
 
-        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
-            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
+            for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
                 if ( terrainspace[ i ][ j ] == '*' )
                     spawn = collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
         spawn = collision(spawn, playerCol , 2);
@@ -28,7 +28,7 @@ Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/TERRAINSI
     return spawn;
 }
 
-Obj enemyspawn( Obj enemy , int level , char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE], Rectangle terrainarray[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE] , Rectangle playerCol , Obj otherenemy[level] )
+Obj enemyspawn( Obj enemy , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj otherenemy[level] )
 {   switch (enemy.health)//Test to see if enemy is alive
     {
     case 0: //if not, starts counting

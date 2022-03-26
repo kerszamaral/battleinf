@@ -3,9 +3,9 @@
 
 #include "core.h"
 
-void terraincreate(char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE]);
+void terraincreate(char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)]);
 
-void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] , char terrainspace[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] );
+void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] );
 
 Rectangle terraindestruct( Obj bullet , Rectangle terrain );
 

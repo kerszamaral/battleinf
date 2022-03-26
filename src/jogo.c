@@ -131,10 +131,10 @@ Vector4 jogo(Vector4 gamestate)
     Texture2D wall = LoadTexture( "resources/images/wall.png" );
     Rectangle sourceWall = { 0 , 0 , wall.width , wall.height }; //Rectangle with size of original image
     //Random Map Generator for testing, needs to be replaced by read file
-    char terrainspace [ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ];
+    char terrainspace [ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ];
     terraincreate(terrainspace);
     //Creates the actual rectangles in the right place
-    Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ];
+    Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ];
     terrainplace( terrainarray , terrainspace );
     //Random player starting position
     player = spawn( player , level , terrainspace , terrainarray , player.colRec , enemy);
@@ -147,8 +147,8 @@ Vector4 jogo(Vector4 gamestate)
         ClearBackground( RAYWHITE );
         
         /********************** TERRAIN CREATION *******************************/
-        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
-            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
+            for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
                 if (terrainspace[i][j] == '*')
                 {
                     for (int k = 0; k < 1 + level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
@@ -224,8 +224,8 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < level; i++)
             player = collision( player , enemy[i].colRec , 2 );
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
-            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
+            for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
                 if (terrainspace[i][j] == '*')
                     player = collision( player, terrainarray[i][j] , 2 );
         
@@ -283,8 +283,8 @@ Vector4 jogo(Vector4 gamestate)
             //Tests collision with player
             enemy[k] = collision( enemy[k] , player.colRec , 2);
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
-                for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+            for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
+                for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
                     if (terrainspace[i][j] == '*')
                         enemy[k] = collision( enemy[k] , terrainarray[i][j] , 2 );
             //Tests collision against other enemys

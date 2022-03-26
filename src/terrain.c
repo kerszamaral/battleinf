@@ -1,13 +1,13 @@
 #include "core.h"
 #include "collision.h"
  
-void terraincreate(char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE])
+void terraincreate(char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)])
 {
     //Creates the Rectangles in the place it finds * in the array to display it in the game
     //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
-    for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+    for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
     {
-        for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+        for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
         {
             switch (GetRandomValue(0,4))
             {
@@ -21,30 +21,30 @@ void terraincreate(char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWid
         }
     }
     //Prints map to console to know if everything lines up, can be removed when changed
-    for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+    for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
     {
-        for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
+        for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
             printf("%c",terrainspace[i][j]);
         printf("\n");
     }
 }
 
-void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] , char terrainspace[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] )
+void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] )
 {
     int terrainx = 0, terrainy = 0;
     //We use an array to create 128 rectangles, they are all set to size and position 0 
     //When it finds the * in sets the position and size for the rectangle on that place
     
-    for ( int i = 0 ; i < GetScreenHeight()/TERRAINSIZE ; i++ )
+    for ( int i = 0 ; i < GetScreenHeight()/(GetScreenHeight()/12) ; i++ )
     {
-        for ( int j = 0 ; j < GetScreenWidth()/TERRAINSIZE ; j++ )
+        for ( int j = 0 ; j < GetScreenWidth()/(GetScreenHeight()/12) ; j++ )
         {
             if ( terrainspace[ i ][ j ] == '*' )
-                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + GetScreenHeight()/12 , TERRAINSIZE , TERRAINSIZE };
-            terrainx += TERRAINSIZE;
+                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + GetScreenHeight()/12 , (GetScreenHeight()/12) , (GetScreenHeight()/12) };
+            terrainx += (GetScreenHeight()/12);
         }
         terrainx = 0;
-        terrainy += TERRAINSIZE;
+        terrainy += (GetScreenHeight()/12);
     }
 }
 
