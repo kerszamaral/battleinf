@@ -32,14 +32,14 @@ Vector4 jogo(Vector4 gamestate)
     {
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) tankplayer.width / tankplayer.height, //ratio
-        (Vector2){ tankplayer.width / 20.0 , ( tankplayer.height * player.ratio ) / 20.0 }, //Vector2 center, x and y
+        (Vector2){ tankplayer.width * (0.000083*GetScreenHeight()) , ( tankplayer.height * player.ratio ) * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         3, //Health
         0, //Object rotation
         gamestate.y, //Score
         0, //Time
         0, //Death
-        2, //Speed
+        2*(GetScreenHeight()*0.0016666666666667), //Speed
         false, //Ammo
         (Rectangle){ 0 , 0 , tankplayer.width , tankplayer.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -59,14 +59,14 @@ Vector4 jogo(Vector4 gamestate)
         (Obj){
             (Vector2){ GetScreenWidth() , GetScreenHeight() }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
             (float) tankenemy.width / tankenemy.height, //ratio
-            (Vector2){ tankenemy.width / 20.0 , ( tankenemy.height * enemy->ratio ) / 20.0 }, //Vector2 center, x and y
+            (Vector2){ tankenemy.width  * (0.000083*GetScreenHeight()) , ( tankenemy.height * enemy->ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
             (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
             0, //Health
             0, //Object rotation
             0, //Score
             0, //Time
             0, //Death
-            1, //Speed
+            1*(GetScreenHeight()*0.0016666666666667), //Speed
             false, //Ammo
             (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -87,14 +87,14 @@ Vector4 jogo(Vector4 gamestate)
         (Obj){
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) bulletimg.width / bulletimg.height, //ratio
-        (Vector2){ bulletimg.width / 100.0 , ( bulletimg.height * bullet->ratio ) / 100.0 }, //Vector2 center, x and y
+        (Vector2){ bulletimg.width * (0.000016*GetScreenHeight()) , ( bulletimg.height * bullet->ratio ) * (0.000016*GetScreenHeight()) }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         0, //Health
         0, //Object rotation
         0, //Score
         0, //Time
         0, //Death
-        3, //Speed
+        3*(GetScreenHeight()*0.0016666666666667), //Speed
         true, //Ammo
         (Rectangle){ 0 , 0 , bulletimg.width , bulletimg.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -111,7 +111,7 @@ Vector4 jogo(Vector4 gamestate)
     {
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) energyimg.width / energyimg.height, //ratio
-        (Vector2){ energyimg.width / 20.0 , ( energyimg.height * energy.ratio ) / 20.0 }, //Vector2 center, x and y
+        (Vector2){ energyimg.width  * (0.000083*GetScreenHeight()) , ( energyimg.height * energy.ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         0, //Health
         0, //Object rotation
@@ -340,7 +340,11 @@ Vector4 jogo(Vector4 gamestate)
             if ( player.time == 60 * 2 )
                 break;
         }
-
+        if (IsKeyPressed(KEY_K))
+        {
+            printf("%f",player.speed);
+        }
+        
         
         EndDrawing();
     }
@@ -353,7 +357,6 @@ Vector4 jogo(Vector4 gamestate)
     UnloadTexture(bulletimg);
     UnloadTexture(tankenemy);
     UnloadTexture(energyimg);
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
 
     return gamestate;
 }

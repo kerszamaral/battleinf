@@ -9,8 +9,8 @@ Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/(GetScree
         spawn.colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
         spawn.pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( GetScreenHeight()/90 , SCREENWIDTH - GetScreenHeight()/90*2 - spawn.cen.x*2 ), 
-            GetRandomValue( GetScreenHeight()/12 , SCREENHEIGHT - GetScreenHeight()/90 - spawn.cen.y*2 ) 
+            GetRandomValue( GetScreenHeight()/90 , GetScreenWidth() - GetScreenHeight()/90*2 - spawn.cen.x*2 ), 
+            GetRandomValue( GetScreenHeight()/12 , GetScreenHeight() - GetScreenHeight()/90 - spawn.cen.y*2 ) 
         };
         //Updates draw position
         spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; 

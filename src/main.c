@@ -25,7 +25,10 @@ int main(void)
             do{
                 gamestate.z++;
                 gamestate = jogo(gamestate);
-            }while ( gamestate.w == 1 ); 
+            }while ( gamestate.w == 1 );
+            
+            if (!IsWindowFullscreen())
+                SetWindowState(FLAG_WINDOW_RESIZABLE);
             
             if (gamestate.y > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
                 nome(gamestate.y, gamestate.z);

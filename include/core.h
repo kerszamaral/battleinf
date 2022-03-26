@@ -2,6 +2,7 @@
 #define end_H_
 
 #include "raylib.h"
+#include <math.h>
 #include <stdio.h>
 
 #define SCREENWIDTH 1000 //Screen size x 1000
