@@ -12,49 +12,63 @@ int startscreen(void)
 
         ClearBackground(BLACK);
         
-        DrawText("BATTLEINF", SCREENWIDTH / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2, SCREENHEIGHT / 4 - 75, 40, LIME);
+        DrawText("BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 3)
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4)
             select += 1;
         if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0)
             select -= 1;
 
         if (select == 0)
         {
-            DrawText("Start", SCREENWIDTH / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, SCREENHEIGHT / 4, 25, YELLOW);
+            DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
                 break;
             }
         }
         else
-            DrawText("Start", SCREENWIDTH / 2 - MeasureText("Start", GetFontDefault().baseSize), SCREENHEIGHT / 4, 20, RAYWHITE);
+            DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
 
         if (select == 1)
         {
-            DrawText("Continue", SCREENWIDTH / 2 - MeasureText("Continue", GetFontDefault().baseSize) * 1.25, SCREENHEIGHT / 4 + 50, 25, YELLOW);
+            DrawText("Load", GetScreenWidth() / 2 - MeasureText("Load", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                /* code */
+                select = 1;
+                break;
             }
         }
         else
-            DrawText("Continue", SCREENWIDTH / 2 - MeasureText("Continue", GetFontDefault().baseSize), SCREENHEIGHT / 4 + 50, 20, RAYWHITE);
+            DrawText("Load", GetScreenWidth() / 2 - MeasureText("Load", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
 
         if (select == 2)
         {
-            DrawText("High Scores", SCREENWIDTH / 2 - MeasureText("High Scores", GetFontDefault().baseSize) * 1.25, SCREENHEIGHT / 4 + 100, 25, YELLOW);
+            DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                /* code */
+                select = 2;
+                break;
             }
         }
         else
-            DrawText("High Scores", SCREENWIDTH / 2 - MeasureText("High Scores", GetFontDefault().baseSize), SCREENHEIGHT / 4 + 100, 20, RAYWHITE);
-
+            DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+        
         if (select == 3)
         {
-            DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25, SCREENHEIGHT / 4 + 150, 25, YELLOW);
+            DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
+            if ( IsKeyPressed(KEY_ENTER) )
+            {
+                select = 3;
+                break;
+            } 
+        }
+        else
+            DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
+
+        if (select == 4)
+        {
+            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
                 select = 5;
@@ -62,7 +76,7 @@ int startscreen(void)
             } 
         }
         else
-            DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize), SCREENHEIGHT / 4 + 150, 20, RAYWHITE);
+            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
         
         EndDrawing();
     }
@@ -75,7 +89,7 @@ void nome(int pscore, int level)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
-    Rectangle textBox = { SCREENWIDTH/2.0f - 100, 320, 225, 50 };
+    Rectangle textBox = { GetScreenWidth()/2.0f - 100, 320, 225, 50 };
 
 
     while (!WindowShouldClose())
@@ -108,20 +122,20 @@ void nome(int pscore, int level)
 
             ClearBackground(BLACK);
 
-            DrawText("Digite seu nome para registrar sua Pontuação!", SCREENWIDTH / 2 - 
-            MeasureText("Digite seu nome para registrar sua Pontuação!", GetFontDefault().baseSize), SCREENHEIGHT / 4 - 50, 20, GRAY);
+            DrawText("Digite seu nome para registrar sua Pontuação!", GetScreenWidth() / 2 - 
+            MeasureText("Digite seu nome para registrar sua Pontuação!", GetFontDefault().baseSize), GetScreenHeight() / 4 - 50, 20, GRAY);
 
-            DrawText(TextFormat("Seu Score foi: %i", pscore), SCREENWIDTH / 2 - 
-            MeasureText("Seu Score foi: 10000", GetFontDefault().baseSize) * 2, SCREENHEIGHT / 4, 40, GRAY);
+            DrawText(TextFormat("Seu Score foi: %i", pscore), GetScreenWidth() / 2 - 
+            MeasureText("Seu Score foi: 10000", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, GRAY);
 
-            DrawText(TextFormat("Sua maior fase foi: %i", level), SCREENWIDTH / 2 - 
+            DrawText(TextFormat("Sua maior fase foi: %i", level), GetScreenWidth() / 2 - 
             MeasureText("Sua maior fase foi: 100", GetFontDefault().baseSize) * 2, 220, 40, GRAY);
 
             DrawRectangleRec(textBox, LIGHTGRAY);
 
             DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
 
-            DrawText(TextFormat("Caracteres restantes: %i/%i", letterCount, MAX_INPUT_CHARS), SCREENWIDTH / 2 - 
+            DrawText(TextFormat("Caracteres restantes: %i/%i", letterCount, MAX_INPUT_CHARS), GetScreenWidth() / 2 - 
             MeasureText("Caracteres restantes: 9/9", GetFontDefault().baseSize), 400, 20, DARKGRAY);
 
             if (letterCount < MAX_INPUT_CHARS)
@@ -163,7 +177,7 @@ int endscreen(void)
 
         ClearBackground(BLACK);
 
-        DrawText("GAME OVER", SCREENWIDTH / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, SCREENHEIGHT / 4 - 75, 40, LIME);
+        DrawText("GAME OVER", GetScreenWidth() / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
         if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 1 )
             select += 1;
@@ -172,7 +186,7 @@ int endscreen(void)
 
         if ( select == 0 )
         {
-            DrawText("Restart", SCREENWIDTH / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4, 25, YELLOW);
+            DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyReleased(KEY_ENTER) )
             {
                 select = 0;
@@ -180,11 +194,11 @@ int endscreen(void)
             }
         }
         else
-            DrawText("Restart", SCREENWIDTH / 2 - MeasureText("Restart", GetFontDefault().baseSize) , SCREENHEIGHT / 4, 20, RAYWHITE);
+            DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) , GetScreenHeight() / 4, 20, RAYWHITE);
 
         if ( select == 1 )
         {
-            DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , SCREENHEIGHT / 4 + 100, 20, YELLOW);
+            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4 + 100, 20, YELLOW);
             if ( IsKeyReleased(KEY_ENTER) )
             {
                 select = 5;
@@ -192,7 +206,86 @@ int endscreen(void)
             }
         }
         else
-            DrawText("Quit", SCREENWIDTH / 2 - MeasureText("Quit", GetFontDefault().baseSize) , SCREENHEIGHT / 4 + 100, 20, RAYWHITE);
+            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) , GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+        
+        EndDrawing();
+    }
+    return select;
+}
+
+int settingscreen(void)
+{
+    int select = 0;
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+        ClearBackground(BLACK);
+        
+        DrawText("SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
+        
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4)
+            select += 1;
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0)
+            select -= 1;
+
+        if (select == 0)
+        {
+            DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
+            if ( IsKeyPressed(KEY_RIGHT) )
+            {
+                break;
+            }
+        }
+        else
+            DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
+
+        if (select == 1)
+        {
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+            if ( IsKeyPressed(KEY_ENTER) )
+            {
+                /* code */
+            }
+        }
+        else
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+
+        if (select == 2)
+        {
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+            if ( IsKeyPressed(KEY_ENTER) )
+            {
+                /* code */
+            }
+        }
+        else
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+        
+        if (select == 3)
+        {
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
+            if ( IsKeyPressed(KEY_ENTER) )
+            {
+                select = 3;
+                break;
+            } 
+        }
+        else
+            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
+
+        if (select == 4)
+        {
+            DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
+            if ( IsKeyReleased(KEY_ENTER) )
+            {
+                select = 7;
+                break;
+            } 
+        }
+        else
+            DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
         
         EndDrawing();
     }

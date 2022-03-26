@@ -9,4 +9,6 @@ bool IsAnyKeyPressed();
 
 int endscreen(void);
 
+int settingscreen(void);
+
 #endif

@@ -18,6 +18,7 @@ int main(void)
     while ( gamestate.x != 5 )
     {
         gamestate.x = startscreen();
+        printf("%d",(int)gamestate.x);
         switch ( (int)gamestate.x )
         {
         case 0:
@@ -31,6 +32,9 @@ int main(void)
             gamestate.z = 0;
             gamestate.y = 0;
             gamestate.x = endscreen();
+            break;
+        case 3:
+            gamestate.x = settingscreen();
             break;
         default:
             break;
