@@ -60,27 +60,27 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain )
         switch (bullet.rot)
         {
         case 0:
-            terrain.height -= 10;
+            terrain.height -= GetScreenHeight()/12*0.2;
             break;
         case 90:
-            terrain.x += 10;
-            terrain.width -= 10;
+            terrain.x += GetScreenHeight()/12*0.2;
+            terrain.width -= GetScreenHeight()/12*0.2;
             break;
         case 180:
-            terrain.y += 10;
-            terrain.height -= 10;
+            terrain.y += GetScreenHeight()/12*0.2;
+            terrain.height -= GetScreenHeight()/12*0.2;
             break;
         case 270:
-            terrain.width -= 10;
+            terrain.width -= GetScreenHeight()/12*0.2;
             break;
         }
     }    
 
-    if (terrain.height < 10 || terrain.width < 10)
+    if (terrain.height < GetScreenHeight()/12*0.2 || terrain.width < GetScreenHeight()/12*0.2)
     {
         terrain.height = 0;
         terrain.width = 0;
-        terrain.x = SCREENWIDTH;
+        terrain.x = GetScreenWidth();
         terrain.y = 0;
     }
 
