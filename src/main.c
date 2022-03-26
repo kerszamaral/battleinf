@@ -13,7 +13,7 @@ int main(void)
     int lscore = 1600;
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetTargetFPS(60);
-
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     
     while ( gamestate.x != 5 )
     {
