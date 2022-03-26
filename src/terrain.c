@@ -1,13 +1,13 @@
 #include "core.h"
 #include "collision.h"
  
-void terraincreate(char terrainspace[MAPY][MAPX])
+void terraincreate(char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE])
 {
     //Creates the Rectangles in the place it finds * in the array to display it in the game
     //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
-    for (int i = 0; i < MAPY; i++)
+    for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
     {
-        for (int j = 0; j < MAPX; j++)
+        for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
         {
             switch (GetRandomValue(0,4))
             {
@@ -21,26 +21,26 @@ void terraincreate(char terrainspace[MAPY][MAPX])
         }
     }
     //Prints map to console to know if everything lines up, can be removed when changed
-    for (int i = 0; i < MAPY; i++)
+    for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
     {
-        for (int j = 0; j < MAPX; j++)
+        for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
             printf("%c",terrainspace[i][j]);
         printf("\n");
     }
 }
 
-void terrainplace(  Rectangle terrainarray[ MAPY ][ MAPX ] , char terrainspace[ MAPY ][ MAPX ] )
+void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] , char terrainspace[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] )
 {
     int terrainx = 0, terrainy = 0;
     //We use an array to create 128 rectangles, they are all set to size and position 0 
     //When it finds the * in sets the position and size for the rectangle on that place
     
-    for ( int i = 0 ; i < MAPY ; i++ )
+    for ( int i = 0 ; i < GetScreenHeight()/TERRAINSIZE ; i++ )
     {
-        for ( int j = 0 ; j < MAPX ; j++ )
+        for ( int j = 0 ; j < GetScreenWidth()/TERRAINSIZE ; j++ )
         {
             if ( terrainspace[ i ][ j ] == '*' )
-                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + TOPBORDER , TERRAINSIZE , TERRAINSIZE };
+                terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + GetScreenHeight()/12 , TERRAINSIZE , TERRAINSIZE };
             terrainx += TERRAINSIZE;
         }
         terrainx = 0;

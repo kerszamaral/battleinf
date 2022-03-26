@@ -2,21 +2,21 @@
 #include "core.h"
 
 //Random starting position
-Obj spawn( Obj spawn , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj enemy[level])
+Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE], Rectangle terrainarray[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE] , Rectangle playerCol , Obj enemy[level])
 {
     do
     {
         spawn.colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
         spawn.pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( BORDER , SCREENWIDTH - BORDER*2 - spawn.cen.x*2 ), 
-            GetRandomValue( TOPBORDER , SCREENHEIGHT - BORDER - spawn.cen.y*2 ) 
+            GetRandomValue( GetScreenHeight()/90 , SCREENWIDTH - GetScreenHeight()/90*2 - spawn.cen.x*2 ), 
+            GetRandomValue( GetScreenHeight()/12 , SCREENHEIGHT - GetScreenHeight()/90 - spawn.cen.y*2 ) 
         };
         //Updates draw position
         spawn.draw = (Vector2){ spawn.pos.x + spawn.cen.x , spawn.pos.y + spawn.cen.y }; 
 
-        for (int i = 0; i < MAPY; i++)
-            for (int j = 0; j < MAPX; j++)
+        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
                 if ( terrainspace[ i ][ j ] == '*' )
                     spawn = collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
         spawn = collision(spawn, playerCol , 2);
@@ -28,7 +28,7 @@ Obj spawn( Obj spawn , int level , char terrainspace[MAPY][MAPX], Rectangle terr
     return spawn;
 }
 
-Obj enemyspawn( Obj enemy , int level , char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] , Rectangle playerCol , Obj otherenemy[level] )
+Obj enemyspawn( Obj enemy , int level , char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE], Rectangle terrainarray[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE] , Rectangle playerCol , Obj otherenemy[level] )
 {   switch (enemy.health)//Test to see if enemy is alive
     {
     case 0: //if not, starts counting

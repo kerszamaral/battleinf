@@ -3,9 +3,9 @@
 
 #include "core.h"
 
-void terraincreate(char terrainspace[MAPY][MAPX]);
+void terraincreate(char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE]);
 
-void terrainplace(  Rectangle terrainarray[ MAPY ][ MAPX ] , char terrainspace[ MAPY ][ MAPX ] );
+void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] , char terrainspace[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ] );
 
 Rectangle terraindestruct( Obj bullet , Rectangle terrain );
 

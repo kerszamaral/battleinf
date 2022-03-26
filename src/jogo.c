@@ -17,10 +17,10 @@ Vector4 jogo(Vector4 gamestate)
     Texture2D healthimg = LoadTexture( "resources/images/health.png" ); //Load imagem da vida do player
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
     Rectangle Menu[4] = {
-    (Rectangle){ 0 , 0 , SCREENWIDTH , TOPBORDER }, //Rectangle for the ingame menu
-    (Rectangle){ 0 , SCREENHEIGHT - BORDER , SCREENWIDTH, BORDER}, //Rectangle for bottom border
-    (Rectangle){ 0 , 0 , BORDER, SCREENHEIGHT }, //Rectangle for left border
-    (Rectangle){ SCREENWIDTH - BORDER , 0 , SCREENWIDTH , SCREENHEIGHT}   //Rectangle for right border
+    (Rectangle){ 0 , 0 , GetScreenWidth() , GetScreenHeight()/12 }, //Rectangle for the ingame menu
+    (Rectangle){ 0 , GetScreenHeight() - GetScreenHeight()/90 , GetScreenWidth(), GetScreenHeight()/90}, //Rectangle for bottom border
+    (Rectangle){ 0 , 0 , GetScreenHeight()/90, GetScreenHeight() }, //Rectangle for left border
+    (Rectangle){ GetScreenWidth() - GetScreenHeight()/90 , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
     };
 
     /********************** PLAYER VARIABELS *******************************/
@@ -56,7 +56,7 @@ Vector4 jogo(Vector4 gamestate)
     {
         enemy[i] = 
         (Obj){
-            (Vector2){ SCREENWIDTH , SCREENHEIGHT }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
+            (Vector2){ GetScreenWidth() , GetScreenHeight() }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
             (float) tankenemy.width / tankenemy.height, //ratio
             (Vector2){ tankenemy.width / 20.0 , ( tankenemy.height * enemy->ratio ) / 20.0 }, //Vector2 center, x and y
             (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
@@ -131,10 +131,10 @@ Vector4 jogo(Vector4 gamestate)
     Texture2D wall = LoadTexture( "resources/images/wall.png" );
     Rectangle sourceWall = { 0 , 0 , wall.width , wall.height }; //Rectangle with size of original image
     //Random Map Generator for testing, needs to be replaced by read file
-    char terrainspace [ MAPY ][ MAPX ];
+    char terrainspace [ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ];
     terraincreate(terrainspace);
     //Creates the actual rectangles in the right place
-    Rectangle terrainarray[ MAPY ][ MAPX ] = { 0 };
+    Rectangle terrainarray[ GetScreenHeight()/TERRAINSIZE ][ GetScreenWidth()/TERRAINSIZE ];
     terrainplace( terrainarray , terrainspace );
     //Random player starting position
     player = spawn( player , level , terrainspace , terrainarray , player.colRec , enemy);
@@ -147,8 +147,8 @@ Vector4 jogo(Vector4 gamestate)
         ClearBackground( RAYWHITE );
         
         /********************** TERRAIN CREATION *******************************/
-        for (int i = 0; i < MAPY; i++)
-            for (int j = 0; j < MAPX; j++)
+        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
                 if (terrainspace[i][j] == '*')
                 {
                     for (int k = 0; k < 1 + level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
@@ -161,8 +161,8 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , level ) , SCREENWIDTH / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) , 10 , 40 , YELLOW );
-        DrawText( TextFormat( "Pontuação: %i", player.score ), SCREENWIDTH - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 , 13 , 32 , RED );
+        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) , 10 , 40 , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 , 13 , 32 , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", level - (player.score - score) / 800 , level ),
         MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize) + 10 , 15 , 24 , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
@@ -224,8 +224,8 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < level; i++)
             player = collision( player , enemy[i].colRec , 2 );
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < MAPY; i++)
-            for (int j = 0; j < MAPX; j++)
+        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
                 if (terrainspace[i][j] == '*')
                     player = collision( player, terrainarray[i][j] , 2 );
         
@@ -266,8 +266,8 @@ Vector4 jogo(Vector4 gamestate)
                 enemy[k].health--;
                 bullet[0].health--;
                 bullet[0].ammo = true;
-                enemy[k].pos = (Vector2){ SCREENWIDTH , SCREENHEIGHT };
-                bullet[0].pos = (Vector2){ 0 , SCREENHEIGHT };
+                enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
+                bullet[0].pos = (Vector2){ 0 , GetScreenHeight() };
                 player.score += 800;
             }
         }
@@ -283,8 +283,8 @@ Vector4 jogo(Vector4 gamestate)
             //Tests collision with player
             enemy[k] = collision( enemy[k] , player.colRec , 2);
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < MAPY; i++)
-                for (int j = 0; j < MAPX; j++)
+            for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+                for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
                     if (terrainspace[i][j] == '*')
                         enemy[k] = collision( enemy[k] , terrainarray[i][j] , 2 );
             //Tests collision against other enemys
@@ -311,7 +311,7 @@ Vector4 jogo(Vector4 gamestate)
                     bullet[1 + k].ammo = true;
                     bullet[1 + k].health = 0;
                     bullet[1 + k].time = 0;
-                    bullet[1 + k].pos = (Vector2){ 0 , SCREENHEIGHT };
+                    bullet[1 + k].pos = (Vector2){ 0 , GetScreenHeight() };
                     player.health--;
                 }
                 DrawTexturePro(bulletimg, bullet[1 + k].sourceRec, bullet[1 + k].drawRec, bullet[1 + k].cen, bullet[1 + k].rot, WHITE);
@@ -324,7 +324,7 @@ Vector4 jogo(Vector4 gamestate)
         {
             player.time++;
             player.health = 3;
-            DrawText( "LEVEL COMPLETE", SCREENWIDTH / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , SCREENHEIGHT / 2  , 40 , GOLD );
+            DrawText( "LEVEL COMPLETE", GetScreenWidth() / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , GOLD );
             if ( player.time == 60 * 2 )
             {
                 gamestate.w = 1;
@@ -335,7 +335,7 @@ Vector4 jogo(Vector4 gamestate)
         if(player.health <= 0)
         {
             player.time++;
-            DrawText( "VOCE MORREU", SCREENWIDTH / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , SCREENHEIGHT / 2  , 40 , RED );
+            DrawText( "VOCE MORREU", GetScreenWidth() / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , RED );
             if ( player.time == 60 * 2 )
                 break;
         }

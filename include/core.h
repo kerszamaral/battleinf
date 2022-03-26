@@ -4,15 +4,10 @@
 #include "raylib.h"
 #include <stdio.h>
 
-#define SCREENWIDTH 1000 //Screen size x
-#define SCREENHEIGHT 600 //Screen size y
+#define SCREENWIDTH 1000 //Screen size x 1000
+#define SCREENHEIGHT 600 //Screen size y 600
 
-#define TOPBORDER SCREENHEIGHT/12 //Menu border NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
-#define BORDER SCREENHEIGHT/90 //Border around playspace NEED TO CHANGE IT TO CORE WHEN CHANGED FIX IN ENEMY.C
-
-#define TERRAINSIZE 50
-#define MAPX SCREENWIDTH/TERRAINSIZE
-#define MAPY SCREENHEIGHT/TERRAINSIZE
+#define TERRAINSIZE 50 //Size for the terrain blocks
 
 typedef struct  //struct for the interactable objects in the game
 {

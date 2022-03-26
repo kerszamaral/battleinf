@@ -215,7 +215,8 @@ int endscreen(void)
 
 int settingscreen(void)
 {
-    int select = 0;
+    int select = 0, resoselect = 0;
+    bool resolu = false;
 
     while (!WindowShouldClose())
     {
@@ -225,9 +226,9 @@ int settingscreen(void)
         
         DrawText("SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4)
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4 && !resolu)
             select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0)
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0 && !resolu)
             select -= 1;
 
         if (select == 0)
@@ -235,8 +236,52 @@ int settingscreen(void)
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_RIGHT) )
             {
-                break;
+                resolu = true;
             }
+            if ( resolu )
+            {
+                if (IsKeyPressed(KEY_LEFT))
+                    resolu = false;
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && resoselect < 2)
+                    resoselect += 1;
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && resoselect > 0)
+                    resoselect -= 1;
+
+                if (resoselect == 0)
+                {
+                    DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        SetWindowSize(1000,600);
+                    }
+                }
+                else
+                    DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
+                
+                if (resoselect == 1)
+                {
+                    DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        SetWindowSize(800,450);
+                    }
+                }
+                else
+                    DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+                
+                if (resoselect == 2)
+                {
+                    DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
+                        ToggleFullscreen();
+                    }
+                }
+                else
+                    DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+            }
+            
         }
         else
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);

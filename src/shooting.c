@@ -35,7 +35,7 @@ Obj shoot( Obj Shooter, Obj Bullet )
     return Bullet;
 }
 
-Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[MAPY][MAPX], Rectangle terrainarray[MAPY][MAPX] )
+Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE], Rectangle terrainarray[GetScreenHeight()/TERRAINSIZE][GetScreenWidth()/TERRAINSIZE] )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -56,8 +56,8 @@ Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[MAPY][M
         //Tests collision against other bullets
         Bullet = collision( Bullet , Other.colRec , 2);
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < MAPY; i++)
-            for (int j = 0; j < MAPX; j++)
+        for (int i = 0; i < GetScreenHeight()/TERRAINSIZE; i++)
+            for (int j = 0; j < GetScreenWidth()/TERRAINSIZE; j++)
                 if (terrainspace[i][j] == '*')
                     Bullet = collision( Bullet, terrainarray[i][j], 2);
         //Kills Bullet if 1 sec passes or it collides with border
