@@ -27,6 +27,7 @@ typedef struct  //struct for the interactable objects in the game
     Rectangle colRec; //Rectangle for object collision
     Rectangle drawRec; //Rectangle for drawing and object rotation
     Vector4 colSide; //For collision detection algorithm, x = up, y = right, z = down, w = left
+    Color color; //For enemy difficulty and mutliplayer
 } Obj;
 
 #endif

@@ -36,7 +36,10 @@ Obj enemyspawn( Obj enemy , int level , char terrainspace[GetScreenHeight()/(Get
     }
     if ( enemy.death > 60*5 && enemy.health == 0 && enemy.death != 100000 && !GetRandomValue(0,60)) //If enemy is dead and 5 seconds have passed spawns enemy at random position
     {
-        enemy.health = 1;
+        if (ColorToInt(enemy.color) == ColorToInt(RED)) //Switches don't work here unfortunately
+            enemy.health = 2; //Controls enemy health based on colors
+        else
+            enemy.health = 1;
         enemy.death = 100000;
         enemy = spawn( enemy , level, terrainspace , terrainarray, playerCol, otherenemy );
     }

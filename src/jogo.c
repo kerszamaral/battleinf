@@ -45,6 +45,7 @@ Vector4 jogo(Vector4 gamestate)
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
         (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        WHITE
     };
 
     /********************** ENEMY VARIABELS *******************************/
@@ -71,8 +72,13 @@ Vector4 jogo(Vector4 gamestate)
             (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
             (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
-            (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+            (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+            WHITE
         };
+        if (!GetRandomValue( 0 , 15 )) //sets enemy difficulty and color
+            enemy[i].color = RED;
+        else
+            enemy[i].color = WHITE;
     }
 
     /********************** BULLET VARIABELS *******************************/
@@ -99,7 +105,8 @@ Vector4 jogo(Vector4 gamestate)
         (Rectangle){ 0 , 0 , bulletimg.width , bulletimg.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
-        (Vector4){ 0 , 0 , 0 , 0 } //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        WHITE
         };
     };
 
@@ -124,6 +131,7 @@ Vector4 jogo(Vector4 gamestate)
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
         (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
+        WHITE
     };
     
     /********************** TERRAIN VARIABELS *******************************/
@@ -162,10 +170,10 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*0.0016666666666667) , 10 , 40*(GetScreenHeight()*0.0016666666666667) , YELLOW );
-        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*0.0016666666666667) , 13 , 32*(GetScreenHeight()*0.0016666666666667) , RED );
+        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*0.0016666666666667) , 10*(GetScreenHeight()*0.0016666666666667) , 40*(GetScreenHeight()*0.0016666666666667) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*0.0016666666666667) , 13 * (GetScreenHeight()*0.0016666666666667) , 32*(GetScreenHeight()*0.0016666666666667) , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", level - (player.score - score) / 800 , level ),
-        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*0.0016666666666667) + 10 , 15 , 24*(GetScreenHeight()*0.0016666666666667) , BLUE );
+        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*0.0016666666666667) + 10 , 15 * (GetScreenHeight()*0.0016666666666667) , 24*(GetScreenHeight()*0.0016666666666667) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*0.0016666666666667) )//
             DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*0.0016666666666667), WHITE );
@@ -173,7 +181,7 @@ Vector4 jogo(Vector4 gamestate)
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
         //Energy Spawning
-        if ( energy.time >= 60*3 && !energy.health && GetRandomValue( 0 , 63 ) == 0 )
+        if ( energy.time >= 60*3 && !energy.health && !GetRandomValue( 0 , 63 ) )
         {
             energy = spawn( energy , level , terrainspace , terrainarray , player.colRec , enemy);
             energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
@@ -213,8 +221,8 @@ Vector4 jogo(Vector4 gamestate)
         player.colRec = (Rectangle){ player.pos.x , player.pos.y , player.cen.x*2 , player.cen.y*2 };
         //Because player cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
         if (player.health > 0)
-            DrawTexturePro( tankplayer , player.sourceRec , player.drawRec , player.cen , player.rot , WHITE ); //Draws player tank
-
+            DrawTexturePro( tankplayer , player.sourceRec , player.drawRec , player.cen , player.rot , player.color ); //Draws player tank
+        //ImageDraw()
         /********************** PLAYER COLLISION/MOVEMENT *******************************/
         //Resets collision detection
         player.colSide = (Vector4){ 0 , 0 , 0 , 0 };
@@ -237,7 +245,7 @@ Vector4 jogo(Vector4 gamestate)
         bullet[0] = shooting( bullet[0] , bullet[1], Menu , terrainspace, terrainarray );
         if ( !bullet[0].ammo )
         {   //Draws bullet[0]
-            DrawTexturePro( bulletimg , bullet[0].sourceRec , bullet[0].drawRec , bullet[0].cen , bullet[0].rot , WHITE );
+            DrawTexturePro( bulletimg , bullet[0].sourceRec , bullet[0].drawRec , bullet[0].cen , bullet[0].rot , bullet[0].color );
         }
 
         /********************** ENEMY HITBOX *******************************/
@@ -260,16 +268,19 @@ Vector4 jogo(Vector4 gamestate)
             enemy[k] = enemyspawn( enemy[k], level , terrainspace , terrainarray , player.colRec , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
-                DrawTexturePro( tankenemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , WHITE ); //Draws Enemy tank
+                DrawTexturePro( tankenemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
             //Will be removed when bullet.c is done
             if ( CheckCollisionRecs( bullet[0].colRec, enemy[k].colRec ) ) //if player bullet collides with enemy[k], kills enemy[k]
             {   //Reverts the states change when enemy[k] alive to neutral
                 enemy[k].health--;
                 bullet[0].health--;
                 bullet[0].ammo = true;
-                enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
                 bullet[0].pos = (Vector2){ 0 , GetScreenHeight() };
-                player.score += 800;
+                if (enemy[k].health == 0)
+                {
+                    player.score += 800;
+                    enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
+                }
             }
         }
 
@@ -315,10 +326,9 @@ Vector4 jogo(Vector4 gamestate)
                     bullet[1 + k].pos = (Vector2){ 0 , GetScreenHeight() };
                     player.health--;
                 }
-                DrawTexturePro(bulletimg, bullet[1 + k].sourceRec, bullet[1 + k].drawRec, bullet[1 + k].cen, bullet[1 + k].rot, WHITE);
+                DrawTexturePro(bulletimg, bullet[1 + k].sourceRec, bullet[1 + k].drawRec, bullet[1 + k].cen, bullet[1 + k].rot, bullet[1 + k].color);
             }
         }
-        
 
         /********************** WINNING VARIABLES *******************************/
         if ( player.score >= gamestate.y + 800 * level )
@@ -342,7 +352,8 @@ Vector4 jogo(Vector4 gamestate)
         }
         if (IsKeyPressed(KEY_K))
         {
-            printf("%f",player.speed);
+            for (int i = 0; i < level; i++)
+                printf("%d ",enemy[i].health);
         }
         
         
