@@ -1,5 +1,5 @@
-#ifndef end_H_
-#define end_H_
+#ifndef core_H_
+#define core_H_
 
 #include "raylib.h"
 #include <math.h>

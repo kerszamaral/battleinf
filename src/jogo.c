@@ -162,13 +162,13 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) , 10 , 40 , YELLOW );
-        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 , 13 , 32 , RED );
+        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*0.0016666666666667) , 10 , 40*(GetScreenHeight()*0.0016666666666667) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*0.0016666666666667) , 13 , 32*(GetScreenHeight()*0.0016666666666667) , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", level - (player.score - score) / 800 , level ),
-        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize) + 10 , 15 , 24 , BLUE );
+        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*0.0016666666666667) + 10 , 15 , 24*(GetScreenHeight()*0.0016666666666667) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
-        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 )//
-            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 , WHITE );
+        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*0.0016666666666667) )//
+            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*0.0016666666666667), WHITE );
         //                                           This image is too big, scaling factor needs to be very small
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
