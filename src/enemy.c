@@ -29,18 +29,15 @@ Obj spawn( Obj spawn , int level , char terrainspace[GetScreenHeight()/(GetScree
 }
 
 Obj enemyspawn( Obj enemy , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj otherenemy[level] )
-{   switch (enemy.health)//Test to see if enemy is alive
+{   
+    if (!enemy.health && enemy.death < 100000)
     {
-    case 0: //if not, starts counting
         enemy.death++;
-        break;
-    default:
-        enemy.death = 0;
-        break;
     }
-    if ( enemy.death > 60*5 && enemy.health == 0 ) //If enemy is dead and 5 seconds have passed spawns enemy at random position
+    if ( enemy.death > 60*5 && enemy.health == 0 && enemy.death != 100000 && !GetRandomValue(0,60)) //If enemy is dead and 5 seconds have passed spawns enemy at random position
     {
         enemy.health = 1;
+        enemy.death = 100000;
         enemy = spawn( enemy , level, terrainspace , terrainarray, playerCol, otherenemy );
     }
     

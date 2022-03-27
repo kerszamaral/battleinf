@@ -11,14 +11,15 @@ int main(void)
 {
     Vector4 gamestate = { 0 , 0 , 0 , 0};
     int lscore = 1600;
+    Image logo = LoadImage("resources/images/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
+    SetWindowIcon(logo);
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
     while ( gamestate.x != 5 )
     {
         gamestate.x = startscreen();
-        printf("%d",(int)gamestate.x);
         switch ( (int)gamestate.x )
         {
         case 0:
@@ -43,7 +44,7 @@ int main(void)
             break;
         }
     }
-    
+    UnloadImage(logo);
     CloseWindow();
     return 0;
 }
