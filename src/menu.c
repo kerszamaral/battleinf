@@ -2,7 +2,7 @@
 #include "core.h"
 
 
-Set startscreen(Set settings)
+Setti startscreen(Setti settings)
 {
     settings.select = 0;
     
@@ -85,7 +85,7 @@ Set startscreen(Set settings)
 
 #define MAX_INPUT_CHARS 9
 
-void nome(Set settings)
+void nome(Setti settings)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
@@ -167,7 +167,7 @@ bool IsAnyKeyPressed()
     return keyPressed;
 }
 
-Set endscreen(Set settings)
+Setti endscreen(Setti settings)
 {
     settings.select = 0;
 
@@ -213,7 +213,7 @@ Set endscreen(Set settings)
     return settings;
 }
 
-Set settingscreen(Set settings)
+Setti settingscreen(Setti settings)
 {
     settings.select = 0;
     int resoselect = 0;

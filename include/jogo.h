@@ -4,6 +4,6 @@
 #include "raylib.h"
 #include "core.h"
 
-Set jogo(Set settings);
+Setti jogo(Setti settings);
 
 #endif

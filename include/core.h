@@ -38,6 +38,6 @@ typedef struct  //struct for the interchangable settings in the game
     int select;
     bool won;
     bool quit;
-} Set;
+} Setti;
 
 #endif

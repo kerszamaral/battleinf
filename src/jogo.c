@@ -9,7 +9,7 @@
 
 
 
-Set jogo(Set settings)
+Setti jogo(Setti settings)
 {
     /********************** MENU VARIABELS *******************************/
     ClearWindowState(FLAG_WINDOW_RESIZABLE);
@@ -39,7 +39,7 @@ Set jogo(Set settings)
         0, //Score
         0, //Time
         0, //Death
-        2*(GetScreenHeight()*1/600), //Speed
+        2*(GetScreenHeight()*(1.0/600)), //Speed
         false, //Ammo
         (Rectangle){ 0 , 0 , tankplayer.width , tankplayer.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -67,7 +67,7 @@ Set jogo(Set settings)
             0, //Score
             0, //Time
             0, //Death
-            1*(GetScreenHeight()*1/600), //Speed
+            1*(GetScreenHeight()*(1.0/600)), //Speed
             false, //Ammo
             (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -101,7 +101,7 @@ Set jogo(Set settings)
         0, //Score
         0, //Time
         0, //Death
-        3*(GetScreenHeight()*1/600), //Speed
+        3*(GetScreenHeight()*(1.0/600)), //Speed
         true, //Ammo
         (Rectangle){ 0 , 0 , bulletimg.width , bulletimg.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -171,13 +171,13 @@ Set jogo(Set settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*1/600) , 10*(GetScreenHeight()*1/600) , 40*(GetScreenHeight()*1/600) , YELLOW );
-        DrawText( TextFormat( "Pontuação: %i", settings.score + player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*1/600) , 13 * (GetScreenHeight()*1/600) , 32*(GetScreenHeight()*1/600) , RED );
+        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/600)) , 10*(GetScreenHeight()*(1.0/600)) , 40*(GetScreenHeight()*(1.0/600)) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", settings.score + player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*(1.0/600)) , 13 * (GetScreenHeight()*(1.0/600)) , 32*(GetScreenHeight()*(1.0/600)) , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", level - player.score / 800 , level ),
-        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*1/600) + 10 , 15 * (GetScreenHeight()*1/600) , 24*(GetScreenHeight()*1/600) , BLUE );
+        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*(1.0/600)) + 10 , 15 * (GetScreenHeight()*(1.0/600)) , 24*(GetScreenHeight()*(1.0/600)) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
-        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*1/600) )//
-            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*1/600), WHITE );
+        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*(1.0/600)) )//
+            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*(1.0/600)), WHITE );
         //                                           This image is too big, scaling factor needs to be very small
 
         /********************** ENERGY DRAWING/COLLISION *******************************/

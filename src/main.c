@@ -9,7 +9,7 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Set settings = { 0 , 0 , 0 , 0 , false , false };
+    Setti settings = { 0 , 0 , 0 , 0 , false , false };
     int lscore = 1600;
     Image logo = LoadImage("resources/images/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
