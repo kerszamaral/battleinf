@@ -9,7 +9,8 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Setti settings = { 0 , 0 , 0 , 0 , false , false };
+    Setti /*settingsPtr,*/ settings = { 0 , 0 , 0 , 0 , false , false };
+    //settingsPtr = &settings;
     int lscore = 1600;
     Image logo = LoadImage("resources/images/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
@@ -19,25 +20,26 @@ int main(void)
     
     while ( !settings.quit )
     {
-        settings = startscreen(settings);
+        startscreen( &settings );
         switch ( settings.select )
         {
         case 0:
             do{
                 settings.level++;
-                settings = jogo(settings);
+                jogo( &settings );
             }while ( settings.won );
+
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
             
             if (settings.score > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
-                nome(settings);
+                nome( &settings );
             settings.level = 0;
             settings.score = 0;
-            settings = endscreen(settings);
+            endscreen( &settings );
             break;
         case 3:
-            settings = settingscreen(settings);
+            settingscreen( &settings );
             break;
         default:
             break;

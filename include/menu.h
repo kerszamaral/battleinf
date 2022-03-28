@@ -3,14 +3,14 @@
 
 #include "core.h"
 
-Setti startscreen(Setti settings);
+void startscreen(Setti *settings);
 
-void nome(Setti settings);
+void nome(Setti *settings);
 
 bool IsAnyKeyPressed();
 
-Setti endscreen(Setti settings);
+void endscreen(Setti *settings);
 
-Setti settingscreen(Setti settings);
+void settingscreen(Setti *settings);
 
 #endif
