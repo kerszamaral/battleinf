@@ -2,7 +2,8 @@
 #define jogo_H_
 
 #include "raylib.h"
+#include "core.h"
 
-Vector4 jogo(Vector4 gamestate);
+Set jogo(Set settings);
 
 #endif

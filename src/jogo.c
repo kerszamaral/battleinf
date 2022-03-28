@@ -9,11 +9,11 @@
 
 
 
-Vector4 jogo(Vector4 gamestate)
+Set jogo(Set settings)
 {
     /********************** MENU VARIABELS *******************************/
     ClearWindowState(FLAG_WINDOW_RESIZABLE);
-    int level = gamestate.z, score = gamestate.y;
+    int level = settings.level;
     //Textures
     Texture2D healthimg = LoadTexture( "resources/images/health.png" ); //Load imagem da vida do player
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
@@ -36,10 +36,10 @@ Vector4 jogo(Vector4 gamestate)
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         3, //Health
         0, //Object rotation
-        gamestate.y, //Score
+        0, //Score
         0, //Time
         0, //Death
-        2*(GetScreenHeight()*0.0016666666666667), //Speed
+        2*(GetScreenHeight()*1/600), //Speed
         false, //Ammo
         (Rectangle){ 0 , 0 , tankplayer.width , tankplayer.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -67,7 +67,7 @@ Vector4 jogo(Vector4 gamestate)
             0, //Score
             0, //Time
             0, //Death
-            1*(GetScreenHeight()*0.0016666666666667), //Speed
+            1*(GetScreenHeight()*1/600), //Speed
             false, //Ammo
             (Rectangle){ 0 , 0 , tankenemy.width , tankenemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -75,7 +75,7 @@ Vector4 jogo(Vector4 gamestate)
             (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
             WHITE
         };
-        if (!GetRandomValue( 0 , 100/level )) //sets enemy difficulty and color
+        if (!GetRandomValue( 0 , 15 )) //sets enemy difficulty and color
             enemy[i].color = RED;
         else
             enemy[i].color = WHITE;
@@ -101,7 +101,7 @@ Vector4 jogo(Vector4 gamestate)
         0, //Score
         0, //Time
         0, //Death
-        3*(GetScreenHeight()*0.0016666666666667), //Speed
+        3*(GetScreenHeight()*1/600), //Speed
         true, //Ammo
         (Rectangle){ 0 , 0 , bulletimg.width , bulletimg.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -171,13 +171,13 @@ Vector4 jogo(Vector4 gamestate)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*0.0016666666666667) , 10*(GetScreenHeight()*0.0016666666666667) , 40*(GetScreenHeight()*0.0016666666666667) , YELLOW );
-        DrawText( TextFormat( "Pontuação: %i", player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*0.0016666666666667) , 13 * (GetScreenHeight()*0.0016666666666667) , 32*(GetScreenHeight()*0.0016666666666667) , RED );
-        DrawText( TextFormat( "Inimigos restantes: %d/%d", level - (player.score - score) / 800 , level ),
-        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*0.0016666666666667) + 10 , 15 * (GetScreenHeight()*0.0016666666666667) , 24*(GetScreenHeight()*0.0016666666666667) , BLUE );
+        DrawText( TextFormat( "Fase %d" , level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*1/600) , 10*(GetScreenHeight()*1/600) , 40*(GetScreenHeight()*1/600) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %i", settings.score + player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*1/600) , 13 * (GetScreenHeight()*1/600) , 32*(GetScreenHeight()*1/600) , RED );
+        DrawText( TextFormat( "Inimigos restantes: %d/%d", level - player.score / 800 , level ),
+        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*1/600) + 10 , 15 * (GetScreenHeight()*1/600) , 24*(GetScreenHeight()*1/600) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
-        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*0.0016666666666667) )//
-            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*0.0016666666666667), WHITE );
+        for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*1/600) )//
+            DrawTextureEx( healthimg , (Vector2){ healthx , 10 } , 0 , 0.025 * (GetScreenHeight()*1/600), WHITE );
         //                                           This image is too big, scaling factor needs to be very small
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
@@ -239,10 +239,10 @@ Vector4 jogo(Vector4 gamestate)
                 if (terrainspace[i][j] == '*')
                     player = collision( player, terrainarray[i][j] , 2 );
         
-        player = moveplayer(player , 0 );
+        player = moveplayer(player , -1 );
 
         /********************** PLAYER BULLET SHOOTING *******************************/
-        bullet[0] = playershoot( player, bullet[0] , 0);
+        bullet[0] = playershoot( player, bullet[0] , -1);
         bullet[0] = shooting( bullet[0] , bullet[1], Menu , terrainspace, terrainarray );
         
         if ( !bullet[0].ammo )
@@ -344,18 +344,19 @@ Vector4 jogo(Vector4 gamestate)
         }
 
         /********************** WINNING VARIABLES *******************************/
-        if ( player.score >= gamestate.y + 800 * level )
+        if ( player.score + settings.score >= settings.score + 800 * level )
         {
             player.time++;
             player.health = 3;
             DrawText( "LEVEL COMPLETE", GetScreenWidth() / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , GOLD );
             if ( player.time == 60 * 2 )
             {
-                gamestate.w = 1;
+                settings.won = true;
                 break;
             }
         }else
-            gamestate.w = 0;
+            settings.won = false;
+        
         if(player.health <= 0)
         {
             player.time++;
@@ -373,7 +374,7 @@ Vector4 jogo(Vector4 gamestate)
     }
 
     /********************** UNLOADING AREA *******************************/
-    gamestate.y = player.score;
+    settings.score += player.score;
 
     UnloadTexture(healthimg);
     UnloadTexture(tankplayer);
@@ -382,5 +383,5 @@ Vector4 jogo(Vector4 gamestate)
     UnloadTexture(energyimg);
     UnloadTexture(fire);
 
-    return gamestate;
+    return settings;
 }

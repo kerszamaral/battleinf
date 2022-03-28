@@ -30,4 +30,14 @@ typedef struct  //struct for the interactable objects in the game
     Color color; //For enemy difficulty and mutliplayer
 } Obj;
 
+typedef struct  //struct for the interchangable settings in the game
+{
+    int players;
+    int level;
+    int score;
+    int select;
+    bool won;
+    bool quit;
+} Set;
+
 #endif

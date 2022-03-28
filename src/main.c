@@ -9,7 +9,7 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Vector4 gamestate = { 0 , 0 , 0 , 0};
+    Set settings = { 0 , 0 , 0 , 0 , false , false };
     int lscore = 1600;
     Image logo = LoadImage("resources/images/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
@@ -17,33 +17,33 @@ int main(void)
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
-    while ( gamestate.x != 5 )
+    while ( !settings.quit )
     {
-        gamestate.x = startscreen();
-        switch ( (int)gamestate.x )
+        settings = startscreen(settings);
+        switch ( settings.select )
         {
         case 0:
             do{
-                gamestate.z++;
-                gamestate = jogo(gamestate);
-            }while ( gamestate.w == 1 );
-            
+                settings.level++;
+                settings = jogo(settings);
+            }while ( settings.won );
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
             
-            if (gamestate.y > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
-                nome(gamestate.y, gamestate.z);
-            gamestate.z = 0;
-            gamestate.y = 0;
-            gamestate.x = endscreen();
+            if (settings.score > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
+                nome(settings);
+            settings.level = 0;
+            settings.score = 0;
+            settings = endscreen(settings);
             break;
         case 3:
-            gamestate.x = settingscreen();
+            settings = settingscreen(settings);
             break;
         default:
             break;
         }
     }
+
     UnloadImage(logo);
     CloseWindow();
     return 0;

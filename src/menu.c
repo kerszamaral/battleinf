@@ -2,10 +2,10 @@
 #include "core.h"
 
 
-int startscreen(void)
+Set startscreen(Set settings)
 {
-    int select = 0;
-
+    settings.select = 0;
+    
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -14,12 +14,12 @@ int startscreen(void)
         
         DrawText("BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4)
-            select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0)
-            select -= 1;
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings.select < 4)
+            settings.select += 1;
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings.select > 0)
+            settings.select -= 1;
 
-        if (select == 0)
+        if (settings.select == 0)
         {
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
@@ -30,48 +30,48 @@ int startscreen(void)
         else
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
 
-        if (select == 1)
+        if (settings.select == 1)
         {
             DrawText("Load", GetScreenWidth() / 2 - MeasureText("Load", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                select = 1;
+                settings.select = 1;
                 break;
             }
         }
         else
             DrawText("Load", GetScreenWidth() / 2 - MeasureText("Load", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
 
-        if (select == 2)
+        if (settings.select == 2)
         {
             DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                select = 2;
+                settings.select = 2;
                 break;
             }
         }
         else
             DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
         
-        if (select == 3)
+        if (settings.select == 3)
         {
             DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                select = 3;
+                settings.select = 3;
                 break;
             } 
         }
         else
             DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
 
-        if (select == 4)
+        if (settings.select == 4)
         {
             DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                select = 5;
+                settings.quit = true;
                 break;
             } 
         }
@@ -80,12 +80,12 @@ int startscreen(void)
         
         EndDrawing();
     }
-    return select;
+    return settings;
 }
 
 #define MAX_INPUT_CHARS 9
 
-void nome(int pscore, int level)
+void nome(Set settings)
 {
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
@@ -125,10 +125,10 @@ void nome(int pscore, int level)
             DrawText("Digite seu nome para registrar sua Pontuação!", GetScreenWidth() / 2 - 
             MeasureText("Digite seu nome para registrar sua Pontuação!", GetFontDefault().baseSize), GetScreenHeight() / 4 - 50, 20, GRAY);
 
-            DrawText(TextFormat("Seu Score foi: %i", pscore), GetScreenWidth() / 2 - 
+            DrawText(TextFormat("Seu Score foi: %i", settings.score), GetScreenWidth() / 2 - 
             MeasureText("Seu Score foi: 10000", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, GRAY);
 
-            DrawText(TextFormat("Sua maior fase foi: %i", level), GetScreenWidth() / 2 - 
+            DrawText(TextFormat("Sua maior fase foi: %i", settings.level), GetScreenWidth() / 2 - 
             MeasureText("Sua maior fase foi: 100", GetFontDefault().baseSize) * 2, 220, 40, GRAY);
 
             DrawRectangleRec(textBox, LIGHTGRAY);
@@ -145,7 +145,7 @@ void nome(int pscore, int level)
             else DrawText("Pressione BACKSPACE para deletar", 230, 400, 20, GRAY);
             if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
             {
-                printf( "\nNome: %s    Pontuacao: %d     fase: %d\n\n", name , pscore , level );
+                printf( "\nNome: %s    Pontuacao: %d     fase: %d\n\n", name , settings.score , settings.level );
                 //write to file "name", remove last place
                 break;
             }
@@ -167,9 +167,9 @@ bool IsAnyKeyPressed()
     return keyPressed;
 }
 
-int endscreen(void)
+Set endscreen(Set settings)
 {
-    int select = 0;
+    settings.select = 0;
 
     while (!WindowShouldClose())
     {
@@ -179,29 +179,29 @@ int endscreen(void)
 
         DrawText("GAME OVER", GetScreenWidth() / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 1 )
-            select += 1;
-        if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0 )
-            select -= 1;
+        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings.select < 1 )
+            settings.select += 1;
+        if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings.select > 0 )
+            settings.select -= 1;
 
-        if ( select == 0 )
+        if ( settings.select == 0 )
         {
             DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyReleased(KEY_ENTER) )
             {
-                select = 0;
+                settings.select = 0;
                 break;
             }
         }
         else
             DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) , GetScreenHeight() / 4, 20, RAYWHITE);
 
-        if ( select == 1 )
+        if ( settings.select == 1 )
         {
             DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4 + 100, 20, YELLOW);
             if ( IsKeyReleased(KEY_ENTER) )
             {
-                select = 5;
+                settings.quit = true;
                 break;
             }
         }
@@ -210,12 +210,13 @@ int endscreen(void)
         
         EndDrawing();
     }
-    return select;
+    return settings;
 }
 
-int settingscreen(void)
+Set settingscreen(Set settings)
 {
-    int select = 0, resoselect = 0;
+    settings.select = 0;
+    int resoselect = 0;
     bool resolu = false;
 
     while (!WindowShouldClose())
@@ -226,12 +227,12 @@ int settingscreen(void)
         
         DrawText("SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && select < 4 && !resolu)
-            select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && select > 0 && !resolu)
-            select -= 1;
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings.select < 4 && !resolu)
+            settings.select += 1;
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings.select > 0 && !resolu)
+            settings.select -= 1;
 
-        if (select == 0)
+        if (settings.select == 0)
         {
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_RIGHT) )
@@ -290,7 +291,7 @@ int settingscreen(void)
         else
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
 
-        if (select == 1)
+        if (settings.select == 1)
         {
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
@@ -301,7 +302,7 @@ int settingscreen(void)
         else
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
 
-        if (select == 2)
+        if (settings.select == 2)
         {
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
@@ -312,24 +313,23 @@ int settingscreen(void)
         else
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
         
-        if (select == 3)
+        if (settings.select == 3)
         {
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
             if ( IsKeyPressed(KEY_ENTER) )
             {
-                select = 3;
-                break;
+                
             } 
         }
         else
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
 
-        if (select == 4)
+        if (settings.select == 4)
         {
             DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
             if ( IsKeyReleased(KEY_ENTER) )
             {
-                select = 7;
+                settings.select = 0;
                 break;
             } 
         }
@@ -338,5 +338,5 @@ int settingscreen(void)
         
         EndDrawing();
     }
-    return select;
+    return settings;
 }

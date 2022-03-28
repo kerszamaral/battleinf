@@ -1,14 +1,16 @@
 #ifndef menu_H_
 #define menu_H_
 
-int startscreen(void);
+#include "core.h"
 
-void nome(int pscore, int level);
+Set startscreen(Set settings);
+
+void nome(Set settings);
 
 bool IsAnyKeyPressed();
 
-int endscreen(void);
+Set endscreen(Set settings);
 
-int settingscreen(void);
+Set settingscreen(Set settings);
 
 #endif
