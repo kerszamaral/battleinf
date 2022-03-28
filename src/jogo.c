@@ -239,10 +239,10 @@ Vector4 jogo(Vector4 gamestate)
                 if (terrainspace[i][j] == '*')
                     player = collision( player, terrainarray[i][j] , 2 );
         
-        player = moveplayer(player);
+        player = moveplayer(player , 0 );
 
         /********************** PLAYER BULLET SHOOTING *******************************/
-        bullet[0] = playershoot( player, bullet[0] );
+        bullet[0] = playershoot( player, bullet[0] , 0);
         bullet[0] = shooting( bullet[0] , bullet[1], Menu , terrainspace, terrainarray );
         
         if ( !bullet[0].ammo )
