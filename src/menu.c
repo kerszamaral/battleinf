@@ -22,10 +22,9 @@ void startscreen(Setti *settings)
         if (settings->select == 0)
         {
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
-            {
-                break;
-            }
+            if ( IsKeyUp(KEY_ENTER))
+                if ( IsKeyPressed(KEY_ENTER) )
+                    break;
         }
         else
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
