@@ -247,10 +247,10 @@ void jogo(Setti *settings)
         
         if ( !bullet[0].ammo )
         {   //Draws bullet[0]
-            DrawTexturePro( fire , (Rectangle){ bullet[0].death*310 , 0 , fire.width/4, fire.height } , (Rectangle){ bullet[0].drawRec.x - bullet[0].cen.x * 2 * sin(bullet[0].rot*PI/180) + bullet[0].speed*sin(bullet[0].rot*PI/180)/2 , bullet[0].drawRec.y + bullet[0].cen.y*2*cos(bullet[0].rot*PI/180) - bullet[0].speed*cos(bullet[0].rot*PI/180)/2 , bullet[0].drawRec.width , bullet[0].drawRec.height } , bullet[0].cen , bullet[0].rot-180 , WHITE);
-            if (bullet[0].death > 3)
+            DrawTexturePro( fire , (Rectangle){ bullet[0].death*532 , 0 , fire.width/20, fire.height } , (Rectangle){ bullet[0].drawRec.x - bullet[0].cen.x * 2 * sin(bullet[0].rot*PI/180) , bullet[0].drawRec.y + bullet[0].cen.y*2*cos(bullet[0].rot*PI/180) , bullet[0].drawRec.width , bullet[0].drawRec.height } , bullet[0].cen , bullet[0].rot-180 , WHITE);
+            if (bullet[0].death > 20)
                 bullet[0].death = 0;
-            else if (bullet[0].time%7 == 0)
+            else if (bullet[0].time%3 == 0)
                 bullet[0].death++;
             DrawTexturePro( bulletimg , bullet[0].sourceRec , bullet[0].drawRec , bullet[0].cen , bullet[0].rot , bullet[0].color );
         }
@@ -333,10 +333,10 @@ void jogo(Setti *settings)
                     bullet[1 + k].pos = (Vector2){ 0 , GetScreenHeight() };
                     player.health--;
                 }
-                DrawTexturePro( fire , (Rectangle){ bullet[1 + k].death*310 , 0 , fire.width/4, fire.height } , (Rectangle){ bullet[1 + k].drawRec.x - bullet[1 + k].cen.x * 2 * sin(bullet[1 + k].rot*PI/180) + bullet[1 + k].speed*sin(bullet[1 + k].rot*PI/180)/2 , bullet[1 + k].drawRec.y + bullet[1 + k].cen.y*2*cos(bullet[1 + k].rot*PI/180) - bullet[1 + k].speed*cos(bullet[1 + k].rot*PI/180)/2 , bullet[1 + k].drawRec.width , bullet[1 + k].drawRec.height } , bullet[1 + k].cen , bullet[1 + k].rot-180 , WHITE);
-                if (bullet[1 + k].death > 3)
+                DrawTexturePro( fire , (Rectangle){ bullet[1 + k].death*532 , 0 , fire.width/20, fire.height } , (Rectangle){ bullet[1 + k].drawRec.x - bullet[1 + k].cen.x * 2 * sin(bullet[1 + k].rot*PI/180) , bullet[1 + k].drawRec.y + bullet[1 + k].cen.y*2*cos(bullet[1 + k].rot*PI/180) , bullet[1 + k].drawRec.width , bullet[1 + k].drawRec.height } , bullet[1 + k].cen , bullet[1 + k].rot-180 , WHITE);
+                if (bullet[1 + k].death > 20)
                     bullet[1 + k].death = 0;
-                else if (bullet[1 + k].time%7 == 0)
+                else if (bullet[1 + k].time%3 == 0)
                     bullet[1 + k].death++;
 
                 DrawTexturePro(bulletimg, bullet[1 + k].sourceRec, bullet[1 + k].drawRec, bullet[1 + k].cen, bullet[1 + k].rot, bullet[1 + k].color);
