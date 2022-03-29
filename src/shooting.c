@@ -35,7 +35,7 @@ Obj shoot( Obj Shooter, Obj Bullet )
     return Bullet;
 }
 
-Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] )
+Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -63,12 +63,13 @@ Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[GetScre
         //Kills Bullet if 1 sec passes or it collides with border
         if (Bullet.time == 60*1 || Bullet.colSide.x || Bullet.colSide.y || Bullet.colSide.z || Bullet.colSide.w )
         {   //Reverts the states change when firing Bullet to neutral
-            Bullet.ammo = true;
+            Bullet.deathpos = Bullet.draw;
+            Bullet.dying = true;
             Bullet.health = 0;
             Bullet.pos = (Vector2){0,SCREENHEIGHT};
             Bullet.time = 0;
         }
-
+        
         //Moves Bullet based on position and speed
         switch (Bullet.rot)
         {
@@ -85,7 +86,29 @@ Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[GetScre
             Bullet.pos.x -= Bullet.speed;
             break;
         }
+
+        if (Bullet.death > 20)
+            Bullet.death = 0;
+        else if (Bullet.time%3 == 0)
+            Bullet.death++;
+
+        DrawTexturePro( textures->smoke , (Rectangle){ Bullet.death*textures->smoke.width/20 , 0 , textures->smoke.width/20, textures->smoke.height } , (Rectangle){ Bullet.drawRec.x - Bullet.cen.x * 2 * sin(Bullet.rot*PI/180) , Bullet.drawRec.y + Bullet.cen.y*2*cos(Bullet.rot*PI/180) , Bullet.drawRec.width , Bullet.drawRec.height } , Bullet.cen , Bullet.rot-180 , WHITE);
+        DrawTexturePro( textures->bullet , Bullet.sourceRec , Bullet.drawRec , Bullet.cen , Bullet.rot , Bullet.color );
+
         Bullet.time++;
     }
+
+    if (Bullet.dying)
+    { // + Bullet.cen.x * sin(Bullet.rot*PI/180) //- Bullet.cen.y*cos(Bullet.rot*PI/180)
+        DrawTexturePro( textures->explosion , (Rectangle){ textures->explosion.width/39*Bullet.deathtimer , 0 , textures->explosion.width/39 , textures->explosion.height } , (Rectangle){ Bullet.deathpos.x , Bullet.deathpos.y  , textures->explosion.width/390, textures->explosion.height/10 } , (Vector2){ (textures->explosion.width/390)/2 , (textures->explosion.height/10)/2 } , Bullet.rot+30 , WHITE );
+        Bullet.deathtimer += 2;
+        if (Bullet.deathtimer > 38)
+        {
+            Bullet.ammo = true;
+            Bullet.deathtimer = 0;
+            Bullet.dying = false;
+        };
+    }
+
     return Bullet;
 }

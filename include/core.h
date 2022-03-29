@@ -28,6 +28,9 @@ typedef struct  //struct for the interactable objects in the game
     Rectangle drawRec; //Rectangle for drawing and object rotation
     Vector4 colSide; //For collision detection algorithm, x = up, y = right, z = down, w = left
     Color color; //For enemy difficulty and mutliplayer
+    bool dying; //For seeing if game should play death animation
+    Vector2 deathpos; //For death animation position
+    int deathtimer; //For death animation timing
 } Obj;
 
 typedef struct  //struct for the interchangable settings in the game
@@ -39,5 +42,18 @@ typedef struct  //struct for the interchangable settings in the game
     bool won;
     bool quit;
 } Setti;
+
+typedef struct  //struct for the interactable objects in the game
+{
+    Texture2D player;  //Texture for the player tank
+    Texture2D enemy; //Texture for the enemy tank
+    Texture2D bullet; //Texture for the bullet
+    Texture2D explosion; //Texture for the explosion
+    Texture2D wall; //Wall texture
+    Texture2D smoke; //Smoke texture
+    Texture2D health; //Health texture
+    Texture2D energy; //Energy texture
+    //Texture2D terrain; //Terrain texture
+} Textus;
 
 #endif
