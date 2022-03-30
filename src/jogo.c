@@ -182,7 +182,7 @@ void jogo(Setti *settings)
             for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
                 if (terrainspace[i][j] == '*')
                 {
-                    for (int k = 0; k < settings->players + settings->level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
+                    for (int k = 0; k < settings->players + settings->level; k++)
                         terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j]);
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
@@ -282,10 +282,10 @@ void jogo(Setti *settings)
                 moveplayer( &player[p] , settings );
             /********************** PLAYER BULLET SHOOTING *******************************/
             playershoot( &player[p] , &bullet[p] , settings );
-            shooting( settings , &bullet[p] , bullet, &player[p] , enemy , Menu , terrainspace, terrainarray , &textures );
+            shooting( settings , &bullet[p] , bullet, player , enemy , Menu , terrainspace, terrainarray , &textures );
         }
 
-         /********************** MULTIPLE ENEMIES *******************************/
+        /********************** MULTIPLE ENEMIES *******************************/
         for (int k = 0; k < settings->level; k++)
         {
             /********************** ENEMY HITBOX *******************************/
@@ -328,8 +328,7 @@ void jogo(Setti *settings)
             /********************** ENEMY BULLET SHOOTING *******************************/
             if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
                 shoot( &enemy[k], &bullet[settings->players + k] );
-            for (int p = 0; p < settings->players; p++)
-                shooting( settings , &bullet[settings->players + k] , bullet , &player[p] , enemy , Menu, terrainspace, terrainarray , &textures);
+            shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, terrainspace, terrainarray , &textures);
         }
 
         /********************** WINNING VARIABLES *******************************/
@@ -357,7 +356,7 @@ void jogo(Setti *settings)
             if ( player[0].time == 60 * 2 )
                 break;
         }
-
+        
         EndDrawing();
     }
 

@@ -34,7 +34,7 @@ void shoot( Obj *Shooter , Obj *Bullet )
     }
 }
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[ settings->players + settings->level ], Obj *Player , Obj enemy[ settings->level ] , Rectangle Menu[4], char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[ settings->players + settings->level ], Obj Player[ settings->players ] , Obj enemy[ settings->level ] , Rectangle Menu[4], char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -105,14 +105,17 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[ settings->players
 
     if ( Bullet->health && Bullet->id >= settings->players)
     {
-        if (CheckCollisionRecs( Player->colRec , Bullet->colRec ))
+        for (int p = 0; p < settings->players; p++)
         {
-            Bullet->deathpos = Bullet->draw;
-            Bullet->dying = true;
-            Bullet->health = 0;
-            Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
-            Bullet->time = 0;
-            Player->health--;
+            if (CheckCollisionRecs( Player[p].colRec , Bullet->colRec ))
+            {
+                Bullet->deathpos = Bullet->draw;
+                Bullet->dying = true;
+                Bullet->health = 0;
+                Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
+                Bullet->time = 0;
+                Player[p].health--;
+            }
         }
     }
 

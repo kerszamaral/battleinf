@@ -52,30 +52,38 @@ void enemymove( Setti *settings , Obj *enemy, Obj player[settings->players] )
     bool up = 0 , down = 0 , left = 0 , right = 0;
     for (int p = 0; p < settings->players; p++)
     {   //Casts a ray every direction from the enemy, if it hits a player, move towards them \ detection range size
-        up = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , 0} , player[p].cen.x/2 );
-        down = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , GetScreenHeight()} , player[p].cen.x/2 );
-        left = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ 0, enemy->pos.y} , player[p].cen.y/2 );
-        right = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ GetScreenWidth() , enemy->pos.y } , player[p].cen.y/2 );
+        if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , 0} , player[p].cen.x/2 ))
+            up = true;
+        if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , GetScreenHeight()} , player[p].cen.x/2 ))
+            down = true;
+        if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ 0, enemy->pos.y} , player[p].cen.y/2 ))
+            left = true;
+        if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){GetScreenWidth() , enemy->pos.y} , player[p].cen.y/2 ))
+            right = true;
     }
     //Chase logic
-    if ( !enemy->colSide.x && up )
+    if ( up )
     {   
-        enemy->pos.y -= enemy->speed;
+        if ( !enemy->colSide.x )
+            enemy->pos.y -= enemy->speed;
         enemy->rot = 0; //Sets enemy rotation to up
     }
-    else if ( !enemy->colSide.z && down )
+    else if ( down )
     {   
-        enemy->pos.y += enemy->speed;
+        if ( !enemy->colSide.z )
+            enemy->pos.y += enemy->speed;
         enemy->rot = 180; //Sets enemy rotation to down
     }
-    else if ( !enemy->colSide.w && left )
+    else if ( left )
     {   
-        enemy->pos.x -= enemy->speed;
+        if ( !enemy->colSide.w )
+            enemy->pos.x -= enemy->speed;
         enemy->rot = 270; //Sets enemy rotation to left
     }
-    else if( !enemy->colSide.y && right )
+    else if( right )
     {   
-        enemy->pos.x += enemy->speed;
+        if ( !enemy->colSide.y )
+            enemy->pos.x += enemy->speed;
         enemy->rot = 90; //Sets enemy rotation to right
     }
     else
@@ -85,24 +93,28 @@ void enemymove( Setti *settings , Obj *enemy, Obj player[settings->players] )
             enemy->score = GetRandomValue(0,4);
             enemy->time = 0;
         }  
-        if (  enemy->score == 0 && !enemy->colSide.x)
+        if (  enemy->score == 0 )
         {   //If the number is 0 and it's not going out of bounds, move in that direction
-            enemy->pos.y -= enemy->speed;
+            if ( !enemy->colSide.x )
+                enemy->pos.y -= enemy->speed;
             enemy->rot = 0; //Sets enemy rotation to up
         }
-        else if ( enemy->score == 1 && !enemy->colSide.z)
+        else if ( enemy->score == 1 )
         {   //If the number is 1 and it's not going out of bounds, move in that direction
-            enemy->pos.y += enemy->speed;
+            if( !enemy->colSide.z )
+                enemy->pos.y += enemy->speed;
             enemy->rot = 180; //Sets enemy rotation to down
         }
-        if ( enemy->score == 2 && !enemy->colSide.w)
+        if ( enemy->score == 2 )
         {   //If the number is 2 and it's not going out of bounds, move in that direction
-            enemy->pos.x -= enemy->speed;
+            if( !enemy->colSide.w )
+                enemy->pos.x -= enemy->speed;
             enemy->rot = 270; //Sets enemy rotation to left
         }
-        if ( enemy->score == 3 && !enemy->colSide.y)
+        if ( enemy->score == 3 )
         {   //If the number is 3 and it's not going out of bounds, move in that direction
-            enemy->pos.x += enemy->speed;
+            if( !enemy->colSide.y )
+                enemy->pos.x += enemy->speed;
             enemy->rot = 90; //Sets enemy rotation to right
         }  
         if ( enemy->score == 4) //stay still
