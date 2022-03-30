@@ -302,7 +302,7 @@ void settingscreen(Setti *settings)
                 if (IsKeyPressed(KEY_LEFT))
                     submenu = false;
 
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->players < 3)
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->players < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
                 {
                     DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
                     settings->players++;

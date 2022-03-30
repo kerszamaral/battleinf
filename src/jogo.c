@@ -304,6 +304,10 @@ void jogo(Setti *settings)
                 //Tests collision with enemy
                 for (int i = 0; i < settings->level; i++)
                     collision( &player[p] , enemy[i].colRec , 2 );
+                //Tests collision with other players
+                for (int i = 0; i < settings->players; i++)
+                    if (i != p)
+                        collision( &player[p] , player[i].colRec , 2 );
                 //Tests collision with each rectangle of terrain
                 for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
                     for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)

@@ -102,19 +102,22 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
 
         Bullet->time++;
     }
-
-    if ( Bullet->health && Bullet->id >= settings->players)
+    if ( Bullet->health)
     {
         for (int p = 0; p < settings->players; p++)
         {
-            if (CheckCollisionRecs( Player[p].colRec , Bullet->colRec ))
+            if (Bullet->id != Player[p].id)
             {
-                Bullet->deathpos = Bullet->draw;
-                Bullet->dying = true;
-                Bullet->health = 0;
-                Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
-                Bullet->time = 0;
-                Player[p].health--;
+                if (CheckCollisionRecs( Player[p].colRec , Bullet->colRec ))
+                {
+                    Bullet->deathpos = Bullet->draw;
+                    Bullet->dying = true;
+                    Bullet->health = 0;
+                    Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
+                    Bullet->time = 0;
+                    if (Bullet->id >= settings->players )
+                        Player[p].health--;
+                }
             }
         }
     }
