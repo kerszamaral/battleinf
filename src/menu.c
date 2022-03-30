@@ -345,14 +345,45 @@ void settingscreen(Setti *settings)
 
         if (settings->select == 2)
         {
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            DrawText("Theme", GetScreenWidth() / 2 - MeasureText("Theme", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+            if ( IsKeyPressed(KEY_RIGHT) )
             {
-                /* code */
+                submenu = true;
+            }
+            if ( submenu )
+            {
+                if (IsKeyPressed(KEY_LEFT))
+                    submenu = false;
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 1)
+                    submenuselect += 1;
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
+                    submenuselect -= 1;
+
+                if (submenuselect == 0)
+                {
+                    DrawText("Night", GetScreenWidth() / 3 * 2 - MeasureText("Night", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4 + 100, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        settings->theme = BLACK;
+                    }
+                }
+                else
+                    DrawText("Night", GetScreenWidth() / 3 * 2 - MeasureText("Night", GetFontDefault().baseSize),  GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+                
+                if (submenuselect == 1)
+                {
+                    DrawText("Day", GetScreenWidth() / 3 * 2 - MeasureText("Day", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        settings->theme = RAYWHITE;
+                    }
+                }
+                else
+                    DrawText("Day", GetScreenWidth() / 3 * 2 - MeasureText("Day", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
             }
         }
         else
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+            DrawText("Theme", GetScreenWidth() / 2 - MeasureText("Theme", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
         
         if (settings->select == 3)
         {

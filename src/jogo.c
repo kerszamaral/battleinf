@@ -175,7 +175,7 @@ void jogo(Setti *settings)
     {
         BeginDrawing();
 
-        ClearBackground( BLACK );
+        ClearBackground( settings->theme ); //Background color
         
         /********************** TERRAIN CREATION *******************************/
         for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
