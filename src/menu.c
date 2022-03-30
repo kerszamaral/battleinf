@@ -213,8 +213,8 @@ void endscreen(Setti *settings)
 void settingscreen(Setti *settings)
 {
     settings->select = 0;
-    int resoselect = 0;
-    bool resolu = false;
+    int submenuselect = 0;
+    bool submenu = false;
 
     while (!WindowShouldClose())
     {
@@ -223,10 +223,12 @@ void settingscreen(Setti *settings)
         ClearBackground(BLACK);
         
         DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
-        
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->select < 4 && !resolu)
+        if (!submenu)
+            submenuselect = 0;
+
+        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->select < 4 && !submenu)
             settings->select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->select > 0 && !resolu)
+        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->select > 0 && !submenu)
             settings->select -= 1;
 
         if (settings->select == 0)
@@ -234,18 +236,18 @@ void settingscreen(Setti *settings)
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             if ( IsKeyPressed(KEY_RIGHT) )
             {
-                resolu = true;
+                submenu = true;
             }
-            if ( resolu )
+            if ( submenu )
             {
                 if (IsKeyPressed(KEY_LEFT))
-                    resolu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && resoselect < 2)
-                    resoselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && resoselect > 0)
-                    resoselect -= 1;
+                    submenu = false;
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 2)
+                    submenuselect += 1;
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
+                    submenuselect -= 1;
 
-                if (resoselect == 0)
+                if (submenuselect == 0)
                 {
                     DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
                     if ( IsKeyPressed(KEY_ENTER) )
@@ -258,7 +260,7 @@ void settingscreen(Setti *settings)
                 else
                     DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
                 
-                if (resoselect == 1)
+                if (submenuselect == 1)
                 {
                     DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
                     if ( IsKeyPressed(KEY_ENTER) )
@@ -271,7 +273,7 @@ void settingscreen(Setti *settings)
                 else
                     DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
                 
-                if (resoselect == 2)
+                if (submenuselect == 2)
                 {
                     DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
                     if ( IsKeyPressed(KEY_ENTER) )
@@ -290,14 +292,56 @@ void settingscreen(Setti *settings)
 
         if (settings->select == 1)
         {
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            DrawText("Number of Players", GetScreenWidth() / 2 - MeasureText("Number of Players", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+            if ( IsKeyPressed(KEY_RIGHT) )
             {
-                /* code */
+                submenu = true;
+            }
+            if ( submenu )
+            {
+                if (IsKeyPressed(KEY_LEFT))
+                    submenu = false;
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 2)
+                    submenuselect += 1;
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
+                    submenuselect -= 1;
+
+                if (submenuselect == 0)
+                {
+                    DrawText("1", GetScreenWidth() / 3 * 2 - MeasureText("1", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        settings->players = 1;
+                    }
+                }
+                else
+                    DrawText("1", GetScreenWidth() / 3 * 2 - MeasureText("1", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
+                
+                if (submenuselect == 1)
+                {
+                    DrawText("2", GetScreenWidth() / 3 * 2 - MeasureText("2", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        settings->players = 2;
+                    }
+                }
+                else
+                    DrawText("2", GetScreenWidth() / 3 * 2 - MeasureText("2", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+                
+                if (submenuselect == 2)
+                {
+                    DrawText("3", GetScreenWidth() / 3 * 2 - MeasureText("3", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+                    if ( IsKeyPressed(KEY_ENTER) )
+                    {
+                        settings->players = 3;
+                    }
+                }
+                else
+                    DrawText("3", GetScreenWidth() / 3 * 2 - MeasureText("3", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
             }
         }
         else
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+            DrawText("Number of Players", GetScreenWidth() / 2 - MeasureText("Number of Players", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
 
         if (settings->select == 2)
         {
