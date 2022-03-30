@@ -253,10 +253,10 @@ void jogo(Setti *settings)
                 if (terrainspace[i][j] == '*')
                     collision( &player, terrainarray[i][j] , 2 );
         
-        player = moveplayer(player , -1 );//TODO move to pointer 
+        moveplayer( &player , settings );
 
         /********************** PLAYER BULLET SHOOTING *******************************/
-        bullet[0] = playershoot( player, bullet[0] , -1 ); //TODO move to pointer 
+        playershoot( &player , &bullet[0] , settings );
         shooting( settings , &bullet[0] , bullet, &player , enemy , Menu , terrainspace, terrainarray , &textures );
         
         /********************** ENEMY HITBOX *******************************/

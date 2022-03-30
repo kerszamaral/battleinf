@@ -2,8 +2,8 @@
 #define player_H_
 #include "core.h"
 
-Obj moveplayer( Obj player , int ID);
+void moveplayer( Obj *player , Setti *settings );
 
-Obj playershoot( Obj player, Obj Bullet , int ID);
+void playershoot( Obj *player, Obj *Bullet , Setti *settings);
 
 #endif
