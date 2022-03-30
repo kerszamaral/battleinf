@@ -8,25 +8,25 @@ void moveplayer( Obj *player , Setti *settings )
     //Movement logic 
     if ( settings->players == 1 && player->health > 0 )
     {
-        if ( IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) )
+        if ( IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || IsGamepadButtonDown(0, 1) || GetGamepadAxisMovement(0 , 1) < -0.5 )
         {   //Checks player is colliding up
             if( !player->colSide.x )
                 player->pos.y -= player->speed;
             player->rot = 0; //Sets players rotation to up
         }
-        else if ( IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) )
+        else if ( IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsGamepadButtonDown(0, 3) || GetGamepadAxisMovement( 0 , 1 ) > 0.5 )
         {   //Checks player is colliding down
             if( !player->colSide.z )
                 player->pos.y += player->speed;
             player->rot = 180; //Sets player rotation to down
         }
-        else if ( IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) )
+        else if ( IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) || IsGamepadButtonDown(0, 4) || GetGamepadAxisMovement(0 , 0) < -0.5 )
         {   //Checks player is colliding left
             if( !player->colSide.w )
                 player->pos.x -= player->speed;
             player->rot = 270; //Sets player rotation to left
         }
-        else if ( IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) )
+        else if ( IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) || IsGamepadButtonDown(0, 2) || GetGamepadAxisMovement(0 , 0) > 0.5 )
         {   //Checks player is colliding right
             if( !player->colSide.y )
                 player->pos.x += player->speed;
@@ -93,7 +93,7 @@ void playershoot( Obj *player, Obj *Bullet , Setti *settings)
 {
     if (settings->players == 1 && player->health > 0 )
     {
-        if ( IsKeyPressed(KEY_SPACE) ||IsKeyPressed(KEY_J) )  
+        if ( IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_J) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
                 shoot( player , Bullet);
     }

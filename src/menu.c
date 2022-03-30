@@ -14,16 +14,16 @@ void startscreen(Setti *settings)
         
         DrawText("BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->select < 4)
+        if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->select < 4)
             settings->select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->select > 0)
+        if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->select > 0)
             settings->select -= 1;
 
         if (settings->select == 0)
         {
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             //if ( IsKeyUp(KEY_ENTER))
-                if ( IsKeyPressed(KEY_ENTER) )
+                if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
                     break;
         }
         else
@@ -32,7 +32,7 @@ void startscreen(Setti *settings)
         if (settings->select == 1)
         {
             DrawText("Load", GetScreenWidth() / 2 - MeasureText("Load", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
             {
                 settings->select = 1;
                 break;
@@ -44,7 +44,7 @@ void startscreen(Setti *settings)
         if (settings->select == 2)
         {
             DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
             {
                 settings->select = 2;
                 break;
@@ -56,7 +56,7 @@ void startscreen(Setti *settings)
         if (settings->select == 3)
         {
             DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
             {
                 settings->select = 3;
                 break;
@@ -68,7 +68,7 @@ void startscreen(Setti *settings)
         if (settings->select == 4)
         {
             DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
             {
                 settings->quit = true;
                 break;
@@ -141,7 +141,7 @@ void nome(Setti *settings)
                 DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
             }
             else DrawText("Pressione BACKSPACE para deletar", 230, 400, 20, GRAY);
-            if (IsKeyReleased(KEY_ENTER) && letterCount <= MAX_INPUT_CHARS)
+            if ((IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && letterCount <= MAX_INPUT_CHARS)
             {
                 printf( "\nNome: %s    Pontuacao: %d     fase: %d\n\n", name , settings->score , settings->level );
                 //write to file "name", remove last place
@@ -177,15 +177,15 @@ void endscreen(Setti *settings)
 
         DrawText("GAME OVER", GetScreenWidth() / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
         
-        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->select < 1 )
+        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3) ) && settings->select < 1 )
             settings->select += 1;
-        if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->select > 0 )
+        if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1) ) && settings->select > 0 )
             settings->select -= 1;
 
         if ( settings->select == 0 )
         {
             DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4, 25, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) )
+            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
             {
                 settings->select = 0;
                 break;
@@ -197,7 +197,7 @@ void endscreen(Setti *settings)
         if ( settings->select == 1 )
         {
             DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4 + 100, 20, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) )
+            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
             {
                 settings->quit = true;
                 break;
@@ -226,31 +226,31 @@ void settingscreen(Setti *settings)
         if (!submenu)
             submenuselect = 0;
 
-        if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->select < 4 && !submenu)
+        if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->select < 4 && !submenu)
             settings->select += 1;
-        if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->select > 0 && !submenu)
+        if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->select > 0 && !submenu)
             settings->select -= 1;
 
         if (settings->select == 0)
         {
             DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) )
+            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2) )
             {
                 submenu = true;
             }
             if ( submenu )
             {
-                if (IsKeyPressed(KEY_LEFT))
+                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
                     submenu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 2)
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && submenuselect < 2)
                     submenuselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && submenuselect > 0)
                     submenuselect -= 1;
 
                 if (submenuselect == 0)
                 {
                     DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
+                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     {
                         if (IsWindowFullscreen())
                             ToggleFullscreen();
@@ -263,7 +263,7 @@ void settingscreen(Setti *settings)
                 if (submenuselect == 1)
                 {
                     DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
+                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     {
                         if (IsWindowFullscreen())
                             ToggleFullscreen();
@@ -276,7 +276,7 @@ void settingscreen(Setti *settings)
                 if (submenuselect == 2)
                 {
                     DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
+                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     {
                         SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
                         ToggleFullscreen();
@@ -293,16 +293,15 @@ void settingscreen(Setti *settings)
         if (settings->select == 1)
         {
             DrawText("Number of Players", GetScreenWidth() / 2 - MeasureText("Number of Players", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) )
-            {
+            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2))
                 submenu = true;
-            }
+            
             if ( submenu )
             {
-                if (IsKeyPressed(KEY_LEFT))
+                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
                     submenu = false;
 
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->players < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->players < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
                 {
                     DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
                     settings->players++;
@@ -310,14 +309,9 @@ void settingscreen(Setti *settings)
                 else
                     DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
                 
-                //if (submenuselect == 1)
-                //{
-                    DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                //}
-                //else
-                    //DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+                DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
                 
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->players > 1)
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->players > 1)
                 {
                     DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
                     settings->players--;
@@ -332,23 +326,23 @@ void settingscreen(Setti *settings)
         if (settings->select == 2)
         {
             DrawText("Theme", GetScreenWidth() / 2 - MeasureText("Theme", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) )
+            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2) )
             {
                 submenu = true;
             }
             if ( submenu )
             {
-                if (IsKeyPressed(KEY_LEFT))
+                if (IsKeyPressed(KEY_LEFT)|| IsGamepadButtonPressed(0, 4))
                     submenu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 1)
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3) ) && submenuselect < 1)
                     submenuselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && submenuselect > 0)
                     submenuselect -= 1;
 
                 if (submenuselect == 0)
                 {
                     DrawText("Night", GetScreenWidth() / 3 * 2 - MeasureText("Night", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
+                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     {
                         settings->theme = BLACK;
                     }
@@ -359,7 +353,7 @@ void settingscreen(Setti *settings)
                 if (submenuselect == 1)
                 {
                     DrawText("Day", GetScreenWidth() / 3 * 2 - MeasureText("Day", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
+                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     {
                         settings->theme = RAYWHITE;
                     }
@@ -374,7 +368,7 @@ void settingscreen(Setti *settings)
         if (settings->select == 3)
         {
             DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) )
+            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
             {
                 
             } 
@@ -385,7 +379,7 @@ void settingscreen(Setti *settings)
         if (settings->select == 4)
         {
             DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) )
+            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
             {
                 settings->select = 0;
                 break;

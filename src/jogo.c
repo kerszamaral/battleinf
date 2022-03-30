@@ -184,7 +184,7 @@ void jogo(Setti *settings)
         spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
     
     //Main game loop
-    while( !WindowShouldClose() ) //End if you press esc or player.health gets to 0
+    while( !WindowShouldClose() && !IsGamepadButtonReleased( 0 , 15 ) ) //End if you press esc or player.health gets to 0
     {
         BeginDrawing();
 

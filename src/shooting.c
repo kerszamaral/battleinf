@@ -141,10 +141,8 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                             enemy[k].dying = true;
                             Player->score += 800;
                             enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
-                        }
-                        
+                        }   
                     }
-        
     }
 
     if (Bullet->dying)
