@@ -413,3 +413,62 @@ void settingscreen(Setti *settings)
         EndDrawing();
     }
 }
+
+void pausescreen(Setti *settings)
+{
+  
+    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, YELLOW);
+    
+    if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->pauseselect < 3 )
+        settings->pauseselect += 1;
+    if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->pauseselect > 0)
+        settings->pauseselect -= 1;
+    
+    if (settings->pauseselect == 0)
+    {
+        DrawText("Resume", GetScreenWidth() / 2 - MeasureText("Resume", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+        {
+            settings->pause = false;
+        }
+    }
+    else
+        DrawText("Resume", GetScreenWidth() / 2 - MeasureText("Resume", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+    
+    if (settings->pauseselect == 1)
+    {
+        DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+        {
+            settings->pauseselect = 1;
+        }
+    }
+    else
+        DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+    
+    if (settings->pauseselect == 2)
+    {
+        DrawText("Main Menu", GetScreenWidth() / 2 - MeasureText("Main Menu", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
+        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+        {
+            settings->exitgame = true;
+            settings->pause = false;
+        }
+    }
+    else
+        DrawText("Main Menu", GetScreenWidth() / 2 - MeasureText("Main Menu", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
+    
+    if (settings->pauseselect == 3)
+    {
+        DrawText("Quit Game", GetScreenWidth() / 2 - MeasureText("Quit Game", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
+        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+        {
+            settings->quit = true;
+            settings->exitgame = true;
+            settings->pause = false;
+        }
+    }
+    else
+        DrawText("Quit Game", GetScreenWidth() / 2 - MeasureText("Quit Game", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
+    
+}

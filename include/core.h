@@ -46,6 +46,7 @@ typedef struct  //struct for the interchangable settings in the game
     int extended;
     bool pause;
     bool exitgame;
+    int pauseselect;
 } Setti;
 
 typedef struct  //struct for the interactable objects in the game

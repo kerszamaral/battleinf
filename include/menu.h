@@ -13,4 +13,6 @@ void endscreen(Setti *settings);
 
 void settingscreen(Setti *settings);
 
+void pausescreen(Setti *settings);
+
 #endif

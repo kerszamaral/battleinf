@@ -6,6 +6,7 @@
 #include "enemy.h"
 #include "shooting.h"
 #include "terrain.h"
+#include "menu.h"
 
 
 
@@ -390,6 +391,10 @@ void jogo(Setti *settings)
             shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, terrainspace, terrainarray , &textures);
         }
 
+        if (settings->pause)
+            pausescreen(settings);
+        else
+            settings->pauseselect = 0;
         /********************** WINNING VARIABLES *******************************/
         if ( score >= settings->score + 800 * settings->level )
         {
