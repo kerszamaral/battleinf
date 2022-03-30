@@ -134,6 +134,8 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[ settings->players
                             enemy[k].health--;
                         if (enemy[k].health == 0)
                         {
+                            enemy[k].deathpos = enemy[k].draw;
+                            enemy[k].dying = true;
                             Player->score += 800;
                             enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
                         }

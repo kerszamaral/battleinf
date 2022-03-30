@@ -20,7 +20,8 @@ void jogo(Setti *settings)
         LoadTexture("resources/images/wall.png"), //Wall texture
         LoadTexture("resources/images/fire.png"), //Smoke texture
         LoadTexture("resources/images/health.png"), //Health texture
-        LoadTexture("resources/images/energy.png") //Energy texture
+        LoadTexture("resources/images/energy.png"), //Energy texture
+        LoadTexture("resources/images/explosionVehicles.png") //Texture for the explosion of vehicles
         //LoadTexture("") //Terrain texture
     };
     /********************** MENU VARIABELS *******************************/
@@ -262,7 +263,25 @@ void jogo(Setti *settings)
             if (player[p].health > 0)
                 DrawTexturePro( textures.player , player[p].sourceRec , player[p].drawRec , player[p].cen , player[p].rot , player[p].color ); //Draws player[p] tank
             if (player[p].health <= 0)
+            {
+                if (!player[p].dying && player[p].health != -100)
+                {                
+                    player[p].deathpos = player[p].draw;
+                    player[p].dying = true;
+                }
                 player[p].pos = (Vector2){ 0 , 0 };
+            }
+            if (player[p].dying)
+            {  //Player death
+                DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * player[p].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){player[p].deathpos.x ,player[p].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,player[p].rot , WHITE );
+                player[p].deathtimer++;
+                if (player[p].deathtimer > 36)
+                {
+                   player[p].deathtimer = 0;
+                   player[p].dying = false;
+                   player[p].health = -100;
+                }
+            }
 
             /********************** PLAYER COLLISION/MOVEMENT *******************************/
                 //Resets collision detection
@@ -324,7 +343,16 @@ void jogo(Setti *settings)
             //TODO When map destruction is done need to lower enemy[i] sight distance, very easy
             if ( enemy[k].health >= 1 )
                 enemymove( settings , &enemy[k] , player );
-            
+            if (enemy[k].dying)
+            {  //Player death
+                DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * enemy[k].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){enemy[k].deathpos.x ,enemy[k].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,enemy[k].rot , WHITE );
+                enemy[k].deathtimer++;
+                if (enemy[k].deathtimer > 36)
+                {
+                   enemy[k].deathtimer = 0;
+                   enemy[k].dying = false;
+                }
+            }
             /********************** ENEMY BULLET SHOOTING *******************************/
             if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
                 shoot( &enemy[k], &bullet[settings->players + k] );
@@ -345,11 +373,11 @@ void jogo(Setti *settings)
         }else
             settings->won = false;
 
-        int totalhealth = 0;    
+        int deathcount = 0;
         for (int p = 0; p < settings->players; p++)
-            totalhealth += player[p].health;
-
-        if(totalhealth <= 0)
+            if( player[p].health <= 0 )
+                deathcount++;
+        if( deathcount >= settings->players )
         {
             player[0].time++;
             DrawText( "VOCE MORREU", GetScreenWidth() / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , RED );

@@ -55,6 +55,7 @@ typedef struct  //struct for the interactable objects in the game
     Texture2D smoke; //Smoke texture
     Texture2D health; //Health texture
     Texture2D energy; //Energy texture
+    Texture2D explosionVehicles; //Texture for the explosion of vehicles
     //Texture2D terrain; //Terrain texture
 } Textus;
 
