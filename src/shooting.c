@@ -113,7 +113,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                     Bullet->deathpos = Bullet->draw;
                     Bullet->dying = true;
                     Bullet->health = 0;
-                    Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
+                    Bullet->pos = (Vector2){ 0 , GetScreenHeight() *2};
                     Bullet->time = 0;
                     if (Bullet->id >= settings->players )
                         Player[p].health--;
@@ -131,7 +131,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                         Bullet->deathpos = Bullet->draw;
                         Bullet->dying = true;
                         Bullet->health = 0;
-                        Bullet->pos = (Vector2){ 0 , GetScreenHeight() };
+                        Bullet->pos = (Vector2){ 0 , GetScreenHeight() *2};
                         Bullet->time = 0;
                         if ( Bullet->id < settings->players )
                             enemy[k].health--;
@@ -140,7 +140,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                             enemy[k].deathpos = enemy[k].draw;
                             enemy[k].dying = true;
                             Player->score += 800;
-                            enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
+                            enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight()*2 };
                         }   
                     }
     }
