@@ -301,7 +301,7 @@ void settingscreen(Setti *settings)
                 if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
                     submenu = false;
 
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->players < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->players < 5) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
                 {
                     DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
                     settings->players++;
@@ -367,14 +367,36 @@ void settingscreen(Setti *settings)
         
         if (settings->select == 3)
         {
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
+            DrawText("Extended Play", GetScreenWidth() / 2 - MeasureText("Extended Play", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
+            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2))
+                submenu = true;
+            
+            if ( submenu )
             {
+                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
+                    submenu = false;
+
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->extended < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
+                {
+                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
+                    settings->extended++;
+                }
+                else
+                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
                 
-            } 
+                DrawText(TextFormat("%d",settings->extended), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->extended), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+                
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->extended > 0)
+                {
+                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+                    settings->extended--;
+                }
+                else
+                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+            }
         }
         else
-            DrawText("test", GetScreenWidth() / 2 - MeasureText("test", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
+            DrawText("Extended Play", GetScreenWidth() / 2 - MeasureText("Extended Play", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
 
         if (settings->select == 4)
         {

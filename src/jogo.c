@@ -66,10 +66,16 @@ void jogo(Setti *settings)
         switch (player[i].id)
         {
             case 1:
-                player[i].color = YELLOW;
+                player[i].color = RED;
                 break;
             case 2:
-                player[i].color = DARKBLUE;
+                player[i].color = GREEN;
+                break;
+            case 3:
+                player[i].color = ORANGE;
+                break;
+            case 4:
+                player[i].color = MAGENTA;
                 break;
             default:
                 player[i].color = WHITE;

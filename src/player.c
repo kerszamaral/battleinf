@@ -90,25 +90,25 @@ void moveplayer( Obj *player , Setti *settings )
 
     if (player->health > 0)
     {
-        if ( IsGamepadButtonDown(player->id, 1) || GetGamepadAxisMovement(player->id , 1) < -0.5 )
+        if ( IsGamepadButtonDown( player->id - settings->extended , 1 ) || GetGamepadAxisMovement(player->id - settings->extended  , 1) < -0.5 )
         {   //Checks player is colliding up
             if( !player->colSide.x )
                 player->pos.y -= player->speed;
             player->rot = 0; //Sets players rotation to up
         }
-        else if ( IsGamepadButtonDown(player->id, 3) || GetGamepadAxisMovement( player->id , 1 ) > 0.5 )
+        else if ( IsGamepadButtonDown(player->id - settings->extended , 3) || GetGamepadAxisMovement( player->id - settings->extended  , 1 ) > 0.5 )
         {   //Checks player is colliding down
             if( !player->colSide.z )
                 player->pos.y += player->speed;
             player->rot = 180; //Sets player rotation to down
         }
-        else if ( IsGamepadButtonDown(player->id, 4) || GetGamepadAxisMovement(player->id , 0) < -0.5 )
+        else if ( IsGamepadButtonDown(player->id - settings->extended , 4) || GetGamepadAxisMovement(player->id - settings->extended  , 0) < -0.5 )
         {   //Checks player is colliding left
             if( !player->colSide.w )
                 player->pos.x -= player->speed;
             player->rot = 270; //Sets player rotation to left
         }
-        else if ( IsGamepadButtonDown(player->id, 2) || GetGamepadAxisMovement(player->id , 0) > 0.5 )
+        else if ( IsGamepadButtonDown(player->id - settings->extended , 2) || GetGamepadAxisMovement(player->id - settings->extended  , 0) > 0.5 )
         {   //Checks player is colliding right
             if( !player->colSide.y )
                 player->pos.x += player->speed;
@@ -141,7 +141,7 @@ void playershoot( Obj *player, Obj *Bullet , Setti *settings)
 
     if ( player->health > 0 )
     {
-         if ( IsGamepadButtonPressed(player->id, 7) || IsGamepadButtonPressed(player->id, 12) )  
+         if ( IsGamepadButtonPressed(player->id - settings->extended , 7) || IsGamepadButtonPressed(player->id - settings->extended , 12) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
                 shoot( player , Bullet);
     }
