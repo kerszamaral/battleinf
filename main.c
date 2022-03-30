@@ -11,7 +11,7 @@ int main(void)
 {
     Setti settings = { 1 , 0 , 0 , 0 , false , false, BLACK, 0 };
     int lscore = 1600;
-    Image logo = LoadImage("resources/images/player.png");
+    Image logo = LoadImage("assets/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetWindowIcon(logo);
     SetTargetFPS(60);
