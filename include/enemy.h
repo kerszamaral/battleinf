@@ -3,10 +3,10 @@
 
 #include "core.h"
 
-void spawn( Obj *spawn , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj enemy[level]);
+void spawn( Setti *settings , Obj *spawn , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[settings->players] , Obj enemy[settings->level]);
 
-void enemyspawn( Obj *enemy , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj otherenemy[level] );
+void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[settings->players] , Obj otherenemy[settings->level] );
 
-void enemymove(Obj *enemy, Obj *player);
+void enemymove(Setti *settings , Obj *enemy, Obj player[settings->players]);
 
 #endif

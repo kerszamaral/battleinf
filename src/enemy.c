@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Random starting position
-void spawn( Obj *spawn , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj enemy[level])
+void spawn( Setti *settings , Obj *spawn , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[settings->players] , Obj enemy[settings->level])
 {
     do
     {
@@ -19,15 +19,16 @@ void spawn( Obj *spawn , int level , char terrainspace[GetScreenHeight()/(GetScr
             for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
                 if ( terrainspace[ i ][ j ] == '*' )
                     collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
-        collision( spawn, playerCol , 2);
-        for (int i = 0; i < level; i++)
+        for (int p = 0; p < settings->players; p++)
+            collision( spawn, player[p].colRec , 2);
+        for (int i = 0; i < settings->level; i++)
             collision( spawn , enemy[i].colRec , 2 );
     //Tests while it doesn't find a suitable match
     } while ( spawn->colSide.x || spawn->colSide.y || spawn->colSide.z || spawn->colSide.w );
     //If it does, returns to game with starting position
 }
 
-void enemyspawn( Obj *enemy , int level , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Rectangle playerCol , Obj otherenemy[level] )
+void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[settings->players] , Obj otherenemy[settings->level] )
 {   
     if (!enemy->health && enemy->death < 100000)
     {
@@ -40,31 +41,40 @@ void enemyspawn( Obj *enemy , int level , char terrainspace[GetScreenHeight()/(G
         else
             enemy->health = 1;
         enemy->death = 100000;
-        spawn( enemy , level, terrainspace , terrainarray, playerCol, otherenemy );
+        spawn( settings , enemy , terrainspace , terrainarray, player , otherenemy );
     }
 }
 
-void enemymove(Obj *enemy, Obj *player)
+void enemymove( Setti *settings , Obj *enemy, Obj player[settings->players] )
 {   
     /********************** ENEMY MOVEMENT *******************************/
+    //Checks for all players
+    bool up = 0 , down = 0 , left = 0 , right = 0;
+    for (int p = 0; p < settings->players; p++)
+    {   //Casts a ray every direction from the enemy, if it hits a player, move towards them \ detection range size
+        up = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , 0} , player[p].cen.x/2 );
+        down = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , GetScreenHeight()} , player[p].cen.x/2 );
+        left = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ 0, enemy->pos.y} , player[p].cen.y/2 );
+        right = CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ GetScreenWidth() , enemy->pos.y } , player[p].cen.y/2 );
+    }
     //Chase logic
-    if ( !enemy->colSide.x && CheckCollisionPointLine(player->pos,enemy->pos, (Vector2){enemy->pos.x , 0}, player->cen.x/2))
-    {   //Casts a ray up from the enemy, if it hits the player, move towards it                     Detection Range Size
+    if ( !enemy->colSide.x && up )
+    {   
         enemy->pos.y -= enemy->speed;
         enemy->rot = 0; //Sets enemy rotation to up
     }
-    else if ( !enemy->colSide.z && CheckCollisionPointLine(player->pos,enemy->pos, (Vector2){enemy->pos.x , SCREENHEIGHT}, player->cen.x/2))
-    {   //Casts a ray down from the enemy, if it hits the player, move towards it                                   Detection Range Size
+    else if ( !enemy->colSide.z && down )
+    {   
         enemy->pos.y += enemy->speed;
         enemy->rot = 180; //Sets enemy rotation to down
     }
-    else if ( !enemy->colSide.w && CheckCollisionPointLine(player->pos,enemy->pos, (Vector2){ 0, enemy->pos.y}, player->cen.y/2) )
-    {   //Casts a ray to the left from the enemy, if it hits the player, move towards it            Detection Range Size
+    else if ( !enemy->colSide.w && left )
+    {   
         enemy->pos.x -= enemy->speed;
         enemy->rot = 270; //Sets enemy rotation to left
     }
-    else if( !enemy->colSide.y && CheckCollisionPointLine(player->pos,enemy->pos, (Vector2){ SCREENWIDTH , enemy->pos.y }, player->cen.y/2) )
-    {   //Casts a ray to the right from the enemy, if it hits the player, move towards it                           Detection Range Size
+    else if( !enemy->colSide.y && right )
+    {   
         enemy->pos.x += enemy->speed;
         enemy->rot = 90; //Sets enemy rotation to right
     }
