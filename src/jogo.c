@@ -412,4 +412,5 @@ void jogo(Setti *settings)
     UnloadTexture(textures.smoke); //Smoke texture
     UnloadTexture(textures.health); //Health texture
     UnloadTexture(textures.energy); //Energy texture
+    UnloadTexture(textures.explosionVehicles); //Texture for the explosion for vehicles 
 }
