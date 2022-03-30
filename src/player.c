@@ -38,7 +38,7 @@ Obj playershoot( Obj player, Obj Bullet , int ID)
 {
     if (( IsKeyPressed(KEY_J) && ID == 0 ) || ( IsKeyPressed(KEY_SPACE) && ID == 1 ) || ( ID == -1 && (IsKeyPressed(KEY_SPACE) ||IsKeyPressed(KEY_J)) ) ) //Verify if player(it's store on bullet) has ammo
         if (Bullet.ammo)
-            Bullet = shoot(player , Bullet);
+            shoot( &player , &Bullet);
         
     return Bullet;
 }

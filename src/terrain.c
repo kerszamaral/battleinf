@@ -31,7 +31,7 @@ void terraincreate(char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][G
 
 void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] )
 {
-    int terrainx = 0, terrainy = 0;
+    int terrainx = (GetScreenHeight()/90), terrainy = 0;
     //We use an array to create 128 rectangles, they are all set to size and position 0 
     //When it finds the * in sets the position and size for the rectangle on that place
     
@@ -43,7 +43,7 @@ void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()
                 terrainarray[ i ][ j ] = (Rectangle){ terrainx , terrainy + GetScreenHeight()/12 , (GetScreenHeight()/12) , (GetScreenHeight()/12) };
             terrainx += (GetScreenHeight()/12);
         }
-        terrainx = 0;
+        terrainx = (GetScreenHeight()/90);
         terrainy += (GetScreenHeight()/12);
     }
 }
@@ -54,7 +54,7 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain )
     bullet.colSide.y = 0;
     bullet.colSide.z = 0;
     bullet.colSide.w = 0;
-    bullet = collision( bullet , terrain , 2);
+    collision( &bullet , terrain , 2);
     if ( bullet.colSide.x || bullet.colSide.y || bullet.colSide.z || bullet.colSide.w )
     {
         switch (bullet.rot)

@@ -25,11 +25,10 @@ void jogo(Setti *settings)
     };
     /********************** MENU VARIABELS *******************************/
     ClearWindowState(FLAG_WINDOW_RESIZABLE);
-    int *level = &settings->level;
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
     Rectangle Menu[4] = {
     (Rectangle){ 0 , 0 , GetScreenWidth() , GetScreenHeight()/12 }, //Rectangle for the ingame menu
-    (Rectangle){ 0 , GetScreenHeight() - GetScreenHeight()/90 , GetScreenWidth(), GetScreenHeight()/90}, //Rectangle for bottom border
+    (Rectangle){ 0 , GetScreenHeight() - GetScreenHeight()/90 , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
     (Rectangle){ 0 , 0 , GetScreenHeight()/90, GetScreenHeight() }, //Rectangle for left border
     (Rectangle){ GetScreenWidth() - GetScreenHeight()/90 , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
     };
@@ -38,6 +37,7 @@ void jogo(Setti *settings)
     //Object
     Obj player = 
     {
+        0, //id of the object
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) textures.player.width / textures.player.height, //ratio
         (Vector2){ textures.player.width * (0.000083*GetScreenHeight()) , ( textures.player.height * player.ratio ) * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
@@ -61,12 +61,13 @@ void jogo(Setti *settings)
 
     /********************** ENEMY VARIABELS *******************************/
     //Object
-    Obj enemy[ *level ];
+    Obj enemy[ settings->level ];
     enemy->ratio = (float) textures.enemy.width / textures.enemy.height; //Fixes weird bug found to fill entire screen
-    for (int i = 0; i < *level; i++)
+    for (int i = 0; i < settings->level; i++)
     {
         enemy[i] = 
         (Obj){
+            i, //id of the object
             (Vector2){ GetScreenWidth() , GetScreenHeight() }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
             (float) textures.enemy.width / textures.enemy.height, //ratio
             (Vector2){ textures.enemy.width  * (0.000083*GetScreenHeight()) , ( textures.enemy.height * enemy->ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
@@ -95,12 +96,13 @@ void jogo(Setti *settings)
 
     /********************** BULLET VARIABELS *******************************/
     //Objects
-    Obj bullet[ 1 + *level ]; //Declares the number of bullets used for the level
+    Obj bullet[ settings->players + settings->level ]; //Declares the number of bullets used for the level
     bullet->ratio = (float) textures.bullet.width / textures.bullet.height; //Fixes weird bug found by player that caused bullets to fill entire screen
-    for (int i = 0; i < 1 + *level ; i++) //Fills in the variables for all bullets
+    for (int i = 0; i < settings->players + settings->level ; i++) //Fills in the variables for all bullets
     {
         bullet[i] =
         (Obj){
+            i, //id of the object
             (Vector2){ 0 , 0 }, //Vector2 pos, x and y
             (float) textures.bullet.width / textures.bullet.height, //ratio
             (Vector2){ textures.bullet.width * (0.000016*GetScreenHeight()) , ( textures.bullet.height * bullet->ratio ) * (0.000016*GetScreenHeight()) }, //Vector2 center, x and y
@@ -127,6 +129,7 @@ void jogo(Setti *settings)
     //Object
     Obj energy = 
     {
+        0, //id of the object
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
         (float) textures.energy.width / textures.energy.height, //ratio
         (Vector2){ textures.energy.width  * (0.000083*GetScreenHeight()) , ( textures.energy.height * energy.ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
@@ -158,7 +161,7 @@ void jogo(Setti *settings)
     Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)) ];
     terrainplace( terrainarray , terrainspace );
     //Random player starting position
-    player = spawn( player , *level , terrainspace , terrainarray , player.colRec , enemy);
+    spawn( &player , settings->level , terrainspace , terrainarray , player.colRec , enemy);
     
     //Main game loop
     while( !WindowShouldClose() ) //End if you press esc or player.health gets to 0
@@ -172,7 +175,7 @@ void jogo(Setti *settings)
             for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
                 if (terrainspace[i][j] == '*')
                 {
-                    for (int k = 0; k < 1 + *level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
+                    for (int k = 0; k < settings->players + settings->level; k++) //Sometimes this creates ghost blocks, but it's not consistent and i don't know why
                         terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j]);
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
@@ -182,9 +185,9 @@ void jogo(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //Text 
-        DrawText( TextFormat( "Fase %d" , *level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/600)) , 10*(GetScreenHeight()*(1.0/600)) , 40*(GetScreenHeight()*(1.0/600)) , YELLOW );
+        DrawText( TextFormat( "Fase %d" , settings->level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/600)) , 10*(GetScreenHeight()*(1.0/600)) , 40*(GetScreenHeight()*(1.0/600)) , YELLOW );
         DrawText( TextFormat( "Pontuação: %i", settings->score + player.score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*(1.0/600)) , 13 * (GetScreenHeight()*(1.0/600)) , 32*(GetScreenHeight()*(1.0/600)) , RED );
-        DrawText( TextFormat( "Inimigos restantes: %d/%d", *level - player.score / 800 , *level ),
+        DrawText( TextFormat( "Inimigos restantes: %d/%d", settings->level - player.score / 800 , settings->level ),
         MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*(1.0/600)) + 10 , 15 * (GetScreenHeight()*(1.0/600)) , 24*(GetScreenHeight()*(1.0/600)) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
         for ( int i = 0, healthx = 5 ; i < player.health ; i++ , healthx += 35 * (GetScreenHeight()*(1.0/600)) )//
@@ -195,7 +198,7 @@ void jogo(Setti *settings)
         //Energy Spawning
         if ( energy.time >= 60*3 && !energy.health && !GetRandomValue( 0 , 63 ) )
         {
-            energy = spawn( energy , *level , terrainspace , terrainarray , player.colRec , enemy);
+            spawn( &energy , settings->level , terrainspace , terrainarray , player.colRec , enemy);
             energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
             energy.health = 1;
         }
@@ -205,7 +208,7 @@ void jogo(Setti *settings)
         if ( energy.health >= 1 )
         {
             DrawTexturePro( textures.energy , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
-            energy = collision( energy , player.colRec , 2 );
+            collision( &energy , player.colRec , 2 );
             energy.time = 0;
             if ( energy.colSide.x || energy.colSide.y || energy.colSide.z || energy.colSide.w )
             {   //Energy pickup
@@ -240,24 +243,24 @@ void jogo(Setti *settings)
         player.colSide = (Vector4){ 0 , 0 , 0 , 0 };
         //Tests collision with sides
         for (int i = 0; i < 4; i++)
-            player = collision( player , Menu[i], 2 );
+            collision( &player , Menu[i], 2 );
         //Tests collision with enemy
-        for (int i = 0; i < *level; i++)
-            player = collision( player , enemy[i].colRec , 2 );
+        for (int i = 0; i < settings->level; i++)
+            collision( &player , enemy[i].colRec , 2 );
         //Tests collision with each rectangle of terrain
         for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
             for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
                 if (terrainspace[i][j] == '*')
-                    player = collision( player, terrainarray[i][j] , 2 );
+                    collision( &player, terrainarray[i][j] , 2 );
         
-        player = moveplayer(player , -1 );
+        player = moveplayer(player , -1 );//TODO move to pointer 
 
         /********************** PLAYER BULLET SHOOTING *******************************/
-        bullet[0] = playershoot( player, bullet[0] , -1);
-        bullet[0] = shooting( bullet[0] , bullet[1], Menu , terrainspace, terrainarray , &textures );
-
+        bullet[0] = playershoot( player, bullet[0] , -1 ); //TODO move to pointer 
+        shooting( settings , &bullet[0] , bullet, &player , enemy , Menu , terrainspace, terrainarray , &textures );
+        
         /********************** ENEMY HITBOX *******************************/
-        for (int k = 0; k < *level; k++)
+        for (int k = 0; k < settings->level; k++)
         {
             //Draw position and draw rectangle update
             //Sets enemy.draw to be enemy.pos + offset
@@ -270,75 +273,51 @@ void jogo(Setti *settings)
         }
 
         /********************** ENEMY SPAWNING *******************************/
-        for (int k = 0; k < *level; k++)
+        for (int k = 0; k < settings->level; k++)
         {
             //Spawn logic
-            enemy[k] = enemyspawn( enemy[k], *level , terrainspace , terrainarray , player.colRec , enemy );
+            enemyspawn( &enemy[k], settings->level , terrainspace , terrainarray , player.colRec , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
                 DrawTexturePro( textures.enemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
             //Will be removed when bullet.c is done
-            if ( CheckCollisionRecs( bullet[0].colRec, enemy[k].colRec ) ) //if player bullet collides with enemy[k], kills enemy[k]
-            {   //Reverts the states change when enemy[k] alive to neutral
-                enemy[k].health--;
-                bullet[0].health--;
-                bullet[0].ammo = true;
-                bullet[0].pos = (Vector2){ 0 , GetScreenHeight() };
-                if (enemy[k].health == 0)
-                {
-                    player.score += 800;
-                    enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight() };
-                }
-            }
         }
 
         /********************** ENEMY COLLISION/MOVEMENT *******************************/
-        for (int k = 0; k < *level; k++)
+        for (int k = 0; k < settings->level; k++)
         {
             //Resets collision detection
             enemy[k].colSide = (Vector4){ 0 , 0 , 0 , 0 };
             //Tests collision with sides
             for (int i = 0; i < 4; i++)
-                enemy[k] = collision( enemy[k] , Menu[i] , 2);
+                collision( &enemy[k] , Menu[i] , 2);
             //Tests collision with player
-            enemy[k] = collision( enemy[k] , player.colRec , 2);
+            collision( &enemy[k] , player.colRec , 2);
             //Tests collision with each rectangle of terrain
             for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
                 for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
                     if (terrainspace[i][j] == '*')
-                        enemy[k] = collision( enemy[k] , terrainarray[i][j] , 2 );
+                        collision( &enemy[k] , terrainarray[i][j] , 2 );
             //Tests collision against other enemys
-            for (int i = 0; i < *level; i++)
-                enemy[k] = collision( enemy[k] , enemy[i].colRec , 2 );
+            for (int i = 0; i < settings->level; i++)
+                collision( &enemy[k] , enemy[i].colRec , 2 );
             //When map destruction is done need to lower enemy[i] sight distance, very easy
             if ( enemy[k].health >= 1 )
-                enemy[k] = enemymove(enemy[k], player);
+                enemymove( &enemy[k], &player );
         }
         
 
         /********************** ENEMY BULLET SHOOTING *******************************/
-        for (int k = 0; k < *level; k++)
+        for (int k = 0; k < settings->level; k++)
         {
-            if (!GetRandomValue(0,15) && bullet[1 + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
-                bullet[1 + k] = shoot( enemy[k], bullet[1 + k] );
+            if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
+                shoot( &enemy[k], &bullet[settings->players + k] );
 
-            bullet[1 + k] = shooting( bullet[1 + k] , bullet[0] , Menu, terrainspace, terrainarray , &textures);
-            
-            if ( !bullet[1 + k].health )
-            {
-                if (CheckCollisionRecs( player.colRec , bullet[1 + k].colRec ))
-                {
-                    bullet[1 + k].ammo = true;
-                    bullet[1 + k].health = 0;
-                    bullet[1 + k].time = 0;
-                    bullet[1 + k].pos = (Vector2){ 0 , GetScreenHeight() };
-                    player.health--;
-                }
-            }
+            shooting( settings , &bullet[settings->players + k] , bullet , &player , enemy , Menu, terrainspace, terrainarray , &textures);
         }
 
         /********************** WINNING VARIABLES *******************************/
-        if ( player.score + settings->score >= settings->score + 800 * *level )
+        if ( player.score + settings->score >= settings->score + 800 * settings->level )
         {
             player.time++;
             player.health = 3;
@@ -358,11 +337,6 @@ void jogo(Setti *settings)
             if ( player.time == 60 * 2 )
                 break;
         }
-        if (IsKeyPressed(KEY_K))
-        {
-            printf("Rot: %d Sin: %f Cos: %f \n",bullet[0].rot , sin(bullet[0].rot*PI/180), cos(bullet[0].rot*PI/180));
-        }
-        
         
         EndDrawing();
     }
@@ -378,5 +352,4 @@ void jogo(Setti *settings)
     UnloadTexture(textures.smoke); //Smoke texture
     UnloadTexture(textures.health); //Health texture
     UnloadTexture(textures.energy); //Energy texture
-
 }

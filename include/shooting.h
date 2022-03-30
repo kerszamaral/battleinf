@@ -3,8 +3,8 @@
 
 #include "core.h"
 
-Obj shoot( Obj Shooter, Obj Bullet );
+void shoot( Obj *Shooter , Obj *Bullet );
 
-Obj shooting(Obj Bullet, Obj Other, Rectangle Menu[4], char terrainspace[8][16], Rectangle terrainarray[8][16] , Textus *textures );
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[ settings->players + settings->level ], Obj *Player , Obj enemy[ settings->level ] , Rectangle Menu[4], char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures );
 
 #endif

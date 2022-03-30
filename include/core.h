@@ -12,6 +12,7 @@
 
 typedef struct  //struct for the interactable objects in the game
 {
+    int id; //id of the object
     Vector2 pos; //Vector2 for position, has x and y
     float ratio; //How much the height is more than the width
     Vector2 cen; //Vector2 for center position, has x and y
