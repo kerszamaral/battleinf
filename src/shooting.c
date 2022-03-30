@@ -69,7 +69,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
             Bullet->deathpos = Bullet->draw;
             Bullet->dying = true;
             Bullet->health = 0;
-            Bullet->pos = (Vector2){0,GetScreenHeight()};
+            Bullet->pos = (Vector2){0,GetScreenHeight()*2};
             Bullet->time = 0;
         }
         
