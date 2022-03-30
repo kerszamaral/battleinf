@@ -23,7 +23,7 @@ void startscreen(Setti *settings)
         {
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             //if ( IsKeyUp(KEY_ENTER))
-                if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+                if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                     break;
         }
         else
