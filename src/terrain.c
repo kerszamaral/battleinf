@@ -1,7 +1,7 @@
 #include "core.h"
 #include "collision.h"
  
-void terraincreate(char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][GetScreenWidth()/(GetScreenHeight()/12)])
+void terraincreate(char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)])
 {
     //Creates the Rectangles in the place it finds * in the array to display it in the game
     //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
@@ -29,7 +29,7 @@ void terraincreate(char terrainspace[GetScreenHeight()/(GetScreenHeight()/12)][G
     }
 }
 
-void terrainplace(  Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[ GetScreenHeight()/(GetScreenHeight()/12) ][ GetScreenWidth()/(GetScreenHeight()/12) ] )
+void terrainplace(  Rectangle terrainarray[][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[][ GetScreenWidth()/(GetScreenHeight()/12) ] )
 {
     int terrainx = (GetScreenHeight()/90), terrainy = 0;
     //We use an array to create 128 rectangles, they are all set to size and position 0 
