@@ -63,6 +63,18 @@ void jogo(Setti *settings)
             (Vector2){ 0 , 0 }, //deathpos
             0 //deathtimer
         };
+        switch (player[i].id)
+        {
+            case 1:
+                player[i].color = YELLOW;
+                break;
+            case 2:
+                player[i].color = DARKBLUE;
+                break;
+            default:
+                player[i].color = WHITE;
+                break;
+        }
     }
     
 
@@ -204,7 +216,7 @@ void jogo(Setti *settings)
         for (int p = 0, healthy = 10; p < settings->players; p++, healthy += (45 * (GetScreenHeight()*(1.0/600)))/settings->players )
         {    
             for ( int i = 0, healthx = 5 ; i < player[p].health ; i++ , healthx += (35 * (GetScreenHeight()*(1.0/600)))/settings->players )
-                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.025 * (GetScreenHeight()*(1.0/600)))/settings->players, WHITE );
+                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.025 * (GetScreenHeight()*(1.0/600)))/settings->players, player[p].color );
             //                                           This image is too big, scaling factor needs to be very small   
         }
 
