@@ -301,43 +301,29 @@ void settingscreen(Setti *settings)
             {
                 if (IsKeyPressed(KEY_LEFT))
                     submenu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && submenuselect < 2)
-                    submenuselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && submenuselect > 0)
-                    submenuselect -= 1;
 
-                if (submenuselect == 0)
+                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)) && settings->players < 3)
                 {
-                    DrawText("1", GetScreenWidth() / 3 * 2 - MeasureText("1", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
-                    {
-                        settings->players = 1;
-                    }
+                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
+                    settings->players++;
                 }
                 else
-                    DrawText("1", GetScreenWidth() / 3 * 2 - MeasureText("1", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
+                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
                 
-                if (submenuselect == 1)
-                {
-                    DrawText("2", GetScreenWidth() / 3 * 2 - MeasureText("2", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
-                    {
-                        settings->players = 2;
-                    }
-                }
-                else
-                    DrawText("2", GetScreenWidth() / 3 * 2 - MeasureText("2", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
+                //if (submenuselect == 1)
+                //{
+                    DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
+                //}
+                //else
+                    //DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
                 
-                if (submenuselect == 2)
+                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S)) && settings->players > 1)
                 {
-                    DrawText("3", GetScreenWidth() / 3 * 2 - MeasureText("3", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) )
-                    {
-                        settings->players = 3;
-                    }
+                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
+                    settings->players--;
                 }
                 else
-                    DrawText("3", GetScreenWidth() / 3 * 2 - MeasureText("3", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
+                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
             }
         }
         else
