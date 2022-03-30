@@ -74,33 +74,34 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
         }
         
         //Moves Bullet based on position and speed
-        switch (Bullet->rot)
-        {
-        case 0:
-            Bullet->pos.y -= Bullet->speed;
-            break;
-        case 90:
-            Bullet->pos.x += Bullet->speed;
-            break;
-        case 180:
-            Bullet->pos.y += Bullet->speed;
-            break;
-        case 270:
-            Bullet->pos.x -= Bullet->speed;
-            break;
-        }
+        if (!settings->pause)
+            switch (Bullet->rot)
+            {
+            case 0:
+                Bullet->pos.y -= Bullet->speed;
+                break;
+            case 90:
+                Bullet->pos.x += Bullet->speed;
+                break;
+            case 180:
+                Bullet->pos.y += Bullet->speed;
+                break;
+            case 270:
+                Bullet->pos.x -= Bullet->speed;
+                break;
+            }
 
         if (Bullet->death > 20)
             Bullet->death = 0;
-        else if (Bullet->time%3 == 0)
+        else if (Bullet->time%3 == 0 && !settings->pause)
             Bullet->death++;
         //This was a bug that made the smoke spin but I kept it as a feature becaue it looked nice doubled
         DrawTexturePro( textures->smoke , (Rectangle){ Bullet->death*textures->smoke.width/20 , 0 , textures->smoke.width/20, textures->smoke.height } , (Rectangle){ Bullet->drawRec.x - Bullet->cen.x * 2 * sin(Bullet->rot*PI/180) , Bullet->drawRec.y + Bullet->cen.y*2*cos(Bullet->rot*PI/180) , Bullet->drawRec.width , Bullet->drawRec.height } , Bullet->cen , Bullet->rot-180 , WHITE);
         DrawTexturePro( textures->smoke , (Rectangle){ textures->smoke.width - textures->smoke.width/20 - Bullet->death*textures->smoke.width/20 , 0 , textures->smoke.width/20, textures->smoke.height } , (Rectangle){ Bullet->drawRec.x - Bullet->cen.x * 2 * sin(Bullet->rot*PI/180) , Bullet->drawRec.y + Bullet->cen.y*2*cos(Bullet->rot*PI/180) , Bullet->drawRec.width , Bullet->drawRec.height } , Bullet->cen , Bullet->rot-180 , WHITE);
         
         DrawTexturePro( textures->bullet , Bullet->sourceRec , Bullet->drawRec , Bullet->cen , Bullet->rot , Bullet->color );
-
-        Bullet->time++;
+        if (!settings->pause)
+            Bullet->time++;
     }
     if ( Bullet->health)
     {
@@ -148,7 +149,8 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
     if (Bullet->dying)
     { // + Bullet->cen.x * sin(Bullet->rot*PI/180) //- Bullet->cen.y*cos(Bullet->rot*PI/180)
         DrawTexturePro( textures->explosion , (Rectangle){ textures->explosion.width/39*Bullet->deathtimer , 0 , textures->explosion.width/39 , textures->explosion.height } , (Rectangle){ Bullet->deathpos.x , Bullet->deathpos.y  , textures->explosion.width/390, textures->explosion.height/10 } , (Vector2){ (textures->explosion.width/390)/2 , (textures->explosion.height/10)/2 } , Bullet->rot+30 , WHITE );
-        Bullet->deathtimer += 2;
+        if (!settings->pause)
+            Bullet->deathtimer += 2;
         if (Bullet->deathtimer > 38)
         {
             Bullet->ammo = true;

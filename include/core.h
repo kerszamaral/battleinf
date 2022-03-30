@@ -44,6 +44,8 @@ typedef struct  //struct for the interchangable settings in the game
     bool quit;
     Color theme;
     int extended;
+    bool pause;
+    bool exitgame;
 } Setti;
 
 typedef struct  //struct for the interactable objects in the game

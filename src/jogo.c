@@ -11,6 +11,7 @@
 
 void jogo(Setti *settings)
 {
+    SetExitKey(0);
     /********************** TEXTURES *******************************/
     Textus textures = {
         LoadTexture("assets/player.png"),  //Texture for the player tank
@@ -190,12 +191,16 @@ void jogo(Setti *settings)
         spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
     
     //Main game loop
-    while( !WindowShouldClose() && !IsGamepadButtonReleased( 0 , 15 ) ) //End if you press esc or player.health gets to 0
+    while( !settings->exitgame && !WindowShouldClose() ) //End if you press esc or player.health gets to 0
     {
         BeginDrawing();
 
         ClearBackground( settings->theme ); //Background color
         
+        if (IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed( 0 , 15) ) //Ends game if esc is pressed
+            settings->pause = !settings->pause;
+        
+
         /********************** TERRAIN CREATION *******************************/
         for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
             for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
@@ -228,13 +233,13 @@ void jogo(Setti *settings)
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
         //Energy Spawning
-        if ( energy.time >= 60*3 && !energy.health && !GetRandomValue( 0 , 63 ) )
+        if ( energy.time >= 60*3 && !energy.health && !GetRandomValue( 0 , 63 ) && !settings->pause )
         {
             spawn( settings , &energy , terrainspace , terrainarray , player , enemy);
             energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
             energy.health = 1;
         }
-        else
+        else if (!settings->pause)
             energy.time++;
         //Energy Drawing
         if ( energy.health >= 1 )
@@ -256,7 +261,7 @@ void jogo(Setti *settings)
             }
         }
         //Energy falloff
-        if ( energy.time >= 60*3 && energy.ammo )
+        if ( energy.time >= 60*3 && energy.ammo && !settings->pause )
         {
             for (int p = 0; p < settings->players; p++)
             {
@@ -292,7 +297,8 @@ void jogo(Setti *settings)
             if (player[p].dying)
             {  //Player death
                 DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * player[p].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){player[p].deathpos.x ,player[p].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,player[p].rot , WHITE );
-                player[p].deathtimer++;
+                if (!settings->pause)
+                    player[p].deathtimer++;
                 if (player[p].deathtimer > 36)
                 {
                    player[p].deathtimer = 0;
@@ -302,27 +308,28 @@ void jogo(Setti *settings)
             }
 
             /********************** PLAYER COLLISION/MOVEMENT *******************************/
-                //Resets collision detection
-                player[p].colSide = (Vector4){ 0 , 0 , 0 , 0 };
-                //Tests collision with sides
-                for (int i = 0; i < 4; i++)
-                    collision( &player[p] , Menu[i], 2 );
-                //Tests collision with enemy
-                for (int i = 0; i < settings->level; i++)
-                    collision( &player[p] , enemy[i].colRec , 2 );
-                //Tests collision with other players
-                for (int i = 0; i < settings->players; i++)
-                    if (i != p)
-                        collision( &player[p] , player[i].colRec , 2 );
-                //Tests collision with each rectangle of terrain
-                for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-                    for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
-                        if (terrainspace[i][j] == '*')
-                            collision( &player[p], terrainarray[i][j] , 2 );
-                
+            //Resets collision detection
+            player[p].colSide = (Vector4){ 0 , 0 , 0 , 0 };
+            //Tests collision with sides
+            for (int i = 0; i < 4; i++)
+                collision( &player[p] , Menu[i], 2 );
+            //Tests collision with enemy
+            for (int i = 0; i < settings->level; i++)
+                collision( &player[p] , enemy[i].colRec , 2 );
+            //Tests collision with other players
+            for (int i = 0; i < settings->players; i++)
+                if (i != p)
+                    collision( &player[p] , player[i].colRec , 2 );
+            //Tests collision with each rectangle of terrain
+            for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
+                for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
+                    if (terrainspace[i][j] == '*')
+                        collision( &player[p], terrainarray[i][j] , 2 );
+            if (!settings->pause)
                 moveplayer( &player[p] , settings );
             /********************** PLAYER BULLET SHOOTING *******************************/
-            playershoot( &player[p] , &bullet[p] , settings );
+            if (!settings->pause)
+                playershoot( &player[p] , &bullet[p] , settings );
             shooting( settings , &bullet[p] , bullet, player , enemy , Menu , terrainspace, terrainarray , &textures );
         }
 
@@ -340,7 +347,8 @@ void jogo(Setti *settings)
             //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
             /********************** ENEMY SPAWNING *******************************/
             //Spawn logic
-            enemyspawn( settings , &enemy[k], terrainspace , terrainarray , player , enemy );
+            if (!settings->pause)
+                enemyspawn( settings , &enemy[k], terrainspace , terrainarray , player , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
                 DrawTexturePro( textures.enemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
@@ -363,12 +371,13 @@ void jogo(Setti *settings)
             for (int i = 0; i < settings->level; i++)
                 collision( &enemy[k] , enemy[i].colRec , 2 );
             //TODO When map destruction is done need to lower enemy[i] sight distance, very easy
-            if ( enemy[k].health >= 1 )
+            if ( enemy[k].health >= 1 && !settings->pause)
                 enemymove( settings , &enemy[k] , player );
             if (enemy[k].dying)
             {  //Player death
                 DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * enemy[k].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){enemy[k].deathpos.x ,enemy[k].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,enemy[k].rot , WHITE );
-                enemy[k].deathtimer++;
+                if (!settings->pause)
+                    enemy[k].deathtimer++;
                 if (enemy[k].deathtimer > 36)
                 {
                    enemy[k].deathtimer = 0;
@@ -376,7 +385,7 @@ void jogo(Setti *settings)
                 }
             }
             /********************** ENEMY BULLET SHOOTING *******************************/
-            if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1) //Verify if enemy[k] has ammo
+            if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1 && !settings->pause) //Verify if enemy[k] has ammo
                 shoot( &enemy[k], &bullet[settings->players + k] );
             shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, terrainspace, terrainarray , &textures);
         }
@@ -384,7 +393,8 @@ void jogo(Setti *settings)
         /********************** WINNING VARIABLES *******************************/
         if ( score >= settings->score + 800 * settings->level )
         {
-            player[0].time++;
+            if (!settings->pause)
+                player[0].time++;
 
             DrawText( "LEVEL COMPLETE", GetScreenWidth() / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , GOLD );
             if ( player[0].time == 60 * 2 )
@@ -401,7 +411,8 @@ void jogo(Setti *settings)
                 deathcount++;
         if( deathcount >= settings->players )
         {
-            player[0].time++;
+            if (!settings->pause)
+                player[0].time++;
             DrawText( "VOCE MORREU", GetScreenWidth() / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , RED );
             if ( player[0].time == 60 * 2 )
                 break;
