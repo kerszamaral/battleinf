@@ -13,15 +13,15 @@ void jogo(Setti *settings)
 {
     /********************** TEXTURES *******************************/
     Textus textures = {
-        LoadTexture("resources/images/player.png"),  //Texture for the player tank
-        LoadTexture("resources/images/enemy.png"), //Texture for the enemy tank
-        LoadTexture("resources/images/bullet.png"), //Texture for the bullet
-        LoadTexture("resources/images/explosionBullets.png"), //Texture for the explosion for bullets
-        LoadTexture("resources/images/wall.png"), //Wall texture
-        LoadTexture("resources/images/fire.png"), //Smoke texture
-        LoadTexture("resources/images/health.png"), //Health texture
-        LoadTexture("resources/images/energy.png"), //Energy texture
-        LoadTexture("resources/images/explosionVehicles.png") //Texture for the explosion of vehicles
+        LoadTexture("assets/player.png"),  //Texture for the player tank
+        LoadTexture("assets/enemy.png"), //Texture for the enemy tank
+        LoadTexture("assets/bullet.png"), //Texture for the bullet
+        LoadTexture("assets/explosionBullets.png"), //Texture for the explosion for bullets
+        LoadTexture("assets/wall.png"), //Wall texture
+        LoadTexture("assets/fire.png"), //Smoke texture
+        LoadTexture("assets/health.png"), //Health texture
+        LoadTexture("assets/energy.png"), //Energy texture
+        LoadTexture("assets/explosionVehicles.png") //Texture for the explosion of vehicles
         //LoadTexture("") //Terrain texture
     };
     /********************** MENU VARIABELS *******************************/
