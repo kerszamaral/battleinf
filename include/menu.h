@@ -15,4 +15,6 @@ void settingscreen(Setti *settings);
 
 void pausescreen(Setti *settings);
 
+void highscorescreen(Setti *settings);
+
 #endif

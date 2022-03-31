@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "core.h"
+#include <string.h>
 
 
 void startscreen(Setti *settings)
@@ -23,7 +24,7 @@ void startscreen(Setti *settings)
         {
             DrawText("Start", GetScreenWidth() / 2 - MeasureText("Start", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
             //if ( IsKeyUp(KEY_ENTER))
-                if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
+                if ( IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(0, 8) || IsGamepadButtonPressed(0, 10) )
                     break;
         }
         else
@@ -44,7 +45,7 @@ void startscreen(Setti *settings)
         if (settings->select == 2)
         {
             DrawText("High Scores", GetScreenWidth() / 2 - MeasureText("High Scores", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-            if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
+            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
             {
                 settings->select = 2;
                 break;
@@ -88,7 +89,20 @@ void nome(Setti *settings)
     char name[MAX_INPUT_CHARS + 1] = "\0"; //+1 de espaço para o \0
     int letterCount = 0;
     Rectangle textBox = { GetScreenWidth()/2.0f - 100, 320, 225, 50 };
+    
+    int ranking = 6;
 
+    for (int i = 0; i < 5; i++)
+    {
+        if (settings->score > LoadStorageValue(0 + i*12))
+        {
+            SaveStorageValue(0 + i*12, LoadStorageValue(12 + i*12));
+            SaveStorageValue(1 + i*12, LoadStorageValue(13 + i*12));
+            for (int j = 0; j < 10; j++)
+                SaveStorageValue(2 + i*12 + j, LoadStorageValue(14 + i*12 + j));
+            ranking--;
+        }
+    }
 
     while (!WindowShouldClose())
     {
@@ -120,6 +134,9 @@ void nome(Setti *settings)
 
             ClearBackground(BLACK);
 
+            DrawText(TextFormat("Seu Ranking: %i", ranking), GetScreenWidth() / 2 - 
+            MeasureText("Seu Ranking: 5", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 100, 40, GRAY);
+
             DrawText("Digite seu nome para registrar sua Pontuação!", GetScreenWidth() / 2 - 
             MeasureText("Digite seu nome para registrar sua Pontuação!", GetFontDefault().baseSize), GetScreenHeight() / 4 - 50, 20, GRAY);
 
@@ -142,15 +159,16 @@ void nome(Setti *settings)
             }
             else DrawText("Pressione BACKSPACE para deletar", 230, 400, 20, GRAY);
             if ((IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && letterCount <= MAX_INPUT_CHARS)
-            {
-                printf( "\nNome: %s    Pontuacao: %d     fase: %d\n\n", name , settings->score , settings->level );
-                //write to file "name", remove last place
                 break;
-            }
             
         EndDrawing();
     }
-    
+    int id = 5 - ranking;
+
+    SaveStorageValue(0 + id*12, settings->score);
+    SaveStorageValue(1 + id*12, settings->level);
+    for (int i = 0; i < 10; i++)
+        SaveStorageValue(2 + id*12 + i, name[i]);
 }
 
 // Check if any key is pressed
@@ -471,4 +489,47 @@ void pausescreen(Setti *settings)
     else
         DrawText("Quit Game", GetScreenWidth() / 2 - MeasureText("Quit Game", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
     
+}
+
+void highscorescreen(Setti *settings)
+{
+    Score pscores[5];
+
+    for (int i = 0; i < 5; i++)
+    {
+        pscores[i].score = LoadStorageValue(48 - i*12);
+        pscores[i].level = LoadStorageValue(49 - i*12);
+        for (int j = 0; j < 10; j++)
+            pscores[i].name[j] = LoadStorageValue(50 + j - i*12 );
+    }
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+
+        ClearBackground(BLACK);
+        DrawText("Highscores", GetScreenWidth() / 2 - MeasureText("Highscores", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 100, 40, YELLOW);
+        
+        DrawText("Rº", GetScreenWidth() / 3 - MeasureText("Rº", GetFontDefault().baseSize) * 1.25 - 200, GetScreenHeight() / 4 - 50 , 25, GOLD);
+        DrawText("Score", GetScreenWidth() / 3 - MeasureText("Score", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, GREEN);
+        DrawText("Name", GetScreenWidth() / 2 - MeasureText("Name", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, YELLOW);
+        DrawText("Level", (GetScreenWidth() - GetScreenWidth() / 4) - MeasureText("Level", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, BLUE);
+
+        for (int i = 0; i < 5; i++)
+        {
+            DrawText(TextFormat("%d", i+1), GetScreenWidth() / 3 - MeasureText(TextFormat("%d", i+1), GetFontDefault().baseSize) * 1.25 - 200, GetScreenHeight() / 4 + 50 + i * 50, 25, GOLD);
+            DrawText(TextFormat("%d", pscores[i].score), GetScreenWidth() / 3 - MeasureText(TextFormat("%d", pscores[i].score), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
+            DrawText(TextFormat("%s", pscores[i].name), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", pscores[i].name), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
+            DrawText(TextFormat("%d", pscores[i].level), (GetScreenWidth() - GetScreenWidth() / 4) - MeasureText(TextFormat("%d", pscores[i].level), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
+        }
+
+        DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 400, 25, YELLOW);
+        if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0,12) )
+        {
+            settings->select = 0;
+            break;
+        } 
+
+        EndDrawing();
+    }
 }

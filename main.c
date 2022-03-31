@@ -6,17 +6,18 @@ BattleInf Jogo de tanquezinho lá do NES
 #include "core.h"
 #include "jogo.h"
 #include "menu.h"
+#include <stdlib.h>
+#include <string.h>
 
 int main(void)
 {
     Setti settings = { 1 , 0 , 0 , 0 , false , false, BLACK, 0, false, 0 };
-    int lscore = 1600;
     Image logo = LoadImage("assets/player.png");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     SetWindowIcon(logo);
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    
+
     while ( !settings.quit )
     {
         startscreen( &settings );
@@ -31,11 +32,14 @@ int main(void)
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
             
-            if (settings.score > lscore) //Quando fizermos load no arquivo de scores passados ele vai ver se é maior que o ultimo
+            if (settings.score > LoadStorageValue(0))
                 nome( &settings );
             settings.exitgame = false;
             settings.level = 0;
             settings.score = 0;
+            break;
+        case 2:
+            highscorescreen( &settings );
             break;
         case 3:
             settingscreen( &settings );

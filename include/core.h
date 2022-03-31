@@ -63,4 +63,11 @@ typedef struct  //struct for the interactable objects in the game
     //Texture2D terrain; //Terrain texture
 } Textus;
 
+typedef struct
+{
+    int score;
+    char name[10];
+    int level;
+} Score;
+
 #endif
