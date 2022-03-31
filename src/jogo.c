@@ -10,9 +10,41 @@
 
 
 
-void jogo(Setti *settings, Textus *textures, SFX *sounds)
+void jogo(Setti *settings)
 {
     SetExitKey(0);
+    /********************** TEXTURES *******************************/
+    Textus textures = {
+        LoadTexture("assets/player.png"),  //Texture for the player tank
+        LoadTexture("assets/enemy.png"), //Texture for the enemy tank
+        LoadTexture("assets/bullet.png"), //Texture for the bullet
+        LoadTexture("assets/explosionBullets.png"), //Texture for the explosion for bullets
+        LoadTexture("assets/wall.png"), //Wall texture
+        LoadTexture("assets/fire.png"), //Smoke texture
+        LoadTexture("assets/health.png"), //Health texture
+        LoadTexture("assets/energy.png"), //Energy texture
+        LoadTexture("assets/explosionVehicles.png") //Texture for the explosion of vehicles
+        //LoadTexture("") //Terrain texture
+    };
+    /********************** SOUNDS *******************************/
+    SFX sounds = {
+        LoadSound("assets/gamestartSFX.wav"),  //Sound for the start of the game
+        LoadSound("assets/gameendSFX.wav"), //Sound for the end of the game
+        LoadSound("assets/explosionVehicleSFX.wav"), //Sound for the explosion
+        LoadSound("assets/BulletShotSFX.wav"), //Sound for the shoot
+        LoadSound("assets/playerpassiveSFX.wav"), //Sound for the player //! Disabled for now because it's too annoying
+        LoadSound("assets/BulletMissSFX.wav"), //Sound for the bullet miss
+        LoadSound("assets/TerrainHitSFX.wav") //Sound for the terrain hit
+    };
+
+    SetSoundVolume(sounds.playerpassive, 0.006);
+    SetSoundVolume(sounds.gamestart, 0.03);
+    SetSoundVolume(sounds.gameend, 0.05);
+    SetSoundVolume(sounds.explosion, 0.02);
+    SetSoundVolume(sounds.shoot, 0.02);
+    SetSoundVolume(sounds.bulletmiss, 0.02);
+    SetSoundVolume(sounds.terrainhit, 0.02);
+
     /********************** MENU VARIABELS *******************************/
     ClearWindowState(FLAG_WINDOW_RESIZABLE);
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
@@ -26,15 +58,15 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     /********************** PLAYER VARIABELS *******************************/
     //Object
     Obj player[settings->players]; 
-    player->ratio = (float) textures->player.width / textures->player.height; //!Fixes weird bug found to fill entire screen
+    player->ratio = (float) textures.player.width / textures.player.height; //!Fixes weird bug found to fill entire screen
     for (int i = 0; i < settings->players; i++)
     {
         player[i] = 
         (Obj){
             i, //id of the object
             (Vector2){ 0 , 0 }, //Vector2 pos, x and y
-            (float) textures->player.width / textures->player.height, //ratio
-            (Vector2){ textures->player.width * (0.000083*GetScreenHeight()) , ( textures->player.height * player->ratio ) * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
+            (float) textures.player.width / textures.player.height, //ratio
+            (Vector2){ textures.player.width * (0.000083*GetScreenHeight()) , ( textures.player.height * player->ratio ) * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
             (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
             3, //Health
             0, //Object rotation
@@ -43,7 +75,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             0, //Death
             2*(GetScreenHeight()*(1.0/600)), //Speed
             false, //Ammo
-            (Rectangle){ 0 , 0 , textures->player.width , textures->player.height }, //sourceRec
+            (Rectangle){ 0 , 0 , textures.player.width , textures.player.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
             (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
             (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
@@ -76,15 +108,15 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     /********************** ENEMY VARIABELS *******************************/
     //Object
     Obj enemy[ settings->level ];
-    enemy->ratio = (float) textures->enemy.width / textures->enemy.height; //!Fixes weird bug found to fill entire screen
+    enemy->ratio = (float) textures.enemy.width / textures.enemy.height; //!Fixes weird bug found to fill entire screen
     for (int i = 0; i < settings->level; i++)
     {
         enemy[i] = 
         (Obj){
             i, //id of the object
             (Vector2){ GetScreenWidth() , GetScreenHeight() }, //Vector2 pos, x and y     Bullets spawn 0,0 conflict enemy spawn
-            (float) textures->enemy.width / textures->enemy.height, //ratio
-            (Vector2){ textures->enemy.width  * (0.000083*GetScreenHeight()) , ( textures->enemy.height * enemy->ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
+            (float) textures.enemy.width / textures.enemy.height, //ratio
+            (Vector2){ textures.enemy.width  * (0.000083*GetScreenHeight()) , ( textures.enemy.height * enemy->ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
             (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
             0, //Health
             0, //Object rotation
@@ -93,7 +125,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             0, //Death
             1*(GetScreenHeight()*(1.0/600)), //Speed
             false, //Ammo
-            (Rectangle){ 0 , 0 , textures->enemy.width , textures->enemy.height }, //sourceRec
+            (Rectangle){ 0 , 0 , textures.enemy.width , textures.enemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
             (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
             (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
@@ -111,15 +143,15 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     /********************** BULLET VARIABELS *******************************/
     //Objects
     Obj bullet[ settings->players + settings->level ]; //Declares the number of bullets used for the level
-    bullet->ratio = (float) textures->bullet.width / textures->bullet.height; //!Fixes weird bug found by player that caused bullets to fill entire screen
+    bullet->ratio = (float) textures.bullet.width / textures.bullet.height; //!Fixes weird bug found by player that caused bullets to fill entire screen
     for (int i = 0; i < settings->players + settings->level ; i++) //Fills in the variables for all bullets
     {
         bullet[i] =
         (Obj){
             i, //id of the object
             (Vector2){ 0 , 0 }, //Vector2 pos, x and y
-            (float) textures->bullet.width / textures->bullet.height, //ratio
-            (Vector2){ textures->bullet.width * (0.000016*GetScreenHeight()) , ( textures->bullet.height * bullet->ratio ) * (0.000016*GetScreenHeight()) }, //Vector2 center, x and y
+            (float) textures.bullet.width / textures.bullet.height, //ratio
+            (Vector2){ textures.bullet.width * (0.000016*GetScreenHeight()) , ( textures.bullet.height * bullet->ratio ) * (0.000016*GetScreenHeight()) }, //Vector2 center, x and y
             (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
             0, //Health
             0, //Object rotation
@@ -128,7 +160,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             0, //Death
             3*(GetScreenHeight()*(1.0/600)), //Speed
             true, //Ammo
-            (Rectangle){ 0 , 0 , textures->bullet.width , textures->bullet.height }, //sourceRec
+            (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
             (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
             (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
@@ -145,8 +177,8 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     {
         0, //id of the object
         (Vector2){ 0 , 0 }, //Vector2 pos, x and y
-        (float) textures->energy.width / textures->energy.height, //ratio
-        (Vector2){ textures->energy.width  * (0.000083*GetScreenHeight()) , ( textures->energy.height * energy.ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
+        (float) textures.energy.width / textures.energy.height, //ratio
+        (Vector2){ textures.energy.width  * (0.000083*GetScreenHeight()) , ( textures.energy.height * energy.ratio )  * (0.000083*GetScreenHeight()) }, //Vector2 center, x and y
         (Vector2){ 0 , 0 }, //Vector 2 for drawing position, has x and y
         0, //Health
         0, //Object rotation
@@ -155,7 +187,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
         0, //Death
         0, //Speed
         false, //Ammo
-        (Rectangle){ 0 , 0 , textures->energy.width , textures->energy.height }, //sourceRec
+        (Rectangle){ 0 , 0 , textures.energy.width , textures.energy.height }, //sourceRec
         (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
         (Rectangle){ 0 , 0 , 0 , 0 }, //drawRec for drawing and object rotation, created here, updated in loop
         (Vector4){ 0 , 0 , 0 , 0 }, //colSide for collision detection algorithm, x = up, y = right, z = down, w = left
@@ -167,7 +199,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     
     /********************** TERRAIN VARIABELS *******************************/
     //Playspace is 1000x600 / We devide those in 50 by 50 cubes
-    Rectangle sourceWall = { 0 , 0 , textures->wall.width , textures->wall.height }; //Rectangle with size of original image
+    Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ GetScreenHeight()/(GetScreenHeight()/12) ][ (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)) ];
     terraincreate(terrainspace);
@@ -177,7 +209,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     //Random player starting position
     for (int p = 0; p < settings->players; p++)
         spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
-    PlaySound(sounds->gamestart);
+    PlaySound(sounds.gamestart);
     //Main game loop
     while( !settings->exitgame && !WindowShouldClose() ) //End if you press esc or player.health gets to 0
     {
@@ -195,8 +227,8 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
                 if (terrainspace[i][j] == '*')
                 {
                     for (int k = 0; k < settings->players + settings->level; k++)
-                        terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j], sounds);
-                    DrawTexturePro( textures->wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
+                        terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j], &sounds);
+                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
 
         /********************** MENU CREATION *******************************/
@@ -215,7 +247,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
         for (int p = 0, healthy = 10; p < settings->players; p++, healthy += (45 * (GetScreenHeight()*(1.0/600)))/settings->players )
         {    
             for ( int i = 0, healthx = 5 ; i < player[p].health ; i++ , healthx += (35 * (GetScreenHeight()*(1.0/600)))/settings->players )
-                DrawTextureEx( textures->health , (Vector2){ healthx , healthy } , 0 , (0.025 * (GetScreenHeight()*(1.0/600)))/settings->players, player[p].color );
+                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.025 * (GetScreenHeight()*(1.0/600)))/settings->players, player[p].color );
             //                                           This image is too big, scaling factor needs to be very small   
         }
 
@@ -232,7 +264,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
         //Energy Drawing
         if ( energy.health >= 1 )
         {
-            DrawTexturePro( textures->energy , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
+            DrawTexturePro( textures.energy , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
             for (int p = 0; p < settings->players; p++)
                 collision( &energy , player[p].colRec , 2 );
             
@@ -273,13 +305,13 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             //Because player[p] cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
             if (player[p].health > 0)
             {
-                DrawTexturePro( textures->player , player[p].sourceRec , player[p].drawRec , player[p].cen , player[p].rot , player[p].color ); //Draws player[p] tank
+                DrawTexturePro( textures.player , player[p].sourceRec , player[p].drawRec , player[p].cen , player[p].rot , player[p].color ); //Draws player[p] tank
             }
             if (player[p].health <= 0)
             {
                 if (!player[p].dying && player[p].health != -100)
                 {                
-                    PlaySoundMulti(sounds->explosion);
+                    PlaySoundMulti(sounds.explosion);
                     player[p].deathpos = player[p].draw;
                     player[p].dying = true;
                 }
@@ -287,7 +319,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             }
             if (player[p].dying)
             {  //Player death
-                DrawTexturePro( textures->explosionVehicles , (Rectangle){ textures->explosionVehicles.width/36 * player[p].deathtimer , 0 , textures->explosionVehicles.width/39 , textures->explosionVehicles.height } , (Rectangle){player[p].deathpos.x ,player[p].deathpos.y  , textures->explosionVehicles.width/180, textures->explosionVehicles.height/5 } , (Vector2){ (textures->explosionVehicles.width/180)/2 , (textures->explosionVehicles.height/5)/2 } ,player[p].rot , WHITE );
+                DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * player[p].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){player[p].deathpos.x ,player[p].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,player[p].rot , WHITE );
                 if (!settings->pause)
                     player[p].deathtimer++;
                 if (player[p].deathtimer > 36)
@@ -320,8 +352,8 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
                 moveplayer( &player[p] , settings );
             /********************** PLAYER BULLET SHOOTING *******************************/
             if (!settings->pause)
-                playershoot( &player[p] , &bullet[p] , settings , sounds);
-            shooting( settings , &bullet[p] , bullet, player , enemy , Menu , sounds , terrainspace, terrainarray , textures );
+                playershoot( &player[p] , &bullet[p] , settings , &sounds);
+            shooting( settings , &bullet[p] , bullet, player , enemy , Menu , &sounds , terrainspace, terrainarray , &textures );
         }
 
         /********************** MULTIPLE ENEMIES *******************************/
@@ -342,7 +374,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
                 enemyspawn( settings , &enemy[k], terrainspace , terrainarray , player , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
-                DrawTexturePro( textures->enemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
+                DrawTexturePro( textures.enemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
             
             /********************** ENEMY COLLISION/MOVEMENT *******************************/
             //Resets collision detection
@@ -366,7 +398,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
                 enemymove( settings , &enemy[k] , player );
             if (enemy[k].dying)
             {  //Player death
-                DrawTexturePro( textures->explosionVehicles , (Rectangle){ textures->explosionVehicles.width/36 * enemy[k].deathtimer , 0 , textures->explosionVehicles.width/39 , textures->explosionVehicles.height } , (Rectangle){enemy[k].deathpos.x ,enemy[k].deathpos.y  , textures->explosionVehicles.width/180, textures->explosionVehicles.height/5 } , (Vector2){ (textures->explosionVehicles.width/180)/2 , (textures->explosionVehicles.height/5)/2 } ,enemy[k].rot , WHITE );
+                DrawTexturePro( textures.explosionVehicles , (Rectangle){ textures.explosionVehicles.width/36 * enemy[k].deathtimer , 0 , textures.explosionVehicles.width/39 , textures.explosionVehicles.height } , (Rectangle){enemy[k].deathpos.x ,enemy[k].deathpos.y  , textures.explosionVehicles.width/180, textures.explosionVehicles.height/5 } , (Vector2){ (textures.explosionVehicles.width/180)/2 , (textures.explosionVehicles.height/5)/2 } ,enemy[k].rot , WHITE );
                 if (!settings->pause)
                     enemy[k].deathtimer++;
                 if (enemy[k].deathtimer > 36)
@@ -377,8 +409,8 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             }
             /********************** ENEMY BULLET SHOOTING *******************************/
             if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1 && !settings->pause) //Verify if enemy[k] has ammo
-                shoot( &enemy[k], &bullet[settings->players + k] , sounds );
-            shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, sounds , terrainspace, terrainarray , textures);
+                shoot( &enemy[k], &bullet[settings->players + k] , &sounds );
+            shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, &sounds , terrainspace, terrainarray , &textures);
         }
 
         if (settings->pause)
@@ -394,7 +426,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             DrawText( "LEVEL COMPLETE", GetScreenWidth() / 2 - MeasureText("LEVEL COMPLETE", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , GOLD );
             if ( player[0].time == 60 * 2 )
             {
-                PlaySound(sounds->gameend);
+                PlaySound(sounds.gameend);
                 settings->won = true;
                 break;
             }
@@ -412,7 +444,7 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
             DrawText( "VOCE MORREU", GetScreenWidth() / 2 - MeasureText("VOCE MORREU", GetFontDefault().baseSize) * 2 , GetScreenHeight() / 2  , 40 , RED );
             if ( player[0].time == 60 * 2 )
             {
-                PlaySound(sounds->gameend);
+                PlaySound(sounds.gameend);
                 break;
             }
         }
@@ -422,6 +454,24 @@ void jogo(Setti *settings, Textus *textures, SFX *sounds)
     /********************** END GAME *******************************/
     for (int p = 0; p < settings->players; p++)
         settings->score += player[p].score;
-    
+        
     StopSoundMulti(); 
+    /********************** UNLOADING AREA *******************************/
+    UnloadSound(sounds.gamestart);  //Sound for the start of the game
+    UnloadSound(sounds.gameend); //Sound for the end of the game
+    UnloadSound(sounds.explosion); //Sound for the explosion
+    UnloadSound(sounds.shoot); //Sound for the shoot
+    UnloadSound(sounds.playerpassive); //Sound for the player
+    UnloadSound(sounds.bulletmiss); //Sound for the bullet miss
+    UnloadSound(sounds.terrainhit); //Sound for the terrain hit
+
+    UnloadTexture(textures.player);  //Texture for the player tank
+    UnloadTexture(textures.enemy); //Texture for the enemy tank
+    UnloadTexture(textures.bullet); //Texture for the bullet
+    UnloadTexture(textures.explosion); //Texture for the explosion for bullets
+    UnloadTexture(textures.wall); //Wall texture
+    UnloadTexture(textures.smoke); //Smoke texture
+    UnloadTexture(textures.health); //Health texture
+    UnloadTexture(textures.energy); //Energy texture
+    UnloadTexture(textures.explosionVehicles); //Texture for the explosion for vehicles
 }
