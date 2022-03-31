@@ -4,6 +4,6 @@
 
 void moveplayer( Obj *player , Setti *settings );
 
-void playershoot( Obj *player, Obj *Bullet , Setti *settings);
+void playershoot( Obj *player, Obj *Bullet , Setti *settings, SFX *Sounds);
 
 #endif

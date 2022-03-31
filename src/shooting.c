@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Uses shooter posint and rotation to start bullet shooting
-void shoot( Obj *Shooter , Obj *Bullet )
+void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds )
 {
     //Shooting setup
     Bullet->ammo = false; //Sets ammo to false
@@ -32,9 +32,10 @@ void shoot( Obj *Shooter , Obj *Bullet )
         Bullet->pos.y -= Bullet->cen.y;
         break;
     }
+    PlaySoundMulti(Sounds->shoot); //Plays the shoot sound
 }
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -67,10 +68,11 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
         if (Bullet->time == 60*1 || Bullet->colSide.x || Bullet->colSide.y || Bullet->colSide.z || Bullet->colSide.w )
         {   //Reverts the states change when firing Bullet to neutral
             Bullet->deathpos = Bullet->draw;
-            Bullet->dying = true;
+            Bullet->dying = true; 
             Bullet->health = 0;
             Bullet->pos = (Vector2){0,GetScreenHeight()*2};
             Bullet->time = 0;
+            PlaySoundMulti(Sounds->bulletmiss); //Plays the bullet miss sound
         }
         
         //Moves Bullet based on position and speed
@@ -130,7 +132,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                     {   //Reverts the states change when enemy[k] alive to neutral
                         Bullet->health--;
                         Bullet->deathpos = Bullet->draw;
-                        Bullet->dying = true;
+                        Bullet->dying = true; //! Add bullet hit sound
                         Bullet->health = 0;
                         Bullet->pos = (Vector2){ 0 , GetScreenHeight() *2};
                         Bullet->time = 0;
@@ -142,6 +144,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                             enemy[k].dying = true;
                             Player->score += 800;
                             enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight()*2 };
+                            PlaySoundMulti(Sounds->explosion);
                         }   
                     }
     }

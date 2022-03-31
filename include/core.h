@@ -49,7 +49,7 @@ typedef struct  //struct for the interchangable settings in the game
     int pauseselect;
 } Setti;
 
-typedef struct  //struct for the interactable objects in the game
+typedef struct  //struct for the textures in the game
 {
     Texture2D player;  //Texture for the player tank
     Texture2D enemy; //Texture for the enemy tank
@@ -62,6 +62,19 @@ typedef struct  //struct for the interactable objects in the game
     Texture2D explosionVehicles; //Texture for the explosion of vehicles
     //Texture2D terrain; //Terrain texture
 } Textus;
+
+typedef struct  //struct for the sounds in the game
+{
+    Sound gamestart;  //Sound for the start of the game
+    Sound gameend; //Sound for the end of the game
+    Sound explosion; //Sound for the explosion
+    Sound shoot; //Sound for the shoot
+    Sound playerpassive; //Sound for the player
+    Sound bulletmiss; //Sound for the bullet miss
+    Sound terrainhit; //Sound for the terrain hit
+    //Sound hit; //Sound for the hit
+    //Sound death; //Sound for the death
+} SFX;
 
 typedef struct
 {

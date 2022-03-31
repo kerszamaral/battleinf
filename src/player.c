@@ -118,31 +118,31 @@ void moveplayer( Obj *player , Setti *settings )
     
 }
 
-void playershoot( Obj *player, Obj *Bullet , Setti *settings)
+void playershoot( Obj *player, Obj *Bullet , Setti *settings, SFX *Sounds)
 {
     if (settings->players == 1 && player->health > 0 )
     {
         if ( IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_J) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet);
+                shoot( player , Bullet, Sounds);
     }
     else if ( player->id == 0 && player->health > 0 )
     {
         if ( IsKeyPressed(KEY_J) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet);
+                shoot( player , Bullet, Sounds);
     }
     else if ( player->id == 1 && player->health > 0 )
     {
         if ( IsKeyPressed(KEY_SPACE) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet);
+                shoot( player , Bullet, Sounds);
     }
 
     if ( player->health > 0 )
     {
          if ( IsGamepadButtonPressed(player->id - settings->extended , 7) || IsGamepadButtonPressed(player->id - settings->extended , 12) )  
             if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet);
+                shoot( player , Bullet, Sounds);
     }
 }

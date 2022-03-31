@@ -21,12 +21,14 @@ void terraincreate(char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)])
         }
     }
     //Prints map to console to know if everything lines up, can be removed when changed
+    printf("\n");
     for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
     {
         for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
             printf("%c",terrainspace[i][j]);
         printf("\n");
     }
+    printf("\n");
 }
 
 void terrainplace(  Rectangle terrainarray[][ GetScreenWidth()/(GetScreenHeight()/12) ] , char terrainspace[][ GetScreenWidth()/(GetScreenHeight()/12) ] )
@@ -48,7 +50,7 @@ void terrainplace(  Rectangle terrainarray[][ GetScreenWidth()/(GetScreenHeight(
     }
 }
 
-Rectangle terraindestruct( Obj bullet , Rectangle terrain )
+Rectangle terraindestruct( Obj bullet , Rectangle terrain, SFX *sounds )
 {
     bullet.colSide.x = 0;
     bullet.colSide.y = 0;
@@ -74,15 +76,16 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain )
             terrain.width -= GetScreenHeight()/12*0.2;
             break;
         }
+        if (terrain.height < GetScreenHeight()/12*0.2 || terrain.width < GetScreenHeight()/12*0.2)
+        {
+            PlaySoundMulti(sounds->terrainhit);
+            terrain.height = 0;
+            terrain.width = 0;
+            terrain.x = GetScreenWidth();
+            terrain.y = 0;
+        }
     }    
 
-    if (terrain.height < GetScreenHeight()/12*0.2 || terrain.width < GetScreenHeight()/12*0.2)
-    {
-        terrain.height = 0;
-        terrain.width = 0;
-        terrain.x = GetScreenWidth();
-        terrain.y = 0;
-    }
 
     return terrain;
 }
