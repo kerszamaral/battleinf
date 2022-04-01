@@ -5,6 +5,6 @@
 
 void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds );
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures );
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[], Rectangle terrainarray[] , Textus *textures );
 
 #endif

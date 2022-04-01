@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Random starting position
-void spawn( Setti *settings , Obj *spawn , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[] , Obj enemy[])
+void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj enemy[])
 {
     do
     {
@@ -15,10 +15,11 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[][GetScreenWidth()/
         //Updates draw position
         spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; 
 
-        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-            for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
-                if ( terrainspace[ i ][ j ] == '*' )
-                    collision( spawn, terrainarray[i][j] , 2); //Tests if it collides with terrain
+        //Checks if the position is valid
+        for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+                if ( terrainspace[ i ] == '*' )
+                    collision( spawn, terrainarray[i] , 2); //Tests if it collides with terrain
+        
         for (int p = 0; p < settings->players; p++)
             collision( spawn, player[p].colRec , 2);
         for (int i = 0; i < settings->level; i++)
@@ -28,7 +29,7 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[][GetScreenWidth()/
     //If it does, returns to game with starting position
 }
 
-void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[] , Obj otherenemy[] )
+void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj otherenemy[] )
 {   
     if (!enemy->health && enemy->death < 100000)
     {

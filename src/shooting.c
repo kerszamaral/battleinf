@@ -35,7 +35,7 @@ void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds )
     PlaySoundMulti(Sounds->shoot); //Plays the shoot sound
 }
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Textus *textures )
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[], Rectangle terrainarray[] , Textus *textures )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -60,10 +60,9 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
             collision( Bullet , otherBullets[i].colRec , 2);
 
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-            for (int j = 0; j < GetScreenWidth()/(GetScreenHeight()/12); j++)
-                if (terrainspace[i][j] == '*')
-                    collision( Bullet, terrainarray[i][j], 2);
+        for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+            if (terrainspace[i] == '*')
+                collision( Bullet, terrainarray[i], 2);
         //Kills Bullet if 1 sec passes or it collides with border
         if (Bullet->time == 60*1 || Bullet->colSide.x || Bullet->colSide.y || Bullet->colSide.z || Bullet->colSide.w )
         {   //Reverts the states change when firing Bullet to neutral

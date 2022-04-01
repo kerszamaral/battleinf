@@ -200,17 +200,22 @@ void jogo(Setti *settings)
     /********************** TERRAIN VARIABELS *******************************/
     //Playspace is 1000x600 / We devide those in 50 by 50 cubes
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
+    
     //Random Map Generator for testing, needs to be replaced by read file
-    char terrainspace [ GetScreenHeight()/(GetScreenHeight()/12) ][ (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)) ];
+    char terrainspace [ (GetScreenHeight()/(GetScreenHeight()/12)) * ((int)ceil(GetScreenWidth()/(GetScreenHeight()/12))) ];
     terraincreate(terrainspace);
+    
     //Creates the actual rectangles in the right place
-    Rectangle terrainarray[ GetScreenHeight()/(GetScreenHeight()/12) ][ (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)) ];
+    Rectangle terrainarray[ (GetScreenHeight()/(GetScreenHeight()/12)) * ((int)ceil(GetScreenWidth()/(GetScreenHeight()/12))) ];
     terrainplace( terrainarray , terrainspace );
+    
     //Random player starting position
     for (int p = 0; p < settings->players; p++)
         spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
+    
     PlaySound(sounds.gamestart);
-    //Main game loop
+    
+    //!Main game loop
     while( !settings->exitgame && !WindowShouldClose() ) //End if you press esc or player.health gets to 0
     {
         BeginDrawing();
@@ -222,13 +227,12 @@ void jogo(Setti *settings)
         
 
         /********************** TERRAIN CREATION *******************************/
-        for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-            for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
-                if (terrainspace[i][j] == '*')
+        for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+                if (terrainspace[i] == '*')
                 {
                     for (int k = 0; k < settings->players + settings->level; k++)
-                        terrainarray[i][j] = terraindestruct(bullet[k],terrainarray[i][j], &sounds);
-                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i][j] , (Vector2){ 0 , 0 } , 0 , WHITE );
+                        terrainarray[i] = terraindestruct( bullet[k], terrainarray[i], &sounds );
+                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
                 }
 
         /********************** MENU CREATION *******************************/
@@ -344,10 +348,9 @@ void jogo(Setti *settings)
                 if (i != p)
                     collision( &player[p] , player[i].colRec , 2 );
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-                for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
-                    if (terrainspace[i][j] == '*')
-                        collision( &player[p], terrainarray[i][j] , 2 );
+            for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+                    if (terrainspace[i] == '*')
+                        collision( &player[p], terrainarray[i] , 2 );
             if (!settings->pause)
                 moveplayer( &player[p] , settings );
             /********************** PLAYER BULLET SHOOTING *******************************/
@@ -386,10 +389,9 @@ void jogo(Setti *settings)
             for (int p = 0; p < settings->players; p++)
                 collision( &enemy[k] , player[p].colRec , 2);
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < GetScreenHeight()/(GetScreenHeight()/12); i++)
-                for (int j = 0; j < (int)ceil(GetScreenWidth()/(GetScreenHeight()/12)); j++)
-                    if (terrainspace[i][j] == '*')
-                        collision( &enemy[k] , terrainarray[i][j] , 2 );
+            for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+                    if (terrainspace[i] == '*')
+                        collision( &enemy[k] , terrainarray[i] , 2 );
             //Tests collision against other enemys
             for (int i = 0; i < settings->level; i++)
                 collision( &enemy[k] , enemy[i].colRec , 2 );

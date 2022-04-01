@@ -3,9 +3,9 @@
 
 #include "core.h"
 
-void spawn( Setti *settings , Obj *spawn , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[] , Obj enemy[]);
+void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj enemy[]);
 
-void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[][GetScreenWidth()/(GetScreenHeight()/12)], Rectangle terrainarray[][GetScreenWidth()/(GetScreenHeight()/12)] , Obj player[] , Obj otherenemy[] );
+void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj otherenemy[] );
 
 void enemymove(Setti *settings , Obj *enemy, Obj player[]);
 
