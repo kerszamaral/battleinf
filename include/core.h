@@ -7,10 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SCREENWIDTH 1000 //Screen size x 1000
-#define SCREENHEIGHT 600 //Screen size y 600
+#define SCREENWIDTH 1010 //Screen size x 1000
+#define SCREENHEIGHT 655 //Screen size y 600
 
-//#define (GetScreenHeight()/12) 50 //Size for the terrain blocks
+//#define (50) 50 //Size for the terrain blocks
 
 typedef struct  //struct for the interactable objects in the game
 {

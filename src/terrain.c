@@ -5,49 +5,35 @@ void terraincreate(char terrainspace[])
 {
     //Creates the Rectangles in the place it finds * in the array to display it in the game
     //Varibles to help find the coordinates the triangles should be placed (might be a better way to do it idk)
-    for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+    for (int i = 0; i < 15 * 41; i++)
     {
-            switch (GetRandomValue(0,4))
-            {
-            case 0:
-                terrainspace[i] = '*';
-                break;
-            default:
-                terrainspace[i] = '-';
-                break;
-            }
+        if( !GetRandomValue(0,6) )
+            terrainspace[i] = '*';
+        else
+            terrainspace[i] = '-';
+        if ( (i+1) % 41  == 0)
+            terrainspace[i] = '\n';
     }
     //Prints map to console to know if everything lines up, can be removed when changed
-    printf("\n");
-    for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
-    {
-        
-        printf("%c",terrainspace[i]);
-
-        if ((i+1) % (GetScreenWidth()/(GetScreenHeight()/12)) == 0)
-            printf("\n");
-
-    }
-    printf("\n");
+    printf("\n%s\n", terrainspace);
 }
 
 void terrainplace(  Rectangle terrainarray[] , char terrainspace[] )
 {
-    int terrainx = (GetScreenHeight()/90), terrainy = 0;
-    //We use an array to create 128 rectangles, they are all set to size and position 0 
+    float terrainx = 5 * (GetScreenWidth()*(1.0/1010)), terrainy = 50 * (GetScreenHeight()*(1.0/655));
     //When it finds the * in sets the position and size for the rectangle on that place
     
-    for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+    for (int i = 0; i < 15 * 41; i++)
     {
-
-        if ( terrainspace[ i ] == '*' )
-            terrainarray[ i ] = (Rectangle){ terrainx , terrainy + GetScreenHeight()/12 , (GetScreenHeight()/12) , (GetScreenHeight()/12) };
-        terrainx += (GetScreenHeight()/12);
+        if ( terrainspace[i] == '*' )
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
         
-        if ((i+1) % (GetScreenWidth()/(GetScreenHeight()/12)) == 0)
+        terrainx += 25 * (GetScreenWidth()*(1.0/1010));
+        
+        if (terrainspace[i] == '\n')
         {
-            terrainx = (GetScreenHeight()/90);
-            terrainy += (GetScreenHeight()/12);
+            terrainx = 5 * (GetScreenWidth()*(1.0/1010));
+            terrainy += 40 * (GetScreenHeight()*(1.0/655));
         }
     }
 }
@@ -64,21 +50,21 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain, SFX *sounds )
         switch (bullet.rot)
         {
         case 0:
-            terrain.height -= GetScreenHeight()/12*0.2;
+            terrain.height -= 40*0.25* (GetScreenHeight()*(1.0/655));
             break;
         case 90:
-            terrain.x += GetScreenHeight()/12*0.2;
-            terrain.width -= GetScreenHeight()/12*0.2;
+            terrain.x += 25*0.25*(GetScreenWidth()*(1.0/1010));
+            terrain.width -= 25*0.25*(GetScreenWidth()*(1.0/1010));
             break;
         case 180:
-            terrain.y += GetScreenHeight()/12*0.2;
-            terrain.height -= GetScreenHeight()/12*0.2;
+            terrain.y += 40*0.25* (GetScreenHeight()*(1.0/655));
+            terrain.height -= 40*0.25* (GetScreenHeight()*(1.0/655));
             break;
         case 270:
-            terrain.width -= GetScreenHeight()/12*0.2;
+            terrain.width -= 25*0.25*(GetScreenWidth()*(1.0/1010));
             break;
         }
-        if (terrain.height < GetScreenHeight()/12*0.2 || terrain.width < GetScreenHeight()/12*0.2)
+        if (terrain.height < 40*0.25* (GetScreenHeight()*(1.0/655)) || terrain.width < 25*0.25*(GetScreenWidth()*(1.0/1010)))
         {
             PlaySoundMulti(sounds->terrainhit);
             terrain.height = 0;

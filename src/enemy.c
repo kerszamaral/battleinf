@@ -9,14 +9,14 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrai
         spawn->colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
         spawn->pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( GetScreenHeight()/90 , GetScreenWidth() - GetScreenHeight()/90*2 - spawn->cen.x*2 ), 
-            GetRandomValue( GetScreenHeight()/12 , GetScreenHeight() - GetScreenHeight()/90 - spawn->cen.y*2 ) 
+            GetRandomValue( 5 * (GetScreenWidth()*(1.0/1010)) , GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) - spawn->cen.x*2 ), 
+            GetRandomValue( 50 * (GetScreenHeight()*(1.0/655)) , GetScreenHeight() - 5 * (GetScreenHeight()*(1.0/655)) - spawn->cen.y*2 ) 
         };
         //Updates draw position
         spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; 
 
         //Checks if the position is valid
-        for (int i = 0; i < (GetScreenHeight()/(GetScreenHeight()/12)) * (GetScreenWidth()/(GetScreenHeight()/12)); i++)
+        for (int i = 0; i < 15 * 40; i++)
                 if ( terrainspace[ i ] == '*' )
                     collision( spawn, terrainarray[i] , 2); //Tests if it collides with terrain
         
