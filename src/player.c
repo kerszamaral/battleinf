@@ -13,24 +13,32 @@ void moveplayer( Obj *player , Setti *settings )
             if( !player->colSide.x )
                 player->pos.y -= player->speed;
             player->rot = 0; //Sets players rotation to up
+            if(player->pos.y - player->speed-1 < GetScreenHeight()/12)
+                player->pos.y = GetScreenHeight() - player->cen.y*2 - GetScreenHeight()/90;
         }
         else if ( IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) )
         {   //Checks player is colliding down
             if( !player->colSide.z )
                 player->pos.y += player->speed;
             player->rot = 180; //Sets player rotation to down
+            if(player->pos.y + player->cen.y*2 + player->speed+1 > GetScreenHeight() - GetScreenHeight()/90)
+                player->pos.y = GetScreenHeight()/12;
         }
         else if ( IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) )
         {   //Checks player is colliding left
             if( !player->colSide.w )
                 player->pos.x -= player->speed;
             player->rot = 270; //Sets player rotation to left
+            if(player->pos.x - player->speed-1 < GetScreenHeight()/90)
+                player->pos.x = GetScreenWidth() - player->cen.x*2 - GetScreenHeight()/90;
         }
         else if ( IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) )
         {   //Checks player is colliding right
             if( !player->colSide.y )
                 player->pos.x += player->speed;
             player->rot = 90; //Sets player rotation to right
+            if(player->pos.x + player->cen.x*2 + player->speed+1 > GetScreenWidth() - GetScreenHeight()/90)
+                player->pos.x = GetScreenHeight()/90;
         }
     }
     else if ( player->id == 0 && player->health > 0 )
