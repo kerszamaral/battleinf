@@ -204,8 +204,8 @@ void jogo(Setti *settings)
     //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ 15 * 41 ];   //15x41 terrain space 
     
-    if (settings->loadgame)
-        strcpy( terrainspace, LoadFileText("save.txt"));
+    if (settings->loadgame && FileExists(TextFormat("saves/nivel%d.txt", settings->level)))
+        strcpy( terrainspace, LoadFileText(TextFormat("saves/nivel%d.txt", settings->level)));
     else
         terraincreate(terrainspace);
     

@@ -458,7 +458,7 @@ void pausescreen(Setti *settings, char terrainspace[] )
         DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
         if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
         {
-            SaveFileText("save.txt", terrainspace);
+            SaveFileText(TextFormat("saves/nivel%d.txt", settings->level), terrainspace);
         }
     }
     else
