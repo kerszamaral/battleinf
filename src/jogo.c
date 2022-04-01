@@ -203,7 +203,11 @@ void jogo(Setti *settings)
     
     //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ (GetScreenHeight()/(GetScreenHeight()/12)) * ((int)ceil(GetScreenWidth()/(GetScreenHeight()/12))) ];
-    terraincreate(terrainspace);
+    
+    if (settings->loadgame)
+        strcpy( terrainspace, LoadFileText("save.txt"));
+    else
+        terraincreate(terrainspace);
     
     //Creates the actual rectangles in the right place
     Rectangle terrainarray[ (GetScreenHeight()/(GetScreenHeight()/12)) * ((int)ceil(GetScreenWidth()/(GetScreenHeight()/12))) ];
@@ -214,7 +218,7 @@ void jogo(Setti *settings)
         spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
     
     PlaySound(sounds.gamestart);
-    
+
     //!Main game loop
     while( !settings->exitgame && !WindowShouldClose() ) //End if you press esc or player.health gets to 0
     {
@@ -416,9 +420,10 @@ void jogo(Setti *settings)
         }
 
         if (settings->pause)
-            pausescreen(settings);
+            pausescreen( settings, terrainspace );
         else
             settings->pauseselect = 0;
+            
         /********************** WINNING VARIABLES *******************************/
         if ( score >= settings->score + 800 * settings->level )
         {

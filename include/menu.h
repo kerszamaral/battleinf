@@ -13,7 +13,7 @@ void endscreen(Setti *settings);
 
 void settingscreen(Setti *settings);
 
-void pausescreen(Setti *settings);
+void pausescreen(Setti *settings, char terrainspace[] );
 
 void highscorescreen(Setti *settings);
 

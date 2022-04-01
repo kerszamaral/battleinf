@@ -432,7 +432,7 @@ void settingscreen(Setti *settings)
     }
 }
 
-void pausescreen(Setti *settings)
+void pausescreen(Setti *settings, char terrainspace[] )
 {
   
     DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, YELLOW);
@@ -458,7 +458,7 @@ void pausescreen(Setti *settings)
         DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
         if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
         {
-            settings->pauseselect = 1;
+            SaveFileText("save.txt", terrainspace);
         }
     }
     else

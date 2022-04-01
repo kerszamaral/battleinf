@@ -4,6 +4,8 @@
 #include "raylib.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define SCREENWIDTH 1000 //Screen size x 1000
 #define SCREENHEIGHT 600 //Screen size y 600
@@ -47,6 +49,7 @@ typedef struct  //struct for the interchangable settings in the game
     bool pause;
     bool exitgame;
     int pauseselect;
+    bool loadgame;
 } Setti;
 
 typedef struct  //struct for the textures in the game
