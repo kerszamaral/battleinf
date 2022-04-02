@@ -38,16 +38,88 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             switch (bullet[b].rot)
             {   //uses the bullets rotation to store it's rotation on the file with different characters
             case 0:
-                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                if (bullet[b].draw.x < GetScreenWidth()/2 )
+                {
+                    if (bullet[b].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                    }
+                }
+                else if (bullet[b].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                }
                 break;
             case 90:
-                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = '>';
+                if (bullet[b].draw.x < GetScreenWidth()/2 )
+                {
+                    if (bullet[b].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                    }
+                }
+                else if (bullet[b].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                }
                 break;
             case 180:
-                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = 'V';
+                if (bullet[b].draw.x < GetScreenWidth()/2 )
+                {
+                    if (bullet[b].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                    }
+                }
+                else if (bullet[b].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                }
                 break;
             case 270:
-                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = '<';
+                if (bullet[b].draw.x < GetScreenWidth()/2 )
+                {
+                    if (bullet[b].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                    }
+                }
+                else if (bullet[b].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                }
                 break;
             }
         }
@@ -276,17 +348,78 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
 
     /***************************** OBJECT SAVING *****************************/
     if (energy->health > 0) //If the energy is alive, it stores it's position
-        terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = 'P';
-                        
+    {
+        if (energy->draw.x < GetScreenWidth()/2 )
+        {
+            if (energy->draw.y < GetScreenHeight()/2 )
+            {
+                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+            }
+            else
+            {
+                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+            }
+        }
+        else if (energy->draw.y < GetScreenHeight()/2 )
+        {
+            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+        }
+        else
+        {
+            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+        }
+    }
+
     for (int e = 0; e < settings->level; e++)
+    {
         if ( enemy[e].health > 0 ) //For every enemy that's alive, store it's position
         {
             if (enemy[e].health == 1)
-                terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+            {
+                if (enemy[e].draw.x < GetScreenWidth()/2 )
+                {
+                    if (enemy[e].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                    }
+                }
+                else if (enemy[e].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                }
+            }
             else if (enemy[e].health == 2 )
-                terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+            {
+                if (enemy[e].draw.x < GetScreenWidth()/2 )
+                {
+                    if (enemy[e].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                    }
+                }
+                else if (enemy[e].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                }
+            }
         }
-
+    }
     for (int p = 0; p < settings->players; p++)
     {
         savescore += player[p].score; //Adds the players score to the total score
@@ -295,13 +428,58 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             lives += player[p].health*pow(10,p);
 
             if (player[p].id == 0)
-                terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+            {
+                if (player[p].draw.x < GetScreenWidth()/2 )
+                {
+                    if (player[p].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                    }
+                }
+                else if (player[p].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                }
+            }
             else
-                terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+            {
+                if (player[p].draw.x < GetScreenWidth()/2 )
+                {
+                    if (player[p].draw.y < GetScreenHeight()/2 )
+                    {
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                    }
+                    else
+                    {
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                    }
+                }
+                else if (player[p].draw.y < GetScreenHeight()/2 )
+                {
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                }
+                else
+                {
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                }
+            }
         }
     }
 
     //Saves the map, score, and lives to a file named "savegame.txt"
     strcpy( savegame, TextFormat("%s%d\n%d\n%d\n%d", terrainspace2, settings->level, settings->players, lives, savescore ) );
     SaveFileText("saves/savegame.txt", savegame);
+}
+
+void loading(Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] )
+{
+
 }
