@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "core.h"
 #include <string.h>
+#include "saveload.h"
 
 
 void startscreen(Setti *settings)
@@ -458,57 +459,7 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
         DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
         if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
         {
-
-            int savescore = settings->score, lives = 0; //Initialize variables for storing
-            char savegame[ 15*41 + 20], terrainspace2[15*41]; //Initialize arrays for map
-            strcpy(terrainspace2, terrainspace); //Copy map onto new array
-            
-            for (int i = 0; i < 15 * 41; i++)
-                if (terrainspace[i] == '#')
-                    if (terrainarray[i].x == GetScreenWidth())
-                        terrainspace2[i] = '-'; //Checks for complete destruction on map
-
-            /*for (int b = 0; b < settings->players + settings->level; b++) //!Code for saving bullets, i think we shouldn't but we may need to
-            {
-                if ( bullet[b].health > 0 )
-                {   //Checks if the bullet is alive
-                    switch (bullet[b].rot)
-                    {   //uses the bullets rotation to store it's rotation on the file with different characters
-                    case 0:
-                        terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = '^';
-                        break;
-                    case 90:
-                        terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = 'D';
-                        break;
-                    case 180:
-                        terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = 'U';
-                        break;
-                    case 270:
-                        terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = 'C';
-                        break;
-                    }
-                }
-            }*/
-
-            if (energy->health > 0) //If the energy is alive, it stores it's position
-                terrainspace2[(int)(floor((energy->draw.x/(970/40.0))-1) + (floor((energy->draw.y/38))-2)*41)] = 'P';
-
-            for (int e = 0; e < settings->level; e++)
-                if ( enemy[e].health > 0 ) //For every enemy that's alive, store it's position
-                    terrainspace2[(int)(floor((enemy[e].draw.x/(970/40.0))-1) + (floor((enemy[e].draw.y/38))-2)*41)] = 'E';
-
-            for (int p = 0; p < settings->players; p++)
-            {
-                savescore += player[p].score; //Adds the players score to the total score
-                if ( player[p].health > 0 )
-                {  //If the player is alive, store it's position and lives remaining
-                    lives += player[p].health*pow(10,p);
-                    terrainspace2[(int)(floor((player[p].draw.x/(970/40.0))-1) + (floor((player[p].draw.y/38))-2)*41)] = 'T';
-                }
-            }
-            //Saves the map, score, and lives to a file named "savegame.txt"
-            strcpy( savegame, TextFormat("%s%d\n%d\n%d\n%d", terrainspace2, settings->level, settings->players, savescore, lives) );
-            SaveFileText("saves/savegame.txt", savegame);
+            saving(settings, terrainspace, player, enemy, energy, bullet, terrainarray);
         }
     }
     else

@@ -13,6 +13,15 @@
 void jogo(Setti *settings)
 {
     SetExitKey(0);
+    /********************* GAME LOADING *****************************/
+    bool levelfile = false;
+    char savegame[ 15*41 + 20];
+    if (settings->loadgame)
+    {
+        levelfile = true;
+        strcpy(savegame, LoadFileText("saves/savegame.txt"));
+    }
+    
     /********************** TEXTURES *******************************/
     Textus textures = {
         LoadTexture("assets/player.png"),  //Texture for the player tank
@@ -204,18 +213,27 @@ void jogo(Setti *settings)
     //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ 15 * 41 ];   //15x41 terrain space 
     
-    if (settings->loadgame && FileExists(TextFormat("saves/nivel%d.txt", settings->level)))
-        strcpy( terrainspace, LoadFileText(TextFormat("saves/nivel%d.txt", settings->level)));
+    if (!settings->loadgame)
+    {
+        if ( FileExists( TextFormat( "saves/nivel%d.txt", settings->level ) ) )
+        {
+            levelfile = true;
+            strcpy( terrainspace, LoadFileText( TextFormat( "saves/nivel%d.txt", settings->level ) ) );
+        }
+        else
+            terraincreate(terrainspace);
+    }
     else
-        terraincreate(terrainspace);
-    
+        strncpy(terrainspace, savegame, 15*41);
+        
     //Creates the actual rectangles in the right place
     Rectangle terrainarray[ 15 * 41 ];
     terrainplace( terrainarray , terrainspace );
     
     //Random player starting position
-    for (int p = 0; p < settings->players; p++)
-        spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
+    if (!levelfile)
+        for (int p = 0; p < settings->players; p++)
+            spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
     
     PlaySound(sounds.gamestart);
 
