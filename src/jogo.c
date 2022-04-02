@@ -232,7 +232,7 @@ void jogo(Setti *settings)
 
         /********************** TERRAIN CREATION *******************************/
         for (int i = 0; i < 15 * 41; i++)
-                if (terrainspace[i] == '*')
+                if (terrainspace[i] == '#')
                 {
                     for (int k = 0; k < settings->players + settings->level; k++)
                         terrainarray[i] = terraindestruct( bullet[k], terrainarray[i], &sounds );
@@ -264,6 +264,7 @@ void jogo(Setti *settings)
         if ( energy.time >= 60*3 && !energy.health && !GetRandomValue( 0 , 63 ) && !settings->pause )
         {
             spawn( settings , &energy , terrainspace , terrainarray , player , enemy);
+            energy.draw = (Vector2){ energy.pos.x + energy.cen.x , energy.pos.y + energy.cen.y };
             energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
             energy.health = 1;
         }
@@ -352,8 +353,8 @@ void jogo(Setti *settings)
                 if (i != p)
                     collision( &player[p] , player[i].colRec , 2 );
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < 15 * 40; i++)
-                    if (terrainspace[i] == '*')
+            for (int i = 0; i < 15 * 41; i++)
+                    if (terrainspace[i] == '#')
                         collision( &player[p], terrainarray[i] , 2 );
             if (!settings->pause)
                 moveplayer( &player[p] , settings );
@@ -393,8 +394,8 @@ void jogo(Setti *settings)
             for (int p = 0; p < settings->players; p++)
                 collision( &enemy[k] , player[p].colRec , 2);
             //Tests collision with each rectangle of terrain
-            for (int i = 0; i < 15 * 40; i++)
-                    if (terrainspace[i] == '*')
+            for (int i = 0; i < 15 * 41; i++)
+                    if (terrainspace[i] == '#')
                         collision( &enemy[k] , terrainarray[i] , 2 );
             //Tests collision against other enemys
             for (int i = 0; i < settings->level; i++)
@@ -420,7 +421,7 @@ void jogo(Setti *settings)
         }
 
         if (settings->pause)
-            pausescreen( settings, terrainspace );
+            pausescreen( settings, terrainspace , player, enemy , &energy, bullet, terrainarray);
         else
             settings->pauseselect = 0;
             
@@ -455,6 +456,12 @@ void jogo(Setti *settings)
                 break;
             }
         }
+        if (IsKeyPressed(KEY_K))
+        {
+            printf("(array)x: %f\n(array)y: %f\n", round(player[0].pos.x/24.25), floor(player[0].pos.y/38-1));
+            printf("x: %f\ny: %f\n", player[0].pos.x, player[0].pos.y);
+        }
+        
         
         EndDrawing();
     }

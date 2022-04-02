@@ -60,8 +60,8 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
             collision( Bullet , otherBullets[i].colRec , 2);
 
         //Tests collision with each rectangle of terrain
-        for (int i = 0; i < 15 * 40; i++)
-            if (terrainspace[i] == '*')
+        for (int i = 0; i < 15 * 41; i++)
+            if (terrainspace[i] == '#')
                 collision( Bullet, terrainarray[i], 2);
         //Kills Bullet if 1 sec passes or it collides with border
         if (Bullet->time == 60*1 || Bullet->colSide.x || Bullet->colSide.y || Bullet->colSide.z || Bullet->colSide.w )

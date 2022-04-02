@@ -13,7 +13,7 @@ void endscreen(Setti *settings);
 
 void settingscreen(Setti *settings);
 
-void pausescreen(Setti *settings, char terrainspace[] );
+void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] );
 
 void highscorescreen(Setti *settings);
 

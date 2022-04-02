@@ -8,7 +8,7 @@ void terraincreate(char terrainspace[])
     for (int i = 0; i < 15 * 41; i++)
     {
         if( !GetRandomValue(0,6) )
-            terrainspace[i] = '*';
+            terrainspace[i] = '#';
         else
             terrainspace[i] = '-';
         if ( (i+1) % 41  == 0)
@@ -25,7 +25,7 @@ void terrainplace(  Rectangle terrainarray[] , char terrainspace[] )
     
     for (int i = 0; i < 15 * 41; i++)
     {
-        if ( terrainspace[i] == '*' )
+        if ( terrainspace[i] == '#' )
             terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
         
         terrainx += 25 * (GetScreenWidth()*(1.0/1010));
