@@ -2,7 +2,7 @@
 
 void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] )
 {
-    //TODO Make savesfiles work with other resolutions
+    //TODO FIX x coordinates being too "left" when to the middle-left of the screen and too "right" when rightmost of the screen
     /***************************** VARIABLES *****************************/
     int savescore = 0, lives = 0; //Initialize variables for storing
 
@@ -38,16 +38,16 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             switch (bullet[b].rot)
             {   //uses the bullets rotation to store it's rotation on the file with different characters
             case 0:
-                terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = '^';
+                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
                 break;
             case 90:
-                terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = '>';
+                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = '>';
                 break;
             case 180:
-                terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = 'V';
+                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = 'V';
                 break;
             case 270:
-                terrainspace2[(int)(floor((bullet[b].draw.x/(970/40.0))-1) + (floor((bullet[b].draw.y/38))-2)*41)] = '<';
+                terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = '<';
                 break;
             }
         }
@@ -64,7 +64,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             {
                 int destruction = 0;//Variabel for knowing how destroyed the terrain is
 
-                switch ((int)(terrainarray[i].width/6.25)) //Destruction on width
+                switch ( (int)( terrainarray[i].width / ( 6.25 * (GetScreenWidth()*(1.0/1010)) ) ) ) //Destruction on width
                 {
                 case 3:
                     destruction += 1;
@@ -78,7 +78,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 default:
                     break;
                 }
-                switch ((int)(terrainarray[i].height/10)) //Destruction on height
+                switch ( (int)( terrainarray[i].height / ( 10 * (GetScreenHeight()*(1.0/655)) ) ) ) //Destruction on height
                 {
                 case 3:
                     destruction += 10;
@@ -92,7 +92,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 default:
                     break;
                 }
-                switch ((int)floor(terrainarray[i].x - terrainarraycomp[i].x)) //Destruction on x
+                switch ( (int)floor( terrainarray[i].x - terrainarraycomp[i].x )) //Destruction on x
                 {
                 case 6:
                     destruction += 100;
@@ -106,7 +106,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 default:
                     break;
                 }
-                switch ((int)(terrainarray[i].y - terrainarraycomp[i].y)) //Destruction on y
+                switch ( (int)( terrainarray[i].y - terrainarraycomp[i].y )) //Destruction on y
                 {
                 case 10:
                     destruction += 1000;
@@ -276,15 +276,15 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
 
     /***************************** OBJECT SAVING *****************************/
     if (energy->health > 0) //If the energy is alive, it stores it's position
-        terrainspace2[(int)(floor((energy->draw.x/(970/40.0))-1) + (floor((energy->draw.y/38))-2)*41)] = 'P';
-
+        terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ]  = 'P';
+                        
     for (int e = 0; e < settings->level; e++)
         if ( enemy[e].health > 0 ) //For every enemy that's alive, store it's position
         {
             if (enemy[e].health == 1)
-                terrainspace2[(int)(floor((enemy[e].draw.x/(970/40.0))-1) + (floor((enemy[e].draw.y/38))-2)*41)] = 'E';
+                terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
             else if (enemy[e].health == 2 )
-                terrainspace2[(int)(floor((enemy[e].draw.x/(970/40.0))-1) + (floor((enemy[e].draw.y/38))-2)*41)] = '@';
+                terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
         }
 
     for (int p = 0; p < settings->players; p++)
@@ -295,9 +295,9 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             lives += player[p].health*pow(10,p);
 
             if (player[p].id == 0)
-                terrainspace2[(int)(floor((player[p].draw.x/(970/40.0))-1) + (floor((player[p].draw.y/38))-2)*41)] = 'T';
+                terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
             else
-                terrainspace2[(int)(floor((player[p].draw.x/(970/40.0))-1) + (floor((player[p].draw.y/38))-2)*41)] = p+'0';
+                terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
         }
     }
 
