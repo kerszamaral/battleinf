@@ -208,7 +208,7 @@ void jogo(Setti *settings)
         if ( FileExists( TextFormat( "saves/nivel%d.txt", settings->level ) ) )
         {
             levelfilefound = true;
-            strcpy( filename , TextFormat( "nivel%d", settings->level ) );
+            strcpy( filename , TextFormat( "saves/nivel%d", settings->level ) );
         }
     //Random Map Generator for testing, needs to be replaced by read file
     char terrainspace [ 15 * 41 ];   //15x41 terrain space 
@@ -224,7 +224,7 @@ void jogo(Setti *settings)
         loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
     
     if (settings->loadgame)
-        loading( "savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
+        loading( "saves/savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
 
     //Random player starting position
     if ( settings->foundplayerposition <= settings->players )

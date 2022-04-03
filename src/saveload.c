@@ -481,10 +481,10 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
 void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[], char terrainspace[] )
 {
     char savegame[ 15 * 41 + 20 ], savevar[20], savemap[15*41];
-    strcpy( savegame, LoadFileText(TextFormat("saves/%s.txt", filename)) );
+    strcpy( savegame, LoadFileText(TextFormat("%s.txt", filename)) );
     
     /********************STORED VARIABLES************************/
-    if ( !strcmp( filename, "savegame") )
+    if ( !strcmp( filename, "saves/savegame") )
     {
         strcpy( savevar, &savegame[615] );
         int counter = 0;
