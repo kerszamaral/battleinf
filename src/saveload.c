@@ -702,6 +702,7 @@ void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj
         case 'E':
             enemy[e].pos = (Vector2){ terrainx - enemy[e].cen.x, terrainy - enemy[e].cen.y };
             enemy[e].health = 1;
+            enemy[e].color = WHITE;
             e++;
             break;
         case '@':
