@@ -721,6 +721,5 @@ void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj
         }
     }
     settings->enemiesremaining = e + (player[0].score/800);
-    printf("%d\n", settings->enemiesremaining);
     printf("\n%s\n",terrainspace);
 }
