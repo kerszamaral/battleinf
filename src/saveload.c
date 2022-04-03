@@ -673,13 +673,13 @@ void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj
 
         //! PowerUps
         case 'P':
-            energy->pos = (Vector2){ terrainx - energy->cen.x * (GetScreenWidth()*(1.0/1010)), terrainy - energy->cen.y * (GetScreenHeight()*(1.0/655)) };
+            energy->pos = (Vector2){ terrainx, terrainy };
             energy->health = 1;
             break;
 
         //! Players
         case 'T':
-            player[0].pos = (Vector2){ terrainx - player[0].cen.x * (GetScreenWidth()*(1.0/1010)), terrainy - player[0].cen.y * (GetScreenHeight()*(1.0/655)) };
+            player[0].pos = (Vector2){ terrainx - player[0].cen.x , terrainy - player[0].cen.y };
             settings->foundplayerposition++;
             break;
         case '1':
