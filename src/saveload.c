@@ -679,34 +679,34 @@ void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj
 
         //! Players
         case 'T':
-            player[0].pos = (Vector2){ terrainx - player[0].cen.x , terrainy - player[0].cen.y };
+            player[0].pos = (Vector2){ terrainx, terrainy };
             settings->foundplayerposition++;
             break;
         case '1':
-            player[1].pos = (Vector2){ terrainx - player[1].cen.x, terrainy - player[1].cen.y };
+            player[1].pos = (Vector2){ terrainx, terrainy };
             settings->foundplayerposition++;
             break;
         case '2':
-            player[2].pos = (Vector2){ terrainx - player[2].cen.x, terrainy - player[2].cen.y };
+            player[2].pos = (Vector2){ terrainx, terrainy };
             settings->foundplayerposition++;
             break;
         case '3':
-            player[3].pos = (Vector2){ terrainx - player[3].cen.x, terrainy - player[3].cen.y };
+            player[3].pos = (Vector2){ terrainx, terrainy };
             settings->foundplayerposition++;
             break;
         case '4':
-            player[4].pos = (Vector2){ terrainx - player[4].cen.x, terrainy - player[4].cen.y };
+            player[4].pos = (Vector2){ terrainx, terrainy };
             settings->foundplayerposition++;
             break;
         //! Enemies
         case 'E':
-            enemy[e].pos = (Vector2){ terrainx - enemy[e].cen.x, terrainy - enemy[e].cen.y };
+            enemy[e].pos = (Vector2){ terrainx, terrainy };
             enemy[e].health = 1;
             enemy[e].color = WHITE;
             e++;
             break;
         case '@':
-            enemy[e].pos = (Vector2){ terrainx - enemy[e].cen.x, terrainy - enemy[e].cen.y };
+            enemy[e].pos = (Vector2){ terrainx, terrainy };
             enemy[e].health = 2;
             enemy[e].color = RED;
             e++;
