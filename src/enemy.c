@@ -31,7 +31,7 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrai
 
 void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj otherenemy[] )
 {   
-    if (!enemy->health && enemy->death < 100000)
+    if ( !enemy->health )
     {
         enemy->death++;
     }
@@ -41,7 +41,7 @@ void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle t
             enemy->health = 2; //Controls enemy health based on colors
         else
             enemy->health = 1;
-        enemy->death = 100000;
+        settings->enemiesremaining++;
         spawn( settings , enemy , terrainspace , terrainarray, player , otherenemy );
     }
 }

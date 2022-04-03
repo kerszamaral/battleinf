@@ -7,7 +7,8 @@
 void startscreen(Setti *settings)
 {
     settings->select = 0;
-    
+    double time = GetTime() , timer = 0;
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -79,6 +80,15 @@ void startscreen(Setti *settings)
         else
             DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
         
+        if ( strcmp(settings->error, " ") )
+        {
+            timer = GetTime();
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 250, 25, RED);
+            if (timer > time + 2)
+                strcpy(settings->error, " ");
+        }
+        
+
         EndDrawing();
     }
 }

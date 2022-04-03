@@ -50,6 +50,9 @@ typedef struct  //struct for the interchangable settings in the game
     bool exitgame;
     int pauseselect;
     bool loadgame;
+    int foundplayerposition;
+    int enemiesremaining;
+    char error[100];
 } Setti;
 
 typedef struct  //struct for the textures in the game

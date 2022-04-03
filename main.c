@@ -9,14 +9,15 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Setti settings = { 1 , 0 , 0 , 0 , false , false, BLACK, 0, false, 0, false };
+    Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, 0, false, 0, false, 0, 0, ' ' };
+    strcpy(settings.error, " ");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     InitAudioDevice();
     SetMasterVolume(1);
     SetWindowIcon(LoadImage("assets/player.png"));
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-
+    
 
     while ( !settings.quit )
     {
@@ -27,8 +28,10 @@ int main(void)
             settings.loadgame = false;
 
             do{
-                settings.level++;
                 jogo( &settings );
+                settings.level++;
+                settings.foundplayerposition = 0;
+                settings.enemiesremaining = 0;
             }while ( settings.won );
             
             if (!IsWindowFullscreen())
@@ -36,27 +39,42 @@ int main(void)
             
             if (settings.score > LoadStorageValue(0) && !settings.quit)
                 nome( &settings );
+
             settings.exitgame = false;
-            settings.level = 0;
+            settings.level = 1;
             settings.score = 0;
+            
             break;
         case 1:
-            settings.loadgame = true;
+            if ( FileExists("saves/savegame.txt") )
+            {
+                settings.loadgame = true;
 
-            do{
-                settings.level++;
-                jogo( &settings );
-            }while ( settings.won );
-            
-            if (!IsWindowFullscreen())
-                SetWindowState(FLAG_WINDOW_RESIZABLE);
-            
-            if (settings.score > LoadStorageValue(0) && !settings.quit)
-                nome( &settings );
-            settings.exitgame = false;
-            settings.level = 0;
-            settings.score = 0;
+                char levelsave[5];
+                strncpy( levelsave, &LoadFileText("saves/savegame.txt")[615], 4 );
+                settings.level = atoi(levelsave);
 
+                do{
+                    jogo( &settings );
+                    settings.level++;
+                    settings.foundplayerposition = 0;
+                    settings.enemiesremaining = 0;
+                    settings.loadgame = false;
+                }while ( settings.won );
+                
+                if (!IsWindowFullscreen())
+                    SetWindowState(FLAG_WINDOW_RESIZABLE);
+                
+                if (settings.score > LoadStorageValue(0) && !settings.quit)
+                    nome( &settings );
+                
+                settings.exitgame = false;
+                settings.level = 1;
+                settings.score = 0;    
+            }
+            else
+                strcpy(settings.error, "Não há nenhum jogo salvo!");
+            
             break;
         case 2:
             highscorescreen( &settings );

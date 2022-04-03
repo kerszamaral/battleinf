@@ -7,21 +7,13 @@
 #include "shooting.h"
 #include "terrain.h"
 #include "menu.h"
+#include "saveload.h"
 
 
 
 void jogo(Setti *settings)
 {
     SetExitKey(0);
-    /********************* GAME LOADING *****************************/
-    bool levelfile = false;
-    char savegame[ 15*41 + 20];
-    if (settings->loadgame)
-    {
-        levelfile = true;
-        strcpy(savegame, LoadFileText("saves/savegame.txt"));
-    }
-    
     /********************** TEXTURES *******************************/
     Textus textures = {
         LoadTexture("assets/player.png"),  //Texture for the player tank
@@ -210,29 +202,33 @@ void jogo(Setti *settings)
     //Playspace is 1000x600 / We devide those in 50 by 50 cubes
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     
-    //Random Map Generator for testing, needs to be replaced by read file
-    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
-    
+    bool levelfilefound = false;
+    char filename[20];
     if (!settings->loadgame)
-    {
         if ( FileExists( TextFormat( "saves/nivel%d.txt", settings->level ) ) )
         {
-            levelfile = true;
-            strcpy( terrainspace, LoadFileText( TextFormat( "saves/nivel%d.txt", settings->level ) ) );
+            levelfilefound = true;
+            strcpy( filename , TextFormat( "nivel%d", settings->level ) );
         }
-        else
+    //Random Map Generator for testing, needs to be replaced by read file
+    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
+    if ( !levelfilefound && !settings->loadgame )
             terraincreate(terrainspace);
-    }
-    else
-        strncpy(terrainspace, savegame, 15*41);
         
     //Creates the actual rectangles in the right place
     Rectangle terrainarray[ 15 * 41 ];
-    terrainplace( terrainarray , terrainspace );
+    if ( !levelfilefound && !settings->loadgame )
+        terrainplace( terrainarray , terrainspace );
     
+    if (levelfilefound)
+        loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
+    
+    if (settings->loadgame)
+        loading( "savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
+
     //Random player starting position
-    if (!levelfile)
-        for (int p = 0; p < settings->players; p++)
+    if ( settings->foundplayerposition <= settings->players )
+        for (int p = settings->foundplayerposition; p < settings->players; p++)
             spawn( settings , &player[p] , terrainspace , terrainarray , player , enemy);
     
     PlaySound(sounds.gamestart);
@@ -291,6 +287,8 @@ void jogo(Setti *settings)
         //Energy Drawing
         if ( energy.health >= 1 )
         {
+            energy.draw = (Vector2){ energy.pos.x + energy.cen.x , energy.pos.y + energy.cen.y };
+            energy.colRec = (Rectangle){ energy.pos.x , energy.pos.y , energy.cen.x*2 , energy.cen.y*2 };
             DrawTexturePro( textures.energy , energy.sourceRec , energy.colRec , (Vector2){ 0 , 0 } , 0 , WHITE );
             for (int p = 0; p < settings->players; p++)
                 collision( &energy , player[p].colRec , 2 );
@@ -396,7 +394,7 @@ void jogo(Setti *settings)
             //Because enemy cen is the center(1/2) of the image scaled, we can multiply by 2 to get the full size
             /********************** ENEMY SPAWNING *******************************/
             //Spawn logic
-            if (!settings->pause)
+            if (!settings->pause && settings->enemiesremaining < settings->level)
                 enemyspawn( settings , &enemy[k], terrainspace , terrainarray , player , enemy );
             //Drawing needs to be done here else it causes a major bug
             if (enemy[k].health != 0)
@@ -474,12 +472,6 @@ void jogo(Setti *settings)
                 break;
             }
         }
-        if (IsKeyPressed(KEY_K))
-        {
-            printf("(array)x: %f\n(array)y: %f\n", round(player[0].pos.x/24.25), floor(player[0].pos.y/38-1));
-            printf("x: %f\ny: %f\n", player[0].pos.x, player[0].pos.y);
-        }
-        
         
         EndDrawing();
     }
