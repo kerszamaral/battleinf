@@ -76,11 +76,14 @@ int main(void)
                 strcpy(settings.error, "Não há nenhum jogo salvo!");
             
             break;
-        case 2:
+        case 3:
             highscorescreen( &settings );
             break;
-        case 3:
+        case 4:
             settingscreen( &settings );
+            break;
+        case 5:
+            settings.quit = true;
             break;
         default:
             break;
