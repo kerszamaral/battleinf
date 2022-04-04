@@ -478,7 +478,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
     SaveFileText("saves/savegame.txt", savegame);
 }
 
-void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[], char terrainspace[] )
+void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[], char terrainspace[], bool print )
 {
     char savegame[ 15 * 41 + 20 ], savevar[20], savemap[15*41];
     strcpy( savegame, LoadFileText(TextFormat("%s.txt", filename)) );
@@ -721,5 +721,6 @@ void loading(char filename[20], Setti *settings, Obj player[], Obj enemy[] , Obj
         }
     }
     settings->enemiesremaining = e + (player[0].score/800);
-    printf("\n%s\n",terrainspace);
+    if (print)
+        printf("\n%s\n",terrainspace);
 }
