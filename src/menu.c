@@ -29,24 +29,36 @@ void startscreen(Setti *settings)
     textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
     textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
     textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    textures.wall = LoadTexture("assets/wall.png"); //Texture for the wall
     SFX sounds;
     sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
     sounds.bulletmiss = LoadSound("assets/BulletMissSFX.wav"); //Sound for the bullet miss
     SetSoundVolume(sounds.shoot, 0.02);
     SetSoundVolume(sounds.bulletmiss, 0.02);
+    //!Bullets
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    //!MAP ART
+    Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
+    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarray[ 15 * 41 ];
+    //!FOR FAKING LOADING A MAP
+    Obj player[1], enemy[1], energy, bullet[1];
+    loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
+        /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
             (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
             (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
             (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
             (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
-        
+
+        /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
             GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) - 10, 
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
@@ -54,6 +66,7 @@ void startscreen(Setti *settings)
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
 
+        /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
         {
             if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->select < optionsnumber - 1)
@@ -63,7 +76,7 @@ void startscreen(Setti *settings)
             if ( IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
                 selected = true;
         }
-
+        /****************** MENU ANIMATIONS ************************/
         if ( selected )
         {
             shoot = true;
@@ -96,11 +109,6 @@ void startscreen(Setti *settings)
             shoot = false;
             PlaySoundMulti(sounds.bulletmiss);
         }
-        if ( bulletdying )
-        {
-            DrawTexturePro( textures.explosion , (Rectangle){ textures.explosion.width/39*bulletdeathtimer , 0 , textures.explosion.width/39 , textures.explosion.height } , (Rectangle){ bulletexplosion.x , bulletexplosion.y  , textures.explosion.width/390, textures.explosion.height/10 } , (Vector2){ (textures.explosion.width/390)/2 , (textures.explosion.height/10)/2 } , 90+30 , WHITE );
-            bulletdeathtimer += 1;
-        }
         if (bulletdeathtimer > 39)
         {
             bulletexplosion.x = GetScreenWidth()*2;
@@ -112,26 +120,41 @@ void startscreen(Setti *settings)
         BeginDrawing();
 
         ClearBackground( settings->theme );
-
+        //* Map art
+        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
+        {
+            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
+            storedWidth = GetScreenWidth();
+            storedHeight = GetScreenHeight();
+        }
+        for (int i = 0; i < 15 * 41; i++)
+                if (terrainspace[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
+        //* Menu bars
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
-
+        //* Texts
         DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
-        
-        DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
         
         for (int i = 0; i < optionsnumber; i++)
             DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], GetFontDefault().baseSize), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
         
+        /*************** FOR ANIMATIONS ****************/
+        DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        if ( bulletdying )
+        {
+            DrawTexturePro( textures.explosion , (Rectangle){ textures.explosion.width/39*bulletdeathtimer , 0 , textures.explosion.width/39 , textures.explosion.height } , (Rectangle){ bulletexplosion.x , bulletexplosion.y  , textures.explosion.width/390, textures.explosion.height/10 } , (Vector2){ (textures.explosion.width/390)/2 , (textures.explosion.height/10)/2 } , 90+30 , WHITE );
+            bulletdeathtimer += 1;
+        }
         //This was a bug that made the smoke spin but I kept it as a feature becaue it looked nice doubled
         DrawTexturePro( textures.smoke , (Rectangle){ bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y + bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
         DrawTexturePro( textures.smoke , (Rectangle){ textures.smoke.width - textures.smoke.width/20 - bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y +bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
-        
         DrawTexturePro( textures.bullet , (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height } , bulletdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
-
+        
+        //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 300, 25, RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }
@@ -144,12 +167,13 @@ void startscreen(Setti *settings)
             settings->quit = true;
         }
     }
-
+    /************** UNLOADING AREA ********************/
     StopSoundMulti();
     UnloadTexture(textures.player);  //Texture for the player tank
     UnloadTexture(textures.bullet); //Texture for the bullet
     UnloadTexture(textures.explosion); //Texture for the explosion for bullets
     UnloadTexture(textures.smoke); //Smoke texture
+    UnloadTexture(textures.wall); //Texture for the wall
     UnloadSound(sounds.shoot); //Sound for shooting
     UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
@@ -253,51 +277,6 @@ bool IsAnyKeyPressed()
     if ((key >= 32) && (key <= 126)) keyPressed = true;
 
     return keyPressed;
-}
-
-void endscreen(Setti *settings)
-{
-    settings->select = 0;
-
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
-
-        ClearBackground(BLACK);
-
-        DrawText("GAME OVER", GetScreenWidth() / 2 - MeasureText("GAME OVER", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
-        
-        if ( (IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3) ) && settings->select < 1 )
-            settings->select += 1;
-        if ( (IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1) ) && settings->select > 0 )
-            settings->select -= 1;
-
-        if ( settings->select == 0 )
-        {
-            DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4, 25, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-            {
-                settings->select = 0;
-                break;
-            }
-        }
-        else
-            DrawText("Restart", GetScreenWidth() / 2 - MeasureText("Restart", GetFontDefault().baseSize) , GetScreenHeight() / 4, 20, RAYWHITE);
-
-        if ( settings->select == 1 )
-        {
-            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) * 1.25 , GetScreenHeight() / 4 + 100, 20, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-            {
-                settings->quit = true;
-                break;
-            }
-        }
-        else
-            DrawText("Quit", GetScreenWidth() / 2 - MeasureText("Quit", GetFontDefault().baseSize) , GetScreenHeight() / 4 + 100, 20, RAYWHITE);
-        
-        EndDrawing();
-    }
 }
 
 void settingscreen(Setti *settings)

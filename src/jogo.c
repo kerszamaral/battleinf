@@ -221,10 +221,10 @@ void jogo(Setti *settings)
         terrainplace( terrainarray , terrainspace );
     
     if (levelfilefound)
-        loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
+        loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
     
     if (settings->loadgame)
-        loading( "saves/savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace );
+        loading( "saves/savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
 
     //Random player starting position
     if ( settings->foundplayerposition <= settings->players )
