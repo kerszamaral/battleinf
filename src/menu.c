@@ -45,6 +45,8 @@ void startscreen(Setti *settings)
     Rectangle terrainarray[ 15 * 41 ];
     //!FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy, bullet[1];
+    player[0].score = 0;
+    player[0].health = 0;
     loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
     int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
@@ -73,7 +75,7 @@ void startscreen(Setti *settings)
                 settings->select += 1;
             if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->select > 0)
                 settings->select -= 1;
-            if ( IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
+            if ( IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
                 selected = true;
         }
         /****************** MENU ANIMATIONS ************************/
@@ -114,6 +116,7 @@ void startscreen(Setti *settings)
             bulletexplosion.x = GetScreenWidth()*2;
             bulletexplosion.y = 0;
             bulletdying = false;
+            bulletdeathtimer = 0;
             break;
         }
         
@@ -123,7 +126,7 @@ void startscreen(Setti *settings)
         //* Map art
         if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
+            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
             storedWidth = GetScreenWidth();
             storedHeight = GetScreenHeight();
         }
@@ -154,7 +157,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }

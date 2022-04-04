@@ -480,7 +480,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
 
 void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[], char terrainspace[], bool print )
 {
-    char savegame[ 15 * 41 + 20 ], savevar[20], savemap[15*41];
+    char savegame[ 15 * 41 + 20 ] = {0}, savevar[20] = {0}, savemap[15*41] = {0};
     strcpy( savegame, LoadFileText(TextFormat("%s.txt", filename)) );
     
     /********************STORED VARIABLES************************/
