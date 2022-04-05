@@ -571,61 +571,47 @@ void settingscreen(Setti *settings)
 
 void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] )
 {
-  
-    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, YELLOW);
-    
+
     if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->pauseselect < 3 )
         settings->pauseselect += 1;
     if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->pauseselect > 0)
         settings->pauseselect -= 1;
-    
-    if (settings->pauseselect == 0)
+    if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
     {
-        DrawText("Resume", GetScreenWidth() / 2 - MeasureText("Resume", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+        switch (settings->pauseselect)
         {
+        case 0:
             settings->pause = false;
-        }
-    }
-    else
-        DrawText("Resume", GetScreenWidth() / 2 - MeasureText("Resume", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
-    
-    if (settings->pauseselect == 1)
-    {
-        DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-        {
+            break;
+        case 1:
             saving(settings, terrainspace, player, enemy, energy, bullet, terrainarray);
-        }
-    }
-    else
-        DrawText("Save", GetScreenWidth() / 2 - MeasureText("Save", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
-    
-    if (settings->pauseselect == 2)
-    {
-        DrawText("Main Menu", GetScreenWidth() / 2 - MeasureText("Main Menu", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-        {
+            break;
+        case 2:
             settings->exitgame = true;
             settings->pause = false;
-        }
-    }
-    else
-        DrawText("Main Menu", GetScreenWidth() / 2 - MeasureText("Main Menu", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
-    
-    if (settings->pauseselect == 3)
-    {
-        DrawText("Quit Game", GetScreenWidth() / 2 - MeasureText("Quit Game", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
-        if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-        {
+            break;
+        case 3:
             settings->quit = true;
             settings->exitgame = true;
             settings->pause = false;
+            break;
         }
     }
-    else
-        DrawText("Quit Game", GetScreenWidth() / 2 - MeasureText("Quit Game", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
     
+    char pauseoptions[4][100] = {
+        "Resume\0",
+        "Save\0",
+        "Main Menu\0",
+        "Quit Game\0"
+    };
+    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, GOLD);
+    for (int i = 0; i < 4; i++)
+    {
+        if (i == settings->pauseselect)
+            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 100*(GetScreenHeight()*(1.0/655)) + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
+        else                
+            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 100*(GetScreenHeight()*(1.0/655)) + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );  
+    }
 }
 
 void highscorescreen(Setti *settings)
