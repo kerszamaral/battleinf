@@ -287,7 +287,7 @@ void settingscreen(Setti *settings)
     /***************** MENU OPTIONS *****************************/
     bool selected = false, shoot = false, submenu = false;
     settings->select = 0;
-    double time = GetTime(), time2 = 0;
+    double time = GetTime(), time2 = 0, error = 0;
     Color lettercolor = BLACK;
     
     int optionsnumber = 5, subselect = 0;
@@ -311,6 +311,7 @@ void settingscreen(Setti *settings)
     textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
     textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
     textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    textures.energy = LoadTexture("assets/controller.png");
     SFX sounds;
     sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
     sounds.bulletmiss = LoadSound("assets/BulletMissSFX.wav"); //Sound for the bullet miss
@@ -458,6 +459,24 @@ void settingscreen(Setti *settings)
                     submenu = false;
                 }
             }
+            if (settings->select == 1)
+            {
+                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->players < 2 + settings->extended)
+                    settings->players++;
+                if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->players > 1 )
+                    settings->players--;
+                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->players == 2 + settings->extended && settings->players != 5)
+                {
+                    strcpy(settings->error, TextFormat("Can't have more than %d players, increase Extended Play", settings->players));
+                    error = GetTime();
+                }
+                Color playercolor[5] = { WHITE, RED, GREEN, ORANGE, MAGENTA };
+                for (int i = 0; i < settings->players; i++)
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, playercolor[i]);
+                
+                if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
+                    submenu = false;
+            }
             if (settings->select == 2)
             {
                 if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && subselect < 1)
@@ -482,6 +501,19 @@ void settingscreen(Setti *settings)
                     submenu = false;
                 }
             }
+            if (settings->select == 3)
+            {
+                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->extended < 3)
+                    settings->extended++;
+                if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->extended > 0)
+                    settings->extended--;
+                if( !settings->extended )
+                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+                for (int i = 0; i < settings->extended; i++)
+                    DrawTextureEx(textures.energy, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, WHITE);
+                if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
+                    submenu = false;
+            }
         }
         
         /*************** FOR ANIMATIONS ****************/
@@ -496,6 +528,14 @@ void settingscreen(Setti *settings)
         DrawTexturePro( textures.smoke , (Rectangle){ textures.smoke.width - textures.smoke.width/20 - bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y +bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
         DrawTexturePro( textures.bullet , (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height } , bulletdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
 
+        //*Error displaying
+        if ( strcmp(settings->error, " ") )
+        {
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25* (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
+            if (GetTime() > error + 2)
+                strcpy(settings->error, " ");
+        }
+        
         EndDrawing();
 
         if( WindowShouldClose() )
