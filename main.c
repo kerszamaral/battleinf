@@ -9,7 +9,7 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0, ' ' };
+    Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0 };
     strcpy(settings.error, " ");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     InitAudioDevice();
@@ -29,9 +29,9 @@ int main(void)
 
             do{
                 jogo( &settings );
-                settings.level++;
                 settings.foundplayerposition = 0;
                 settings.enemiesremaining = 0;
+                settings.level++;
             }while ( settings.won );
             
             if (!IsWindowFullscreen())

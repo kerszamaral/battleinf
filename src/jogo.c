@@ -397,7 +397,7 @@ void jogo(Setti *settings)
             if (!settings->pause && settings->enemiesremaining < settings->level)
                 enemyspawn( settings , &enemy[k], terrainspace , terrainarray , player , enemy );
             //Drawing needs to be done here else it causes a major bug
-            if (enemy[k].health != 0)
+            if (enemy[k].health >= 1)
                 DrawTexturePro( textures.enemy , enemy[k].sourceRec , enemy[k].drawRec , enemy[k].cen , enemy[k].rot , enemy[k].color ); //Draws Enemy tank
             
             /********************** ENEMY COLLISION/MOVEMENT *******************************/
@@ -478,7 +478,10 @@ void jogo(Setti *settings)
     /********************** END GAME *******************************/
     for (int p = 0; p < settings->players; p++)
         settings->score += player[p].score;
-        
+    memset( terrainspace, 0, sizeof(terrainspace) );
+    memset( terrainarray, 0, sizeof(terrainarray) );
+    memset( filename, 0, sizeof(filename) );
+
     StopSoundMulti(); 
     /********************** UNLOADING AREA *******************************/
     UnloadSound(sounds.gamestart);  //Sound for the start of the game

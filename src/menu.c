@@ -457,7 +457,7 @@ void settingscreen(Setti *settings)
                     settings->players++;
                 if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->players > 1 )
                     settings->players--;
-                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->players == 2 + settings->extended && settings->players != 5)
+                if (( IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S) || IsGamepadButtonPressed(0, 3)  ) && settings->players == 2 + settings->extended && settings->players != 5)
                 {
                     strcpy(settings->error, TextFormat("Can't have more than %d players, increase Extended Play", settings->players));
                     error = GetTime();
