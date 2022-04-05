@@ -10,9 +10,6 @@ void startscreen(Setti *settings)
     bool selected = false, shoot = false;
     settings->select = 0;
     double time = GetTime();
-    Color lettercolor = BLACK;
-    if (ColorToInt(settings->theme) == ColorToInt(BLACK))
-        lettercolor = RAYWHITE;
     
     int optionsnumber = 6;
     char options[6][100] = {
@@ -62,7 +59,7 @@ void startscreen(Setti *settings)
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) - 10, 
+            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
@@ -140,7 +137,7 @@ void startscreen(Setti *settings)
         DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
         
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
@@ -288,7 +285,6 @@ void settingscreen(Setti *settings)
     bool selected = false, shoot = false, submenu = false;
     settings->select = 0;
     double time = GetTime(), time2 = 0, error = 0;
-    Color lettercolor = BLACK;
     
     int optionsnumber = 5, subselect = 0;
     char optionssettings[5][100] = {
@@ -324,10 +320,6 @@ void settingscreen(Setti *settings)
 
     while ( !settings->quit )
     {
-        if (ColorToInt(settings->theme) == ColorToInt(BLACK))
-            lettercolor = RAYWHITE;
-        else
-            lettercolor = BLACK;
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
             (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
@@ -338,7 +330,7 @@ void settingscreen(Setti *settings)
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) - 10, 
+            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
@@ -416,7 +408,7 @@ void settingscreen(Setti *settings)
         DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
         
         if (submenu)
         {
@@ -431,7 +423,7 @@ void settingscreen(Setti *settings)
                     if (i == subselect)
                         DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
                     else                
-                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
                 }
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                 {
@@ -493,9 +485,11 @@ void settingscreen(Setti *settings)
                     {
                     case 0:
                         settings->theme = BLACK;
+                        settings->lettercolor = RAYWHITE;
                         break;
                     case 1:
                         settings->theme = RAYWHITE;
+                        settings->lettercolor = BLACK;
                         break;
                     }
                     submenu = false;
@@ -508,7 +502,7 @@ void settingscreen(Setti *settings)
                 if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->extended > 0)
                     settings->extended--;
                 if( !settings->extended )
-                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
                 for (int i = 0; i < settings->extended; i++)
                     DrawTextureEx(textures.energy, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, WHITE);
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
