@@ -289,8 +289,6 @@ void settingscreen(Setti *settings)
     settings->select = 0;
     double time = GetTime(), time2 = 0;
     Color lettercolor = BLACK;
-    if (ColorToInt(settings->theme) == ColorToInt(BLACK))
-        lettercolor = RAYWHITE;
     
     int optionsnumber = 5, subselect = 0;
     char optionssettings[5][100] = {
@@ -325,6 +323,10 @@ void settingscreen(Setti *settings)
 
     while ( !settings->quit )
     {
+        if (ColorToInt(settings->theme) == ColorToInt(BLACK))
+            lettercolor = RAYWHITE;
+        else
+            lettercolor = BLACK;
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
             (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
@@ -355,6 +357,7 @@ void settingscreen(Setti *settings)
                 else if (!submenu)
                 {
                     submenu = true;
+                    subselect = 0;
                     time2 = GetTime();
                 }
             }
@@ -450,6 +453,30 @@ void settingscreen(Setti *settings)
                     case 4:
                         SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
                         ToggleFullscreen();
+                        break;
+                    }
+                    submenu = false;
+                }
+            }
+            if (settings->select == 2)
+            {
+                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && subselect < 1)
+                    subselect += 1;
+                if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && subselect > 0)
+                    subselect -= 1;
+                if ( subselect == 0 )
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*(1.0/655))}, 0, 0.2, DARKPURPLE);               
+                else 
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*(1.0/655))}, 0, 0.2, GOLD);
+                if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
+                {
+                    switch (subselect)
+                    {
+                    case 0:
+                        settings->theme = BLACK;
+                        break;
+                    case 1:
+                        settings->theme = RAYWHITE;
                         break;
                     }
                     submenu = false;
