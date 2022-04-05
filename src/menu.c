@@ -284,206 +284,208 @@ bool IsAnyKeyPressed()
 
 void settingscreen(Setti *settings)
 {
+    /***************** MENU OPTIONS *****************************/
+    bool selected = false, shoot = false, submenu = false;
     settings->select = 0;
-    int submenuselect = 0;
-    bool submenu = false;
+    double time = GetTime(), time2 = 0;
+    Color lettercolor = BLACK;
+    if (ColorToInt(settings->theme) == ColorToInt(BLACK))
+        lettercolor = RAYWHITE;
+    
+    int optionsnumber = 5, subselect = 0;
+    char optionssettings[5][100] = {
+        "Resolution\0",
+        "Number of Players\0",
+        "Theme\0",
+        "Extended Play\0",
+        "Back\0"
+    };
+    char resolutions[5][100] = {
+        "1010x655\0",
+        "800x450\0",
+        "1920x1080\0",
+        "1280x720\0",
+        "Fullscreen\0"
+    };
+    /***************** EFFECTS *********************************/
+    Textus textures;
+    textures.player = LoadTexture("assets/player.png");  //Texture for the player tank
+    textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
+    textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
+    textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    SFX sounds;
+    sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
+    sounds.bulletmiss = LoadSound("assets/BulletMissSFX.wav"); //Sound for the bullet miss
+    SetSoundVolume(sounds.shoot, 0.02);
+    SetSoundVolume(sounds.bulletmiss, 0.02);
+    //!Bullets
+    bool bulletdying = false;
+    Vector2 bulletexplosion = {0,0};
+    int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
 
-    while (!WindowShouldClose())
+    while ( !settings->quit )
     {
+        /***************** RESIZABLE MENU BAR *****************************/
+        Rectangle Menu[4] = {
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+        };
+
+        /***************** PLAYER DRAWING *****************************/
+        Rectangle playerdrawRec = { 
+            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) - 10, 
+            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
+            textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
+            ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
+        }, bulletdrawRec;
+
+        /***************** MENU OPTIONS *****************************/
+        if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
+        {
+            if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && !submenu && settings->select < optionsnumber - 1)
+                settings->select += 1;
+            if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && !submenu && settings->select > 0)
+                settings->select -= 1;
+            if ( IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+            {   
+                if (settings->select == 4)
+                    selected = true;
+                else if (!submenu)
+                {
+                    submenu = true;
+                    time2 = GetTime();
+                }
+            }
+        }
+        /****************** MENU ANIMATIONS ************************/
+        if ( selected )
+        {
+            shoot = true;
+            PlaySoundMulti(sounds.shoot);
+            bulletdrawRec = (Rectangle){ 
+                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    playerdrawRec.y + playerdrawRec.height / 2 - ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ), 
+                    ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ) 
+                };
+            selected = false;
+        }
+        
+        if ( shoot )
+        {
+            if (bulletsmoke > 20)
+                bulletsmoke = 0;
+            else if (bullettimer%3 == 0)
+                bulletsmoke++;
+            bullettimer++;
+            bulletdrawRec.x += 2;
+        }
+        if( bulletdrawRec.x >= playerdrawRec.x + 10 + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) * 2 )
+        {
+            bulletexplosion.x = bulletdrawRec.x;
+            bulletexplosion.y = bulletdrawRec.y + 5;
+            bulletdying = true;
+            bulletdrawRec = (Rectangle){ 0 , 0 , 0 , 0 };
+            bulletdeathtimer = 0;
+            shoot = false;
+            PlaySoundMulti(sounds.bulletmiss);
+        }
+        if (bulletdeathtimer > 39)
+        {
+            bulletexplosion.x = GetScreenWidth()*2;
+            bulletexplosion.y = 0;
+            bulletdying = false;
+            bulletdeathtimer = 0;
+            break;
+        }
+        
         BeginDrawing();
 
-        ClearBackground(BLACK);
+        ClearBackground( settings->theme );
+
+        //* Menu bars
+        for (int i = 0; i < 4; i++)
+            DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
+        //* Texts
+        DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
         
-        DrawText("Settings", GetScreenWidth() / 2 - MeasureText("Settings", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 75, 40, LIME);
-        if (!submenu)
-            submenuselect = 0;
-
-        if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->select < 4 && !submenu)
-            settings->select += 1;
-        if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->select > 0 && !submenu)
-            settings->select -= 1;
-
-        if (settings->select == 0)
+        for (int i = 0; i < optionsnumber; i++)
+            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], GetFontDefault().baseSize), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
+        
+        if (submenu)
         {
-            DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2) )
+            if (settings->select == 0)
             {
-                submenu = true;
-            }
-            if ( submenu )
-            {
-                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
-                    submenu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && submenuselect < 2)
-                    submenuselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && submenuselect > 0)
-                    submenuselect -= 1;
-
-                if (submenuselect == 0)
+                if (( IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && subselect < optionsnumber - 1)
+                    subselect += 1;
+                if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && subselect > 0)
+                    subselect -= 1;
+                for (int i = 0; i < 5; i++)
                 {
-                    DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
-                    {
-                        if (IsWindowFullscreen())
-                            ToggleFullscreen();
-                        SetWindowSize(1000,600);
-                    }
+                    if (i == subselect)
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
+                    else                
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), lettercolor );
                 }
-                else
-                    DrawText("1000x600", GetScreenWidth() / 3 * 2 - MeasureText("1000x600", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
-                
-                if (submenuselect == 1)
+                if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                 {
-                    DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
+                    if (IsWindowFullscreen())
+                        ToggleFullscreen();
+                    switch (subselect)
                     {
-                        if (IsWindowFullscreen())
-                            ToggleFullscreen();
-                        SetWindowSize(800,450);
-                    }
-                }
-                else
-                    DrawText("800x450", GetScreenWidth() / 3 * 2 - MeasureText("800x450", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
-                
-                if (submenuselect == 2)
-                {
-                    DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
-                    {
+                    case 0:
+                        SetWindowSize( 1010, 655 );
+                        break;
+                    case 1:
+                        SetWindowSize( 800, 450 );
+                        break;
+                    case 2:
+                        SetWindowSize( 1920, 1080 );
+                        break;
+                    case 3:
+                        SetWindowSize( 1280, 720 );
+                        break;
+                    case 4:
                         SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
                         ToggleFullscreen();
+                        break;
                     }
-                }
-                else
-                    DrawText("Fullscreen", GetScreenWidth() / 3 * 2 - MeasureText("Fullscreen", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
-            }
-            
-        }
-        else
-            DrawText("Resolution", GetScreenWidth() / 2 - MeasureText("Resolution", GetFontDefault().baseSize), GetScreenHeight() / 4, 20, RAYWHITE);
-
-        if (settings->select == 1)
-        {
-            DrawText("Number of Players", GetScreenWidth() / 2 - MeasureText("Number of Players", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2))
-                submenu = true;
-            
-            if ( submenu )
-            {
-                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
                     submenu = false;
-
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->players < 5) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
-                {
-                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
-                    settings->players++;
                 }
-                else
-                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
-                
-                DrawText(TextFormat("%d",settings->players), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->players), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->players > 1)
-                {
-                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    settings->players--;
-                }
-                else
-                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
             }
         }
-        else
-            DrawText("Number of Players", GetScreenWidth() / 2 - MeasureText("Number of Players", GetFontDefault().baseSize), GetScreenHeight() / 4 + 50, 20, RAYWHITE);
-
-        if (settings->select == 2)
-        {
-            DrawText("Theme", GetScreenWidth() / 2 - MeasureText("Theme", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2) )
-            {
-                submenu = true;
-            }
-            if ( submenu )
-            {
-                if (IsKeyPressed(KEY_LEFT)|| IsGamepadButtonPressed(0, 4))
-                    submenu = false;
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3) ) && submenuselect < 1)
-                    submenuselect += 1;
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && submenuselect > 0)
-                    submenuselect -= 1;
-
-                if (submenuselect == 0)
-                {
-                    DrawText("Night", GetScreenWidth() / 3 * 2 - MeasureText("Night", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
-                    {
-                        settings->theme = BLACK;
-                    }
-                }
-                else
-                    DrawText("Night", GetScreenWidth() / 3 * 2 - MeasureText("Night", GetFontDefault().baseSize),  GetScreenHeight() / 4 + 100, 20, RAYWHITE);
-                
-                if (submenuselect == 1)
-                {
-                    DrawText("Day", GetScreenWidth() / 3 * 2 - MeasureText("Day", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-                    if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0, 12) )
-                    {
-                        settings->theme = RAYWHITE;
-                    }
-                }
-                else
-                    DrawText("Day", GetScreenWidth() / 3 * 2 - MeasureText("Day", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
-            }
-        }
-        else
-            DrawText("Theme", GetScreenWidth() / 2 - MeasureText("Theme", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
         
-        if (settings->select == 3)
+        /*************** FOR ANIMATIONS ****************/
+        DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        if ( bulletdying )
         {
-            DrawText("Extended Play", GetScreenWidth() / 2 - MeasureText("Extended Play", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 150, 25, YELLOW);
-            if ( IsKeyPressed(KEY_RIGHT) || IsGamepadButtonPressed(0, 2))
-                submenu = true;
-            
-            if ( submenu )
-            {
-                if ( IsKeyPressed(KEY_LEFT) || IsGamepadButtonPressed(0, 4))
-                    submenu = false;
-
-                if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsGamepadButtonReleased(0, 1)  ) && settings->extended < 3) //!INCREASE THIS NUMBER TO INCREASE MAXIMUM POSSIBLE PLAYERS
-                {
-                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize) * 1.25,  GetScreenHeight() / 4, 25, YELLOW);
-                    settings->extended++;
-                }
-                else
-                    DrawText("+", GetScreenWidth() / 3 * 2 - MeasureText("+", GetFontDefault().baseSize),  GetScreenHeight() / 4, 20, RAYWHITE);
-                
-                DrawText(TextFormat("%d",settings->extended), GetScreenWidth() / 3 * 2 - MeasureText(TextFormat("%d",settings->extended), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50, 25, YELLOW);
-                
-                if ((IsKeyReleased(KEY_DOWN) || IsKeyReleased(KEY_S) || IsGamepadButtonReleased(0, 3)  ) && settings->extended > 0)
-                {
-                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 100, 25, YELLOW);
-                    settings->extended--;
-                }
-                else
-                    DrawText("-", GetScreenWidth() / 3 * 2 - MeasureText("-", GetFontDefault().baseSize), GetScreenHeight() / 4 + 100, 20, RAYWHITE);
-            }
+            DrawTexturePro( textures.explosion , (Rectangle){ textures.explosion.width/39*bulletdeathtimer , 0 , textures.explosion.width/39 , textures.explosion.height } , (Rectangle){ bulletexplosion.x , bulletexplosion.y  , textures.explosion.width/390, textures.explosion.height/10 } , (Vector2){ (textures.explosion.width/390)/2 , (textures.explosion.height/10)/2 } , 90+30 , WHITE );
+            bulletdeathtimer += 1;
         }
-        else
-            DrawText("Extended Play", GetScreenWidth() / 2 - MeasureText("Extended Play", GetFontDefault().baseSize), GetScreenHeight() / 4 + 150, 20, RAYWHITE);
+        //This was a bug that made the smoke spin but I kept it as a feature becaue it looked nice doubled
+        DrawTexturePro( textures.smoke , (Rectangle){ bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y + bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.smoke , (Rectangle){ textures.smoke.width - textures.smoke.width/20 - bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y +bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.bullet , (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height } , bulletdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
 
-        if (settings->select == 4)
-        {
-            DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 200, 25, YELLOW);
-            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
-            {
-                settings->select = 0;
-                break;
-            } 
-        }
-        else
-            DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize), GetScreenHeight() / 4 + 200, 20, RAYWHITE);
-        
         EndDrawing();
+
+        if( WindowShouldClose() )
+        {
+            settings->select = 5;
+            settings->quit = true;
+        }
     }
+    /************** UNLOADING AREA ********************/
+    StopSoundMulti();
+    UnloadTexture(textures.player);  //Texture for the player tank
+    UnloadTexture(textures.bullet); //Texture for the bullet
+    UnloadTexture(textures.explosion); //Texture for the explosion for bullets
+    UnloadTexture(textures.smoke); //Smoke texture
+    UnloadTexture(textures.wall); //Texture for the wall
+    UnloadSound(sounds.shoot); //Sound for shooting
+    UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
 
 void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] )
