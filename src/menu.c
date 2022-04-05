@@ -123,7 +123,7 @@ void startscreen(Setti *settings)
         //* Map art
         if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
             storedWidth = GetScreenWidth();
             storedHeight = GetScreenHeight();
         }
@@ -414,7 +414,7 @@ void settingscreen(Setti *settings)
         //* Map art
         if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+            loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
             storedWidth = GetScreenWidth();
             storedHeight = GetScreenHeight();
         }
