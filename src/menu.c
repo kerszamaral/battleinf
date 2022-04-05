@@ -81,7 +81,7 @@ void startscreen(Setti *settings)
             shoot = true;
             PlaySoundMulti(sounds.shoot);
             bulletdrawRec = (Rectangle){ 
-                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 100 ), 
                     playerdrawRec.y + playerdrawRec.height / 2 - ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
                     textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ), 
                     ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ) 
@@ -98,7 +98,7 @@ void startscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + 10 + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -154,7 +154,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }
@@ -372,7 +372,7 @@ void settingscreen(Setti *settings)
             shoot = true;
             PlaySoundMulti(sounds.shoot);
             bulletdrawRec = (Rectangle){ 
-                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 100 ), 
                     playerdrawRec.y + playerdrawRec.height / 2 - ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
                     textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ), 
                     ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ) 
@@ -389,7 +389,7 @@ void settingscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + 10 * (GetScreenHeight()*(1.0/655)) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -545,7 +545,7 @@ void settingscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25* (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25, RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25* (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
             if (GetTime() > error + 2)
                 strcpy(settings->error, " ");
         }
@@ -597,14 +597,14 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
             break;
         }
     }
-    
+
     char pauseoptions[4][100] = {
         "Resume\0",
         "Save\0",
         "Main Menu\0",
         "Quit Game\0"
     };
-    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4, 40, GOLD);
+    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4, 40*(GetScreenHeight()*(1.0/655)), GOLD);
     for (int i = 0; i < 4; i++)
     {
         if (i == settings->pauseselect)
