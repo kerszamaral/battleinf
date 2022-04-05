@@ -307,6 +307,7 @@ void settingscreen(Setti *settings)
     textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
     textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
     textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    textures.wall = LoadTexture("assets/wall.png"); //Texture for the wall
     textures.energy = LoadTexture("assets/controller.png");
     SFX sounds;
     sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
@@ -317,6 +318,16 @@ void settingscreen(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    //!MAP ART
+    Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
+    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarray[ 15 * 41 ];
+    //!FOR FAKING LOADING A MAP
+    Obj player[1], enemy[1], energy, bullet[1];
+    player[0].score = 0;
+    player[0].health = 0;
+    loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -400,7 +411,16 @@ void settingscreen(Setti *settings)
         BeginDrawing();
 
         ClearBackground( settings->theme );
-
+        //* Map art
+        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
+        {
+            loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+            storedWidth = GetScreenWidth();
+            storedHeight = GetScreenHeight();
+        }
+        for (int i = 0; i < 15 * 41; i++)
+                if (terrainspace[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
         //* Menu bars
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
