@@ -85,7 +85,7 @@ int main(void)
                 if (!IsWindowFullscreen())
                     SetWindowState(FLAG_WINDOW_RESIZABLE);
                 
-                if (settings.score > LoadStorageValue(0) && !settings.quit)
+                if (settings.score > lowscore && !settings.quit)
                     nome( &settings );
                 
                 settings.exitgame = false;
@@ -95,6 +95,8 @@ int main(void)
             else
                 strcpy(settings.error, "Não há nenhum jogo salvo!");
             
+            break;
+        case 2:
             break;
         case 3:
             highscorescreen( &settings );
