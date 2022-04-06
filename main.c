@@ -18,6 +18,26 @@ int main(void)
     SetTargetFPS(60);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
+    if (fopen("assets/highscores.bin", "rb") == NULL)
+    {
+        FILE *noscores = fopen("assets/highscores.bin", "wb");
+        char madeupscores[15][100] =
+        {
+            //score     name            level
+            "4000\0",   "Marcelo\0",    "3\0",
+            "8000\0",   "Pedro\0",      "5\0",
+            "8800\0",   "Felipe\0",     "5\0",
+            "19200\0",  "Artur\0",      "7\0",
+            "46400\0",  "Ian\0",        "11\0"
+        };
+        fwrite(madeupscores, sizeof(madeupscores), 1, noscores);
+        fclose(noscores);
+    }
+    FILE *highscorescheck = fopen("assets/highscores.bin", "rb");
+    char scores[15][100] = {0};
+    fread(scores, sizeof(scores), 1, highscorescheck);
+    fclose(highscorescheck);
+    int lowscore = atoi(scores[0]);
 
     while ( !settings.quit )
     {
@@ -37,7 +57,7 @@ int main(void)
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
             
-            if (settings.score > LoadStorageValue(0) && !settings.quit)
+            if (settings.score > lowscore && !settings.quit)
                 nome( &settings );
 
             settings.exitgame = false;

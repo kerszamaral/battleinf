@@ -38,13 +38,13 @@ void startscreen(Setti *settings)
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
-    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
-    Rectangle terrainarray[ 15 * 41 ];
+    char terrainspacestar[ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarraystar[ 15 * 41 ];
     //!FOR FAKING LOADING A MAP
-    Obj player[1], enemy[1], energy, bullet[1];
-    player[0].score = 0;
-    player[0].health = 0;
-    loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+    Obj playerstar[1], enemystar[1], energystar, bulletstar[1];
+    playerstar[0].score = 0;
+    playerstar[0].health = 0;
+    loading( "assets/startscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 1 );
     int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
@@ -59,8 +59,8 @@ void startscreen(Setti *settings)
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
+            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
+            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5*(GetScreenHeight()*(1.0/655)), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -123,21 +123,21 @@ void startscreen(Setti *settings)
         //* Map art
         if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            loading( "assets/startscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
+            loading( "assets/startscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 0 );
             storedWidth = GetScreenWidth();
             storedHeight = GetScreenHeight();
         }
         for (int i = 0; i < 15 * 41; i++)
-                if (terrainspace[i] == '#')
-                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
+                if (terrainspacestar[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarraystar[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
         //* Menu bars
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], 20)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
         
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
@@ -154,7 +154,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25, GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }
@@ -187,15 +187,18 @@ void nome(Setti *settings)
     Rectangle textBox = { GetScreenWidth()/2.0f - 100, 320, 225, 50 };
     
     int ranking = 6;
-
+    
+    FILE *highscoresread = fopen("assets/highscores.bin", "rb");
+    char scores[15][100] = {0};
+    fread(scores, sizeof(scores), 1, highscoresread);
+    fclose(highscoresread);
     for (int i = 0; i < 5; i++)
     {
-        if (settings->score > LoadStorageValue(0 + i*12))
+        if (settings->score > atoi(scores[i*3]))
         {
-            SaveStorageValue(0 + i*12, LoadStorageValue(12 + i*12));
-            SaveStorageValue(1 + i*12, LoadStorageValue(13 + i*12));
-            for (int j = 0; j < 10; j++)
-                SaveStorageValue(2 + i*12 + j, LoadStorageValue(14 + i*12 + j));
+            strcpy(scores[(i*3)], scores[((i+1)*3)]);
+            strcpy(scores[(i*3)+1], scores[((i+1)*3)+1]);
+            strcpy(scores[(i*3)+2], scores[((i+1)*3)+2]);
             ranking--;
         }
     }
@@ -260,11 +263,12 @@ void nome(Setti *settings)
         EndDrawing();
     }
     int id = 5 - ranking;
-
-    SaveStorageValue(0 + id*12, settings->score);
-    SaveStorageValue(1 + id*12, settings->level);
-    for (int i = 0; i < 10; i++)
-        SaveStorageValue(2 + id*12 + i, name[i]);
+    FILE *highscoreswrite = fopen("assets/highscores.bin", "wb");
+    sprintf(scores[id*3], "%d", settings->score);
+    strcpy(scores[id*3+1], name);
+    sprintf(scores[id*3+2], "%d", settings->level);
+    fwrite(scores, sizeof(scores), 1, highscoreswrite);
+    fclose(highscoreswrite);
 }
 
 // Check if any key is pressed
@@ -320,13 +324,13 @@ void settingscreen(Setti *settings)
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
-    char terrainspace [ 15 * 41 ];   //15x41 terrain space 
-    Rectangle terrainarray[ 15 * 41 ];
+    char terrainspaceset[ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarrayset[ 15 * 41 ];
     //!FOR FAKING LOADING A MAP
-    Obj player[1], enemy[1], energy, bullet[1];
-    player[0].score = 0;
-    player[0].health = 0;
-    loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+    Obj playerset[1], enemyset[1], energyset, bulletset[1];
+    playerset[0].score = 0;
+    playerset[0].health = 0;
+    loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, bulletset, terrainarrayset, terrainspaceset, 1 );
     int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
@@ -341,8 +345,8 @@ void settingscreen(Setti *settings)
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5, 
+            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
+            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5*(GetScreenHeight()*(1.0/655)), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -389,7 +393,7 @@ void settingscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -414,21 +418,21 @@ void settingscreen(Setti *settings)
         //* Map art
         if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            loading( "assets/settingsscreen", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 0 );
+            loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, bulletset, terrainarrayset, terrainspaceset, 0 );
             storedWidth = GetScreenWidth();
             storedHeight = GetScreenHeight();
         }
         for (int i = 0; i < 15 * 41; i++)
-                if (terrainspace[i] == '#')
-                    DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
+                if (terrainspaceset[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarrayset[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
         //* Menu bars
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", GetFontDefault().baseSize) * 2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], 20)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
         
         if (submenu)
         {
@@ -441,9 +445,9 @@ void settingscreen(Setti *settings)
                 for (int i = 0; i < 5; i++)
                 {
                     if (i == subselect)
-                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
                     else                
-                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
                 }
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                 {
@@ -522,7 +526,7 @@ void settingscreen(Setti *settings)
                 if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->extended > 0)
                     settings->extended--;
                 if( !settings->extended )
-                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
                 for (int i = 0; i < settings->extended; i++)
                     DrawTextureEx(textures.energy, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, WHITE);
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
@@ -545,7 +549,7 @@ void settingscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), GetFontDefault().baseSize) * 1.25* (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
             if (GetTime() > error + 2)
                 strcpy(settings->error, " ");
         }
@@ -565,6 +569,7 @@ void settingscreen(Setti *settings)
     UnloadTexture(textures.explosion); //Texture for the explosion for bullets
     UnloadTexture(textures.smoke); //Smoke texture
     UnloadTexture(textures.wall); //Texture for the wall
+    UnloadTexture(textures.energy); //Texture for the energy
     UnloadSound(sounds.shoot); //Sound for shooting
     UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
@@ -616,43 +621,182 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
 
 void highscorescreen(Setti *settings)
 {
-    Score pscores[5];
+    /***************** MENU OPTIONS *****************************/
+    bool selected = false, shoot = false;
+    settings->select = 4;
+    double time3 = GetTime();
+    
+    int displaynumber = 6;
+    char optionshighscores[4][100] = {
+        "Rº\0",
+        "Score\0",
+        "Name\0",
+        "Level\0"
+    };
+    FILE *highscoresdisplay = fopen("assets/highscores.bin", "rb");
+    char scoresdisplay[15][100] = {0};
+    fread(scoresdisplay, sizeof(scoresdisplay), 1, highscoresdisplay);
+    fclose(highscoresdisplay);
 
-    for (int i = 0; i < 5; i++)
-    {
-        pscores[i].score = LoadStorageValue(48 - i*12);
-        pscores[i].level = LoadStorageValue(49 - i*12);
-        for (int j = 0; j < 10; j++)
-            pscores[i].name[j] = LoadStorageValue(50 + j - i*12 );
-    }
+    /***************** EFFECTS *********************************/
+    Textus textures;
+    textures.player = LoadTexture("assets/player.png");  //Texture for the player tank
+    textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
+    textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
+    textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    textures.wall = LoadTexture("assets/wall.png"); //Texture for the wall
+    SFX sounds;
+    sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
+    sounds.bulletmiss = LoadSound("assets/BulletMissSFX.wav"); //Sound for the bullet miss
+    SetSoundVolume(sounds.shoot, 0.02);
+    SetSoundVolume(sounds.bulletmiss, 0.02);
+    //!Bullets
+    bool bulletdying = false;
+    Vector2 bulletexplosion = {0,0};
+    int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    //!MAP ART
+    Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
+    char terrainspacesco[ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarraysco[ 15 * 41 ];
+    //!FOR FAKING LOADING A MAP
+    Obj playersco[1], enemysco[1], energysco, bulletsco[1];
+    playersco[0].score = 0;
+    playersco[0].health = 0;
+    loading( "assets/highscorescreen", settings, playersco, enemysco, &energysco, bulletsco, terrainarraysco, terrainspacesco, 1 );
+    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
-    while (!WindowShouldClose())
+    while ( !settings->quit )
     {
+        /***************** RESIZABLE MENU BAR *****************************/
+        Rectangle Menu[4] = {
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+        };
+
+        /***************** PLAYER DRAWING *****************************/
+        Rectangle playerdrawRec = { 
+            GetScreenWidth() / 2 - MeasureText("Back", 20)/2 *(GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
+            (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*(1.0/655)), 
+            textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
+            ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
+        }, bulletdrawRec;
+
+        /***************** MENU OPTIONS *****************************/
+        if( !selected && !shoot && !bulletdying && GetTime() > time3 + 0.5)
+        {
+            if ( IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+                selected = true;
+        }
+        /****************** MENU ANIMATIONS ************************/
+        if ( selected )
+        {
+            shoot = true;
+            PlaySoundMulti(sounds.shoot);
+            bulletdrawRec = (Rectangle){ 
+                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 100 ), 
+                    playerdrawRec.y + playerdrawRec.height / 2 - ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ), 
+                    ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ) 
+                };
+            selected = false;
+        }
+        
+        if ( shoot )
+        {
+            if (bulletsmoke > 20)
+                bulletsmoke = 0;
+            else if (bullettimer%3 == 0)
+                bulletsmoke++;
+            bullettimer++;
+            bulletdrawRec.x += 2;
+        }
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText("Back", GetFontDefault().baseSize) * 1.25 * (GetScreenWidth()*(1.0/1010)) * 2 )
+        {
+            bulletexplosion.x = bulletdrawRec.x;
+            bulletexplosion.y = bulletdrawRec.y + 5;
+            bulletdying = true;
+            bulletdrawRec = (Rectangle){ 0 , 0 , 0 , 0 };
+            bulletdeathtimer = 0;
+            shoot = false;
+            PlaySoundMulti(sounds.bulletmiss);
+        }
+        if (bulletdeathtimer > 39)
+        {
+            bulletexplosion.x = GetScreenWidth()*2;
+            bulletexplosion.y = 0;
+            bulletdying = false;
+            bulletdeathtimer = 0;
+            break;
+        }
+        
         BeginDrawing();
 
-        ClearBackground(BLACK);
-        DrawText("Highscores", GetScreenWidth() / 2 - MeasureText("Highscores", GetFontDefault().baseSize) * 2, GetScreenHeight() / 4 - 100, 40, YELLOW);
-        
-        DrawText("Rº", GetScreenWidth() / 3 - MeasureText("Rº", GetFontDefault().baseSize) * 1.25 - 200, GetScreenHeight() / 4 - 50 , 25, GOLD);
-        DrawText("Score", GetScreenWidth() / 3 - MeasureText("Score", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, GREEN);
-        DrawText("Name", GetScreenWidth() / 2 - MeasureText("Name", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, YELLOW);
-        DrawText("Level", (GetScreenWidth() - GetScreenWidth() / 4) - MeasureText("Level", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 - 50 , 25, BLUE);
-
-        for (int i = 0; i < 5; i++)
+        ClearBackground( settings->theme );
+        //* Map art
+        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
         {
-            DrawText(TextFormat("%d", i+1), GetScreenWidth() / 3 - MeasureText(TextFormat("%d", i+1), GetFontDefault().baseSize) * 1.25 - 200, GetScreenHeight() / 4 + 50 + i * 50, 25, GOLD);
-            DrawText(TextFormat("%d", pscores[i].score), GetScreenWidth() / 3 - MeasureText(TextFormat("%d", pscores[i].score), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
-            DrawText(TextFormat("%s", pscores[i].name), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", pscores[i].name), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
-            DrawText(TextFormat("%d", pscores[i].level), (GetScreenWidth() - GetScreenWidth() / 4) - MeasureText(TextFormat("%d", pscores[i].level), GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 50 + i * 50, 25, WHITE);
+            loading( "assets/highscorescreen", settings, playersco, enemysco, &energysco, bulletsco, terrainarraysco, terrainspacesco, 0 );
+            storedWidth = GetScreenWidth();
+            storedHeight = GetScreenHeight();
         }
-
-        DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", GetFontDefault().baseSize) * 1.25, GetScreenHeight() / 4 + 400, 25, YELLOW);
-        if ( IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, 7) || IsGamepadButtonPressed(0,12) )
+        for (int i = 0; i < 15 * 41; i++)
+                if (terrainspacesco[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarraysco[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
+        //* Menu bars
+        for (int i = 0; i < 4; i++)
+            DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
+        //* Texts
+        DrawText( "HIGHSCORES", GetScreenWidth() / 2 - (MeasureText("HIGHSCORES", 40) * (GetScreenHeight()*(1.0/655)))/2 , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        
+        for (int i = 0; i < displaynumber; i++)
         {
-            settings->select = 0;
-            break;
-        } 
-
+            if ( i == 0 )
+            {
+                DrawText(optionshighscores[0], (GetScreenWidth() / 5 ) - MeasureText(optionshighscores[0], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), GOLD);
+                DrawText(optionshighscores[1], (GetScreenWidth() / 5 *2) - MeasureText(optionshighscores[1], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), GREEN);
+                DrawText(optionshighscores[2], (GetScreenWidth() / 5 *3) - MeasureText(optionshighscores[2], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), VIOLET);
+                DrawText(optionshighscores[3], (GetScreenWidth() / 5 *4) - MeasureText(optionshighscores[3], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), BLUE);
+            }
+            else
+            {
+                DrawText(TextFormat("%d", i), (GetScreenWidth() / 5 ) - MeasureText(TextFormat("%d", i), 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+                DrawText(scoresdisplay[12 - ((i-1)*3)], (GetScreenWidth() / 5 *2) - MeasureText(scoresdisplay[12 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+                DrawText(scoresdisplay[13 - ((i-1)*3)], (GetScreenWidth() / 5 *3) - MeasureText(scoresdisplay[13 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+                DrawText(scoresdisplay[14 - ((i-1)*3)], (GetScreenWidth() / 5 *4) - MeasureText(scoresdisplay[14 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+            }
+        }
+        
+        DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", 20)/2 * (GetScreenHeight()*(1.0/655)), (GetScreenHeight() - GetScreenHeight() / 5), 20 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        
+        /*************** FOR ANIMATIONS ****************/
+        DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        if ( bulletdying )
+        {
+            DrawTexturePro( textures.explosion , (Rectangle){ textures.explosion.width/39*bulletdeathtimer , 0 , textures.explosion.width/39 , textures.explosion.height } , (Rectangle){ bulletexplosion.x , bulletexplosion.y  , textures.explosion.width/390, textures.explosion.height/10 } , (Vector2){ (textures.explosion.width/390)/2 , (textures.explosion.height/10)/2 } , 90+30 , WHITE );
+            bulletdeathtimer += 1;
+        }
+        //This was a bug that made the smoke spin but I kept it as a feature becaue it looked nice doubled
+        DrawTexturePro( textures.smoke , (Rectangle){ bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y + bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.smoke , (Rectangle){ textures.smoke.width - textures.smoke.width/20 - bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y +bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.bullet , (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height } , bulletdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        
         EndDrawing();
+
+        if( WindowShouldClose() )
+        {
+            settings->select = 5;
+            settings->quit = true;
+        }
     }
+    /************** UNLOADING AREA ********************/
+    StopSoundMulti();
+    UnloadTexture(textures.player);  //Texture for the player tank
+    UnloadTexture(textures.bullet); //Texture for the bullet
+    UnloadTexture(textures.explosion); //Texture for the explosion for bullets
+    UnloadTexture(textures.smoke); //Smoke texture
+    UnloadTexture(textures.wall); //Texture for the wall
+    UnloadSound(sounds.shoot); //Sound for shooting
+    UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
