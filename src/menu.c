@@ -997,6 +997,7 @@ void loadscreen(Setti *settings)
         {
             letterCount--;
             if (letterCount < 0) letterCount = 0;
+            name[letterCount] = 0; // Add null terminator at the end of the string.
         }
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
@@ -1074,8 +1075,6 @@ void loadscreen(Setti *settings)
                 else
                 {
                     strcpy(settings->error, "Arquivo nao existe\0");
-                    memset(name, 0, sizeof(name));
-                    letterCount = 0;
                     error = GetTime();
                 }
             }
