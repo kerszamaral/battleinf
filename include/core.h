@@ -53,7 +53,9 @@ typedef struct  //struct for the interchangable settings in the game
     bool loadgame;
     int foundplayerposition;
     int enemiesremaining;
+    bool filenamefound;
     char error[100];
+    char loadgamename[100]; //For loading game name 
 } Setti;
 
 typedef struct  //struct for the textures in the game
@@ -82,12 +84,5 @@ typedef struct  //struct for the sounds in the game
     //Sound hit; //Sound for the hit
     //Sound death; //Sound for the death
 } SFX;
-
-typedef struct
-{
-    int score;
-    char name[10];
-    int level;
-} Score;
 
 #endif

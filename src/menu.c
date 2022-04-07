@@ -933,3 +933,225 @@ void highscorescreen(Setti *settings)
     UnloadSound(sounds.shoot); //Sound for shooting
     UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
+
+void loadscreen(Setti *settings)
+{
+     /***************** MENU OPTIONS *****************************/
+    bool selected = false, shoot = false;
+    settings->select = 0;
+    double time = GetTime(), error = 0;
+    
+    char name[20] = {0};
+    int letterCount = 0;
+    settings->filenamefound = false;
+
+    int optionsnumberload = 2;
+    char optionsload[2][100] = {
+        "Next\0",
+        "Back\0"
+    };
+
+    /***************** EFFECTS *********************************/
+    Textus textures;
+    textures.player = LoadTexture("assets/player.png");  //Texture for the player tank
+    textures.bullet = LoadTexture("assets/bullet.png"); //Texture for the bullet
+    textures.explosion = LoadTexture("assets/explosionBullets.png"); //Texture for the explosion for bullets
+    textures.smoke = LoadTexture("assets/fire.png"); //Smoke texture
+    textures.wall = LoadTexture("assets/wall.png"); //Texture for the wall
+    SFX sounds;
+    sounds.shoot =  LoadSound("assets/BulletShotSFX.wav"); //Sound for the shoot
+    sounds.bulletmiss = LoadSound("assets/BulletMissSFX.wav"); //Sound for the bullet miss
+    SetSoundVolume(sounds.shoot, 0.02);
+    SetSoundVolume(sounds.bulletmiss, 0.02);
+    //!Bullets
+    bool bulletdying = false;
+    Vector2 bulletexplosion = {0,0};
+    int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    //!MAP ART
+    Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
+    char terrainspacestar[ 15 * 41 ];   //15x41 terrain space 
+    Rectangle terrainarraystar[ 15 * 41 ];
+    //!FOR FAKING LOADING A MAP
+    Obj playerstar[1], enemystar[1], energystar, bulletstar[1];
+    playerstar[0].score = 0;
+    playerstar[0].health = 0;
+    loading( "assets/loadscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 1 );
+    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
+
+    while ( !settings->quit )
+    {
+        /***************** TEXT BAR *****************************/
+        int key = GetCharPressed();
+        while (key > 0)
+        {
+            // NOTE: Only allow keys in range [32..125]
+            if ((key >= 32) && (key <= 125) && (letterCount < 20))
+            {
+                name[letterCount] = (char)key;
+                letterCount++;
+            }
+
+            key = GetCharPressed();  // Check next character in the queue
+        }
+        if (IsKeyReleased(KEY_BACKSPACE))
+        {
+            letterCount--;
+            if (letterCount < 0) letterCount = 0;
+        }
+        /***************** RESIZABLE MENU BAR *****************************/
+        Rectangle Menu[4] = {
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+        };
+
+        /***************** PLAYER DRAWING *****************************/
+        Rectangle playerdrawRec = { 
+            GetScreenWidth() / 2 - MeasureText(optionsload[settings->select], 20)/2 *(GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
+            (GetScreenHeight() - GetScreenHeight() / 5) + 50 * settings->select * (GetScreenHeight()*(1.0/655)), 
+            textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
+            ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
+        }, bulletdrawRec;
+
+        /***************** MENU OPTIONS *****************************/
+        if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
+        {
+            if (( IsKeyReleased(KEY_DOWN) || IsGamepadButtonReleased(0, 3)  ) && settings->select < optionsnumberload - 1)
+                settings->select += 1;
+            if (( IsKeyReleased(KEY_UP) || IsGamepadButtonReleased(0, 1)  ) && settings->select > 0)
+                settings->select -= 1;
+            if ( IsKeyReleased(KEY_ENTER) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12) )
+                selected = true;
+        }
+        /****************** MENU ANIMATIONS ************************/
+        if ( selected )
+        {
+            shoot = true;
+            PlaySoundMulti(sounds.shoot);
+            bulletdrawRec = (Rectangle){ 
+                    playerdrawRec.x + playerdrawRec.width / 2 - textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 100 ), 
+                    playerdrawRec.y + playerdrawRec.height / 2 - ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 100 ), 
+                    textures.bullet.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ), 
+                    ( textures.bullet.height * textures.bullet.width / textures.bullet.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 50 ) 
+                };
+            selected = false;
+        }
+        
+        if ( shoot )
+        {
+            if (bulletsmoke > 20)
+                bulletsmoke = 0;
+            else if (bullettimer%3 == 0)
+                bulletsmoke++;
+            bullettimer++;
+            bulletdrawRec.x += 2;
+        }
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(optionsload[settings->select], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
+        {
+            bulletexplosion.x = bulletdrawRec.x;
+            bulletexplosion.y = bulletdrawRec.y + 5;
+            bulletdying = true;
+            bulletdrawRec = (Rectangle){ 0 , 0 , 0 , 0 };
+            bulletdeathtimer = 0;
+            shoot = false;
+            PlaySoundMulti(sounds.bulletmiss);
+        }
+        if (bulletdeathtimer > 39)
+        {
+            bulletexplosion.x = GetScreenWidth()*2;
+            bulletexplosion.y = 0;
+            bulletdying = false;
+            bulletdeathtimer = 0;
+            if (settings->select == 0)
+            {
+                if(FileExists(TextFormat("saves/%s.txt",name)))
+                {
+                    strcpy(settings->loadgamename, name);
+                    settings->filenamefound = true;
+                    break; 
+                }
+                else
+                {
+                    strcpy(settings->error, "Arquivo nao existe\0");
+                    memset(name, 0, sizeof(name));
+                    letterCount = 0;
+                    error = GetTime();
+                }
+            }
+            else
+                break;
+        }
+        
+        BeginDrawing();
+
+        ClearBackground( settings->theme );
+        //* Map art
+        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
+        {
+            loading( "assets/loadscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 0 );
+            storedWidth = GetScreenWidth();
+            storedHeight = GetScreenHeight();
+        }
+        for (int i = 0; i < 15 * 41; i++)
+                if (terrainspacestar[i] == '#')
+                    DrawTexturePro( textures.wall , sourceWall , terrainarraystar[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
+        //* Menu bars
+        for (int i = 0; i < 4; i++)
+            DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
+        //* Texts
+        DrawText( "LOADGAME", GetScreenWidth() / 2 - MeasureText("LOADGAME", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        
+        DrawText( "Digite o nome do arquivo que quer carregar:", GetScreenWidth() / 2 - MeasureText("Digite o nome do arquivo que quer carregar:", 25)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 8 + 50 * 2 * (GetScreenHeight()*(1.0/655)), 25*(GetScreenHeight()*(1.0/655)), GOLD );
+        
+        DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        
+        if (letterCount < 20)
+        {
+            DrawText("_", GetScreenWidth()/2 + 8 * (GetScreenWidth()*(1.0/1010)) + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        }
+        else
+            strcpy(settings->error, "Numero Maximo de Caracteres");
+        
+        for (int i = 0; i < optionsnumberload; i++)
+            DrawText( &optionsload[i][0], GetScreenWidth() / 2 - MeasureText(&optionsload[i][0], 25)/2*(GetScreenHeight()*(1.0/655)), (GetScreenHeight() - GetScreenHeight() / 5) + 50 * i * (GetScreenHeight()*(1.0/655)), 25*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+
+        /*************** FOR ANIMATIONS ****************/
+        DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        if ( bulletdying )
+        {
+            DrawTexturePro( textures.explosion , (Rectangle){ textures.explosion.width/39*bulletdeathtimer , 0 , textures.explosion.width/39 , textures.explosion.height } , (Rectangle){ bulletexplosion.x , bulletexplosion.y  , textures.explosion.width/390, textures.explosion.height/10 } , (Vector2){ (textures.explosion.width/390)/2 , (textures.explosion.height/10)/2 } , 90+30 , WHITE );
+            bulletdeathtimer += 1;
+        }
+        //This was a bug that made the smoke spin but I kept it as a feature becaue it looked nice doubled
+        DrawTexturePro( textures.smoke , (Rectangle){ bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y + bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.smoke , (Rectangle){ textures.smoke.width - textures.smoke.width/20 - bulletsmoke*textures.smoke.width/20 , 0 , textures.smoke.width/20, textures.smoke.height } , (Rectangle){ bulletdrawRec.x - bulletdrawRec.width * sin(90*PI/180) - 3, bulletdrawRec.y +bulletdrawRec.height*cos(90*PI/180) + 5, bulletdrawRec.width , bulletdrawRec.height } , (Vector2){ bulletdrawRec.width/2 , bulletdrawRec.height/2 }  , 90-180 , WHITE);
+        DrawTexturePro( textures.bullet , (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height } , bulletdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
+        
+        //*Error displaying
+        if ( strcmp(settings->error, " ") )
+        {
+            DrawText(TextFormat("%s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", settings->error), 15)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 3 + 100*(GetScreenHeight()*(1/655)), 15*(GetScreenHeight()*(1.0/655)), RED);
+            if (GetTime() > error + 2)
+                strcpy(settings->error, " ");
+        }
+
+        EndDrawing();
+
+        if( WindowShouldClose() )
+        {
+            settings->select = 5;
+            settings->quit = true;
+        }
+    }
+    /************** UNLOADING AREA ********************/
+
+    StopSoundMulti();
+    UnloadTexture(textures.player);  //Texture for the player tank
+    UnloadTexture(textures.bullet); //Texture for the bullet
+    UnloadTexture(textures.explosion); //Texture for the explosion for bullets
+    UnloadTexture(textures.smoke); //Smoke texture
+    UnloadTexture(textures.wall); //Texture for the wall
+    UnloadSound(sounds.shoot); //Sound for shooting
+    UnloadSound(sounds.bulletmiss); //Sound for explosion
+}

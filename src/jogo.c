@@ -203,7 +203,7 @@ void jogo(Setti *settings)
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     
     bool levelfilefound = false;
-    char filename[20];
+    char filename[100];
     if (!settings->loadgame)
         if ( FileExists( TextFormat( "saves/nivel%d.txt", settings->level ) ) )
         {
@@ -222,10 +222,12 @@ void jogo(Setti *settings)
     
     if (levelfilefound)
         loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
-    
-    if (settings->loadgame)
-        loading( "saves/savegame", settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
 
+    if (settings->loadgame)
+    {
+        strcpy( filename , TextFormat( "saves/%s", settings->loadgamename ) );
+        loading( filename, settings, player, enemy, &energy, bullet, terrainarray, terrainspace, 1 );
+    }
     //Random player starting position
     if ( settings->foundplayerposition <= settings->players )
         for (int p = settings->foundplayerposition; p < settings->players; p++)

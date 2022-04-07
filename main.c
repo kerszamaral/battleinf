@@ -9,8 +9,9 @@ BattleInf Jogo de tanquezinho lá do NES
 
 int main(void)
 {
-    Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0 };
+    Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0, 0 };
     strcpy(settings.error, " ");
+    strcpy(settings.loadgamename, " ");
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
     InitAudioDevice();
     SetMasterVolume(1);
@@ -73,6 +74,7 @@ int main(void)
                 char levelsave[5];
                 strncpy( levelsave, &LoadFileText("saves/savegame.txt")[615], 4 );
                 settings.level = atoi(levelsave);
+                strcpy(settings.loadgamename, "savegame");
 
                 do{
                     jogo( &settings );
@@ -97,6 +99,26 @@ int main(void)
             
             break;
         case 2:
+            loadscreen( &settings );
+            if (settings.filenamefound)
+            {
+                settings.loadgame = true;
+                do{
+                    jogo( &settings );
+                    settings.level++;
+                    settings.foundplayerposition = 0;
+                    settings.enemiesremaining = 0;
+                }while ( settings.won );
+                
+                if (!IsWindowFullscreen())
+                    SetWindowState(FLAG_WINDOW_RESIZABLE);
+                SetExitKey(KEY_ESCAPE);
+
+                settings.loadgame = false;//Will keep looping the same level over and over
+                settings.exitgame = false;
+                settings.level = 1;
+                settings.score = 0;
+            }
             break;
         case 3:
             highscorescreen( &settings );

@@ -15,4 +15,6 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
 
 void highscorescreen(Setti *settings);
 
+void loadscreen(Setti *settings);
+
 #endif
