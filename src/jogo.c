@@ -261,16 +261,15 @@ void jogo(Setti *settings)
         for (int p = 0; p < settings->players; p++)
             score += player[p].score;
         //Text 
-        DrawText( TextFormat( "Fase %d" , settings->level ) , GetScreenWidth() / 2 - MeasureText("Fase 10", GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , YELLOW );
-        DrawText( TextFormat( "Pontuação: %d", score ), GetScreenWidth() - MeasureText("Pontuação: 100000", GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*(1.0/655)) , 13 * (GetScreenHeight()*(1.0/655)) , 32*(GetScreenHeight()*(1.0/655)) , RED );
+        DrawText( TextFormat( "Fase %d" , settings->level ) , GetScreenWidth() / 2 - MeasureText(TextFormat( "Fase %d" , settings->level ), GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %d", score ), GetScreenWidth() - MeasureText(TextFormat( "Pontuação: %d", score ), GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*(1.0/655)) , 13 * (GetScreenHeight()*(1.0/655)) , 32*(GetScreenHeight()*(1.0/655)) , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", settings->level - (score - settings->score) / 800 , settings->level ),
-        MeasureText("Inimigos restantes: 10/10", GetFontDefault().baseSize)*(GetScreenHeight()*(1.0/655)) + 10 , 15 * (GetScreenHeight()*(1.0/655)) , 24*(GetScreenHeight()*(1.0/655)) , BLUE );
+        MeasureText(TextFormat( "Inimigos restantes: %d/%d", settings->level - (score - settings->score) / 800 , settings->level ), GetFontDefault().baseSize)*(GetScreenHeight()*(1.0/655)) + 10 , 15 * (GetScreenHeight()*(1.0/655)) , 24*(GetScreenHeight()*(1.0/655)) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
         for (int p = 0, healthy = 10; p < settings->players; p++, healthy += (45 * (GetScreenHeight()*(1.0/655)))/settings->players )
         {    
             for ( int i = 0, healthx = 5 ; i < player[p].health ; i++ , healthx += (35 * (GetScreenHeight()*(1.0/655)))/settings->players )
-                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.025 * (GetScreenHeight()*(1.0/655)))/settings->players, player[p].color );
-            //                                           This image is too big, scaling factor needs to be very small   
+                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.05 * (GetScreenHeight()*(1.0/655)))/settings->players, player[p].color );
         }
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
