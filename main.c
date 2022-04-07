@@ -56,7 +56,7 @@ int main(void)
             
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
-            
+            SetExitKey(KEY_ESCAPE);
             if (settings.score > lowscore && !settings.quit)
                 nome( &settings );
 
@@ -84,7 +84,7 @@ int main(void)
                 
                 if (!IsWindowFullscreen())
                     SetWindowState(FLAG_WINDOW_RESIZABLE);
-                
+                SetExitKey(KEY_ESCAPE);
                 if (settings.score > lowscore && !settings.quit)
                     nome( &settings );
                 
