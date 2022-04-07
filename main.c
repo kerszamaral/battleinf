@@ -12,7 +12,7 @@ int main(void)
     Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0, 0 };
     strcpy(settings.error, " ");
     strcpy(settings.loadgamename, " ");
-    InitWindow(SCREENWIDTH, SCREENHEIGHT, "Game");
+    InitWindow(SCREENWIDTH, SCREENHEIGHT, "BattleInf");
     InitAudioDevice();
     SetMasterVolume(1);
     SetWindowIcon(LoadImage("assets/player.png"));

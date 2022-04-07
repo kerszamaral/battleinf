@@ -45,7 +45,6 @@ void startscreen(Setti *settings)
     playerstar[0].score = 0;
     playerstar[0].health = 0;
     loading( "assets/startscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 1 );
-    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -121,12 +120,8 @@ void startscreen(Setti *settings)
 
         ClearBackground( settings->theme );
         //* Map art
-        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
-        {
+        if (IsWindowResized())
             loading( "assets/startscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 0 );
-            storedWidth = GetScreenWidth();
-            storedHeight = GetScreenHeight();
-        }
         for (int i = 0; i < 15 * 41; i++)
                 if (terrainspacestar[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarraystar[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -237,7 +232,6 @@ void nome(Setti *settings)
     playerstar[0].score = 0;
     playerstar[0].health = 0;
     loading( "assets/namescreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 1 );
-    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -329,12 +323,8 @@ void nome(Setti *settings)
 
         ClearBackground( settings->theme );
         //* Map art
-        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
-        {
+        if (IsWindowResized())
             loading( "assets/namescreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 0 );
-            storedWidth = GetScreenWidth();
-            storedHeight = GetScreenHeight();
-        }
         for (int i = 0; i < 15 * 41; i++)
                 if (terrainspacestar[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarraystar[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -464,7 +454,6 @@ void settingscreen(Setti *settings)
     playerset[0].score = 0;
     playerset[0].health = 0;
     loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, bulletset, terrainarrayset, terrainspaceset, 1 );
-    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -549,12 +538,8 @@ void settingscreen(Setti *settings)
 
         ClearBackground( settings->theme );
         //* Map art
-        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
-        {
+        if (IsWindowResized())
             loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, bulletset, terrainarrayset, terrainspaceset, 0 );
-            storedWidth = GetScreenWidth();
-            storedHeight = GetScreenHeight();
-        }
         for (int i = 0; i < 15 * 41; i++)
                 if (terrainspaceset[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarrayset[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -796,7 +781,6 @@ void highscorescreen(Setti *settings)
     playersco[0].score = 0;
     playersco[0].health = 0;
     loading( "assets/highscorescreen", settings, playersco, enemysco, &energysco, bulletsco, terrainarraysco, terrainspacesco, 1 );
-    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -868,12 +852,8 @@ void highscorescreen(Setti *settings)
 
         ClearBackground( settings->theme );
         //* Map art
-        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
-        {
+        if (IsWindowResized())
             loading( "assets/highscorescreen", settings, playersco, enemysco, &energysco, bulletsco, terrainarraysco, terrainspacesco, 0 );
-            storedWidth = GetScreenWidth();
-            storedHeight = GetScreenHeight();
-        }
         for (int i = 0; i < 15 * 41; i++)
                 if (terrainspacesco[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarraysco[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -976,7 +956,6 @@ void loadscreen(Setti *settings)
     playerstar[0].score = 0;
     playerstar[0].health = 0;
     loading( "assets/loadscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 1 );
-    int storedWidth = GetScreenWidth(), storedHeight = GetScreenHeight();
 
     while ( !settings->quit )
     {
@@ -1086,12 +1065,8 @@ void loadscreen(Setti *settings)
 
         ClearBackground( settings->theme );
         //* Map art
-        if (GetScreenWidth() != storedWidth || GetScreenHeight() != storedHeight)
-        {
+        if (IsWindowResized())
             loading( "assets/loadscreen", settings, playerstar, enemystar, &energystar, bulletstar, terrainarraystar, terrainspacestar, 0 );
-            storedWidth = GetScreenWidth();
-            storedHeight = GetScreenHeight();
-        }
         for (int i = 0; i < 15 * 41; i++)
                 if (terrainspacestar[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarraystar[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
