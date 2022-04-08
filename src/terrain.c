@@ -13,9 +13,11 @@ void terraincreate(char terrainspace[])
             terrainspace[i] = '-';
         if ( (i+1) % 41  == 0)
             terrainspace[i] = '\n';
+        if ( i == 614 )
+            terrainspace[i] = '\0';
     }
     //Prints map to console to know if everything lines up, can be removed when changed
-    printf("\n%s\n", terrainspace);
+    printf("\n%s\n\n", terrainspace);
 }
 
 void terrainplace(  Rectangle terrainarray[] , char terrainspace[] )

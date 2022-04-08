@@ -474,11 +474,11 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
     }
 
     //Saves the map, score, and lives to a file named "savegame.txt"
-    strcpy( savegame, TextFormat("%s%d\n%d\n%d", terrainspace2, settings->level, lives, savescore ) );
+    strcpy( savegame, TextFormat("%s\n%d\n%d\n%d", terrainspace2, settings->level, lives, savescore ) );
     SaveFileText("saves/savegame.txt", savegame);
 }
 
-void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[], char terrainspace[], bool print )
+void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Obj *energy, Rectangle terrainarray[], char terrainspace[], bool print )
 {
     char savegame[ 15 * 41 + 20 ] = {0}, savevar[20] = {0}, savemap[15*41] = {0};
     strcpy( savegame, LoadFileText(TextFormat("%s.txt", filename)) );
@@ -510,7 +510,7 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
     /********************STORED MAP************************/
     strncpy( savemap, savegame, 15*41 );
     float terrainx = 5 * (GetScreenWidth()*(1.0/1010)), terrainy = 50 * (GetScreenHeight()*(1.0/655));
-    int e = 0, b = 0;
+    int e = 0;
 
     for (int i = 0; i < 15 * 41; i++)
     {
@@ -519,6 +519,8 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
             terrainspace[i] = '-';
         if ( (i+1) % 41  == 0)
             terrainspace[i] = '\n';
+        if ( i == 614 )
+            terrainspace[i] = '\0';
         
         switch (savemap[i])
         {
@@ -725,5 +727,5 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
     memset(savegame, 0, sizeof(savegame));
     memset(savevar, 0, sizeof(savevar));
     if (print)
-        printf("\n%s\n",terrainspace);
+        printf("\n%s\n\n",terrainspace);
 }
