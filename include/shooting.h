@@ -3,8 +3,8 @@
 
 #include "core.h"
 
-void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds );
+void shoot( Obj *Shooter , Obj *Bullet );
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[], Rectangle terrainarray[] , Textus *textures );
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[] , char terrainspace[], Rectangle terrainarray[] , Textus *textures );
 
 #endif
