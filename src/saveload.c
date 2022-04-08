@@ -11,21 +11,21 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
 
     strcpy(terrainspace2, terrainspace); //Copy map onto new array for modifications
 
-    float terrainx = 5 * (GetScreenWidth()*(1.0/1010)), terrainy = 50 * (GetScreenHeight()*(1.0/655));
+    float terrainx = 5 * (GetScreenWidth()*RATIOX), terrainy = 50 * (GetScreenHeight()*RATIOY);
     //When it finds the * in sets the position and size for the rectangle on that place
     
     //Recreates the original map for comparassion
     for (int i = 0; i < 15 * 41; i++)
     {
         if ( terrainspace[i] == '#' )
-            terrainarraycomp[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarraycomp[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
         
-        terrainx += 25 * (GetScreenWidth()*(1.0/1010));
+        terrainx += 25 * (GetScreenWidth()*RATIOX);
         
         if (terrainspace[i] == '\n')
         {
-            terrainx = 5 * (GetScreenWidth()*(1.0/1010));
-            terrainy += 40 * (GetScreenHeight()*(1.0/655));
+            terrainx = 5 * (GetScreenWidth()*RATIOX);
+            terrainy += 40 * (GetScreenHeight()*RATIOY);
         }
     }
 
@@ -41,20 +41,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (bullet[b].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '^';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '^';
                     }
                 }
                 else if (bullet[b].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '^';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '^';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '^';
                 }
                 break;
             case 90:
@@ -62,20 +62,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (bullet[b].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '>';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '>';
                     }
                 }
                 else if (bullet[b].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '>';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '>';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '>';
                 }
                 break;
             case 180:
@@ -83,20 +83,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (bullet[b].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'V';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'V';
                     }
                 }
                 else if (bullet[b].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'V';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'V';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'V';
                 }
                 break;
             case 270:
@@ -104,20 +104,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (bullet[b].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '<';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                        terrainspace2[ (int)( round( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '<';
                     }
                 }
                 else if (bullet[b].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '<';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '<';
+                    terrainspace2[ (int)( floor( ( bullet[b].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( bullet[b].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '<';
                 }
                 break;
             }
@@ -135,7 +135,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
             {
                 int destruction = 0;//Variabel for knowing how destroyed the terrain is
 
-                switch ( (int)( terrainarray[i].width / ( 6.25 * (GetScreenWidth()*(1.0/1010)) ) ) ) //Destruction on width
+                switch ( (int)( terrainarray[i].width / ( 6.25 * (GetScreenWidth()*RATIOX) ) ) ) //Destruction on width
                 {
                 case 3:
                     destruction += 1;
@@ -149,7 +149,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 default:
                     break;
                 }
-                switch ( (int)( terrainarray[i].height / ( 10 * (GetScreenHeight()*(1.0/655)) ) ) ) //Destruction on height
+                switch ( (int)( terrainarray[i].height / ( 10 * (GetScreenHeight()*RATIOY) ) ) ) //Destruction on height
                 {
                 case 3:
                     destruction += 10;
@@ -352,20 +352,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
         {
             if (energy->draw.y < GetScreenHeight()/2 )
             {
-                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'P';
             }
             else
             {
-                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+                terrainspace2[ (int)( round( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'P';
             }
         }
         else if (energy->draw.y < GetScreenHeight()/2 )
         {
-            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( energy->draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'P';
         }
         else
         {
-            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'P';
+            terrainspace2[ (int)( floor( ( energy->draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( energy->draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'P';
         }
     }
 
@@ -379,20 +379,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (enemy[e].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'E';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'E';
                     }
                 }
                 else if (enemy[e].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'E';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'E';
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'E';
                 }
             }
             else if (enemy[e].health == 2 )
@@ -401,20 +401,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (enemy[e].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '@';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                        terrainspace2[ (int)( round( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '@';
                     }
                 }
                 else if (enemy[e].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '@';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = '@';
+                    terrainspace2[ (int)( floor( ( enemy[e].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( enemy[e].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = '@';
                 }
             }
         }
@@ -432,20 +432,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (player[p].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'T';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'T';
                     }
                 }
                 else if (player[p].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'T';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = 'T';
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = 'T';
                 }
             }
             else
@@ -454,20 +454,20 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
                 {
                     if (player[p].draw.y < GetScreenHeight()/2 )
                     {
-                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = p+'0';
                     }
                     else
                     {
-                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                        terrainspace2[ (int)( round( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = p+'0';
                     }
                 }
                 else if (player[p].draw.y < GetScreenHeight()/2 )
                 {
-                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( round( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = p+'0';
                 }
                 else
                 {
-                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*(1.0/1010)) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*(1.0/655))) ) ) - 2 ) * 41 ) ] = p+'0';
+                    terrainspace2[ (int)( floor( ( player[p].draw.x / ( ( 970 * (GetScreenWidth()*RATIOX) ) / 40.0 ) ) - 1 ) + ( floor( ( player[p].draw.y / (38 * (GetScreenHeight()*RATIOY)) ) ) - 2 ) * 41 ) ] = p+'0';
                 }
             }
         }
@@ -509,7 +509,7 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
     }
     /********************STORED MAP************************/
     strncpy( savemap, savegame, 15*41 );
-    float terrainx = 5 * (GetScreenWidth()*(1.0/1010)), terrainy = 50 * (GetScreenHeight()*(1.0/655));
+    float terrainx = 5 * (GetScreenWidth()*RATIOX), terrainy = 50 * (GetScreenHeight()*RATIOY);
     int e = 0;
 
     for (int i = 0; i < 15 * 41; i++)
@@ -526,151 +526,151 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
         {
         //! Terrain
         case '#':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'A':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'B':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.5) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.5) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'C':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'D':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'F':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'G':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'H':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'I':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 12.5) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 12.5) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'J':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
             break;
         case 'K':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*(1.0/655))), 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*RATIOY)), 25 * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'L':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*(1.0/655))), 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*RATIOY)), 25 * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'M':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*(1.0/655))), 25 * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*RATIOY)), 25 * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'N':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'O':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'Q':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'R':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'S':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'U':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'W':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'X':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'Y':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'Z':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'a':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'b':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'c':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'd':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'e':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'f':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'g':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'h':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy , (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy , (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'i':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'j':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'k':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'l':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'm':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'n':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy + (10 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 10) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy + (10 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 10) * (GetScreenHeight()*RATIOY)};
             break;
         case 'o':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'p':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'q':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'r':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 's':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 't':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy + (20 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 20) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy + (20 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 20) * (GetScreenHeight()*RATIOY)};
             break;
         case 'u':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'v':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'w':
-            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'x':
-            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*(1.0/1010))), terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 6.25) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (6.25 * (GetScreenWidth()*RATIOX)), terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 6.25) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'y':
-            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*(1.0/1010))), terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 12.50) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (12.50 * (GetScreenWidth()*RATIOX)), terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 12.50) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
         case 'z':
-            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*(1.0/1010))), terrainy + (30 * (GetScreenHeight()*(1.0/655))), (25 - 18.75) * (GetScreenWidth()*(1.0/1010)) , (40 - 30) * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx + (18.75 * (GetScreenWidth()*RATIOX)), terrainy + (30 * (GetScreenHeight()*RATIOY)), (25 - 18.75) * (GetScreenWidth()*RATIOX) , (40 - 30) * (GetScreenHeight()*RATIOY)};
             break;
 
         //! PowerUps
@@ -715,11 +715,11 @@ void loading(char filename[100], Setti *settings, Obj player[], Obj enemy[] , Ob
             break;
         }
 
-        terrainx += 25 * (GetScreenWidth()*(1.0/1010));
+        terrainx += 25 * (GetScreenWidth()*RATIOX);
         if (savemap[i] == '\n')
         {
-            terrainx = 5 * (GetScreenWidth()*(1.0/1010));
-            terrainy += 40 * (GetScreenHeight()*(1.0/655));
+            terrainx = 5 * (GetScreenWidth()*RATIOX);
+            terrainy += 40 * (GetScreenHeight()*RATIOY);
         }
     }
     settings->enemiesremaining = e + (player[0].score/800);

@@ -22,20 +22,20 @@ void terraincreate(char terrainspace[])
 
 void terrainplace(  Rectangle terrainarray[] , char terrainspace[] )
 {
-    float terrainx = 5 * (GetScreenWidth()*(1.0/1010)), terrainy = 50 * (GetScreenHeight()*(1.0/655));
+    float terrainx = 5 * (GetScreenWidth()*RATIOX), terrainy = 50 * (GetScreenHeight()*RATIOY);
     //When it finds the * in sets the position and size for the rectangle on that place
     
     for (int i = 0; i < 15 * 41; i++)
     {
         if ( terrainspace[i] == '#' )
-            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*(1.0/1010)) , 40 * (GetScreenHeight()*(1.0/655))};
+            terrainarray[i] = (Rectangle){ terrainx , terrainy , 25 * (GetScreenWidth()*RATIOX) , 40 * (GetScreenHeight()*RATIOY)};
         
-        terrainx += 25 * (GetScreenWidth()*(1.0/1010));
+        terrainx += 25 * (GetScreenWidth()*RATIOX);
         
         if (terrainspace[i] == '\n')
         {
-            terrainx = 5 * (GetScreenWidth()*(1.0/1010));
-            terrainy += 40 * (GetScreenHeight()*(1.0/655));
+            terrainx = 5 * (GetScreenWidth()*RATIOX);
+            terrainy += 40 * (GetScreenHeight()*RATIOY);
         }
     }
 }
@@ -52,21 +52,21 @@ Rectangle terraindestruct( Obj bullet , Rectangle terrain, SFX *sounds )
         switch (bullet.rot)
         {
         case 0:
-            terrain.height -= 40*0.25* (GetScreenHeight()*(1.0/655));
+            terrain.height -= 40*0.25* (GetScreenHeight()*RATIOY);
             break;
         case 90:
-            terrain.x += 25*0.25*(GetScreenWidth()*(1.0/1010));
-            terrain.width -= 25*0.25*(GetScreenWidth()*(1.0/1010));
+            terrain.x += 25*0.25*(GetScreenWidth()*RATIOX);
+            terrain.width -= 25*0.25*(GetScreenWidth()*RATIOX);
             break;
         case 180:
-            terrain.y += 40*0.25* (GetScreenHeight()*(1.0/655));
-            terrain.height -= 40*0.25* (GetScreenHeight()*(1.0/655));
+            terrain.y += 40*0.25* (GetScreenHeight()*RATIOY);
+            terrain.height -= 40*0.25* (GetScreenHeight()*RATIOY);
             break;
         case 270:
-            terrain.width -= 25*0.25*(GetScreenWidth()*(1.0/1010));
+            terrain.width -= 25*0.25*(GetScreenWidth()*RATIOX);
             break;
         }
-        if (terrain.height < 40*0.25* (GetScreenHeight()*(1.0/655)) || terrain.width < 25*0.25*(GetScreenWidth()*(1.0/1010)))
+        if (terrain.height < 40*0.25* (GetScreenHeight()*RATIOY) || terrain.width < 25*0.25*(GetScreenWidth()*RATIOX))
         {
             PlaySoundMulti(sounds->terrainhit);
             terrain.height = 0;

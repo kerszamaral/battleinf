@@ -48,16 +48,16 @@ void startscreen(Setti *settings)
     {
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
-            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5*(GetScreenHeight()*(1.0/655)), 
+            GetScreenWidth() / 2 - MeasureText(&options[settings->select][0], 20)/2 * (GetScreenWidth()*RATIOX) - textures.player.width/20 * (GetScreenWidth()*RATIOX), 
+            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -95,7 +95,7 @@ void startscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], GetFontDefault().baseSize) * (GetScreenWidth()*RATIOX) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -127,10 +127,10 @@ void startscreen(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", 40)/2 * (GetScreenHeight()*RATIOY) , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], 20)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+            DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], 20)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), settings->lettercolor );
         
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
@@ -147,7 +147,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*RATIOY), RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }
@@ -253,16 +253,16 @@ void nome(Setti *settings)
         }
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
-            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText("Next", 20)/2 *(GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*(1.0/655)), 
+            GetScreenWidth() / 2 - MeasureText("Next", 20)/2 *(GetScreenWidth()*RATIOX) - textures.player.width/20 * (GetScreenWidth()*RATIOX), 
+            (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -296,7 +296,7 @@ void nome(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText("Next", GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText("Next", GetFontDefault().baseSize) * (GetScreenWidth()*RATIOX) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -328,21 +328,21 @@ void nome(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "BATTLEINF", GetScreenWidth() / 2 - MeasureText("BATTLEINF", 40)/2 * (GetScreenHeight()*RATIOY) , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , LIME );
         
         for (int i = 0; i < optionsnumbernome; i++)
-            DrawText( &optionsnome[i][0], GetScreenWidth() / 2 - MeasureText(&optionsnome[i][0], 25)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 8 + 50 * i * (GetScreenHeight()*(1.0/655)), 25*(GetScreenHeight()*(1.0/655)), GOLD );
+            DrawText( &optionsnome[i][0], GetScreenWidth() / 2 - MeasureText(&optionsnome[i][0], 25)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() / 8 + 50 * i * (GetScreenHeight()*RATIOY), 25*(GetScreenHeight()*RATIOY), GOLD );
 
-        DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), PURPLE);
+        DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*RATIOY), 40*(GetScreenHeight()*RATIOY), PURPLE);
 
         if (letterCount < 9)
         {
-            DrawText("_", GetScreenWidth()/2 + 8 * (GetScreenWidth()*(1.0/1010)) + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), PURPLE);
+            DrawText("_", GetScreenWidth()/2 + 8 * (GetScreenWidth()*RATIOX) + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*RATIOY), 40*(GetScreenHeight()*RATIOY), PURPLE);
         }
         else
             strcpy(settings->error, "Numero Maximo de Caracteres");
 
-        DrawText("Next", GetScreenWidth() / 2 - MeasureText("Next", 20)/2 * (GetScreenHeight()*(1.0/655)), (GetScreenHeight() - GetScreenHeight() / 5), 20 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        DrawText("Next", GetScreenWidth() / 2 - MeasureText("Next", 20)/2 * (GetScreenHeight()*RATIOY), (GetScreenHeight() - GetScreenHeight() / 5), 20 * (GetScreenHeight()*RATIOY), settings->lettercolor);
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
         if ( bulletdying )
@@ -358,7 +358,7 @@ void nome(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("%s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", settings->error), 15)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 3 + 100*(GetScreenHeight()*(1/655)), 15*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("%s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", settings->error), 15)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() - GetScreenHeight() / 3 + 100*(GetScreenHeight()*(1/655)), 15*(GetScreenHeight()*RATIOY), RED);
             if (GetTime() > time + 2)
                 strcpy(settings->error, " ");
         }
@@ -453,16 +453,16 @@ void settingscreen(Setti *settings)
     {
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
-            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*(1.0/655)) - 5*(GetScreenHeight()*(1.0/655)), 
+            GetScreenWidth() / 2 - MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*RATIOX) - textures.player.width/20 * (GetScreenWidth()*RATIOX), 
+            GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -509,7 +509,7 @@ void settingscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(&optionssettings[settings->select][0], 20)/2 * (GetScreenWidth()*RATIOX) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -541,10 +541,10 @@ void settingscreen(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "SETTINGS", GetScreenWidth() / 2 - MeasureText("SETTINGS", 40)/2 * (GetScreenHeight()*RATIOY) , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , LIME );
         
         for (int i = 0; i < optionsnumber; i++)
-            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], 20)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+            DrawText( &optionssettings[i][0], GetScreenWidth() / 2 - MeasureText(&optionssettings[i][0], 20)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), settings->lettercolor );
         
         if (submenu)
         {
@@ -557,9 +557,9 @@ void settingscreen(Setti *settings)
                 for (int i = 0; i < 5; i++)
                 {
                     if (i == subselect)
-                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*RATIOX), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), GOLD );
                     else                
-                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+                        DrawText( &resolutions[i][0], GetScreenWidth() - GetScreenWidth() / 3 - MeasureText(&resolutions[i][0], 20)/2* (GetScreenWidth()*RATIOX), GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), settings->lettercolor );
                 }
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                 {
@@ -600,7 +600,7 @@ void settingscreen(Setti *settings)
                 }
                 Color playercolor[5] = { WHITE, RED, GREEN, ORANGE, MAGENTA };
                 for (int i = 0; i < settings->players; i++)
-                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, playercolor[i]);
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY)}, 0, 0.1, playercolor[i]);
                 
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                     submenu = false;
@@ -612,9 +612,9 @@ void settingscreen(Setti *settings)
                 if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && subselect > 0)
                     subselect -= 1;
                 if ( subselect == 0 )
-                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*(1.0/655))}, 0, 0.2, DARKPURPLE);               
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*RATIOY)}, 0, 0.2, DARKPURPLE);               
                 else 
-                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*(1.0/655))}, 0, 0.2, GOLD);
+                    DrawTextureEx(textures.player, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * 2 * (GetScreenHeight()*RATIOY)}, 0, 0.2, GOLD);
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                 {
                     switch (subselect)
@@ -638,9 +638,9 @@ void settingscreen(Setti *settings)
                 if (( IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W)|| IsGamepadButtonReleased(0, 1)  ) && settings->extended > 0)
                     settings->extended--;
                 if( !settings->extended )
-                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", 20)/2* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 , 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+                    DrawText( "Extended Play Disabled", GetScreenWidth() - GetScreenWidth() / 4 - MeasureText("Extended Play Disabled", 20)/2* (GetScreenWidth()*RATIOX), GetScreenHeight() / 4 , 20*(GetScreenHeight()*RATIOY), settings->lettercolor );
                 for (int i = 0; i < settings->extended; i++)
-                    DrawTextureEx(textures.energy, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*(1.0/655))}, 0, 0.1, WHITE);
+                    DrawTextureEx(textures.energy, (Vector2){ GetScreenWidth() - GetScreenWidth() / 3, GetScreenHeight() / 4 + 50 * i * (GetScreenHeight()*RATIOY)}, 0, 0.1, WHITE);
                 if ( (IsKeyReleased(KEY_ENTER) || IsKeyReleased(KEY_SPACE) || IsGamepadButtonReleased(0, 7) || IsGamepadButtonReleased(0, 12)) && GetTime() > time2 + 0.5)
                     submenu = false;
             }
@@ -661,7 +661,7 @@ void settingscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*(GetScreenHeight()*RATIOY), RED);
             if (GetTime() > error + 2)
                 strcpy(settings->error, " ");
         }
@@ -721,13 +721,13 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
         "Main Menu\0",
         "Quit Game\0"
     };
-    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4, 40*(GetScreenHeight()*(1.0/655)), GOLD);
+    DrawText("Paused", GetScreenWidth() / 2 - MeasureText("Paused", GetFontDefault().baseSize) * 2 * (GetScreenWidth()*RATIOX), GetScreenHeight() / 4, 40*(GetScreenHeight()*RATIOY), GOLD);
     for (int i = 0; i < 4; i++)
     {
         if (i == settings->pauseselect)
-            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 100*(GetScreenHeight()*(1.0/655)) + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), GOLD );
+            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*RATIOX), GetScreenHeight() / 4 + 100*(GetScreenHeight()*RATIOY) + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), GOLD );
         else                
-            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*(1.0/1010)), GetScreenHeight() / 4 + 100*(GetScreenHeight()*(1.0/655)) + 50 * i * (GetScreenHeight()*(1.0/655)), 20*(GetScreenHeight()*(1.0/655)), settings->lettercolor );  
+            DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], GetFontDefault().baseSize)* (GetScreenWidth()*RATIOX), GetScreenHeight() / 4 + 100*(GetScreenHeight()*RATIOY) + 50 * i * (GetScreenHeight()*RATIOY), 20*(GetScreenHeight()*RATIOY), settings->lettercolor );  
     }
 }
 
@@ -778,16 +778,16 @@ void highscorescreen(Setti *settings)
     {
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
-            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText("Back", 20)/2 *(GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*(1.0/655)), 
+            GetScreenWidth() / 2 - MeasureText("Back", 20)/2 *(GetScreenWidth()*RATIOX) - textures.player.width/20 * (GetScreenWidth()*RATIOX), 
+            (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -821,7 +821,7 @@ void highscorescreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText("Back", GetFontDefault().baseSize) * 1.25 * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText("Back", GetFontDefault().baseSize) * 1.25 * (GetScreenWidth()*RATIOX) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -853,27 +853,27 @@ void highscorescreen(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "HIGHSCORES", GetScreenWidth() / 2 - (MeasureText("HIGHSCORES", 40) * (GetScreenHeight()*(1.0/655)))/2 , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "HIGHSCORES", GetScreenWidth() / 2 - (MeasureText("HIGHSCORES", 40) * (GetScreenHeight()*RATIOY))/2 , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , LIME );
         
         for (int i = 0; i < displaynumber; i++)
         {
             if ( i == 0 )
             {
-                DrawText(optionshighscores[0], (GetScreenWidth() / 5 ) - MeasureText(optionshighscores[0], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), GOLD);
-                DrawText(optionshighscores[1], (GetScreenWidth() / 5 *2) - MeasureText(optionshighscores[1], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), GREEN);
-                DrawText(optionshighscores[2], (GetScreenWidth() / 5 *3) - MeasureText(optionshighscores[2], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), VIOLET);
-                DrawText(optionshighscores[3], (GetScreenWidth() / 5 *4) - MeasureText(optionshighscores[3], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), BLUE);
+                DrawText(optionshighscores[0], (GetScreenWidth() / 5 ) - MeasureText(optionshighscores[0], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), GOLD);
+                DrawText(optionshighscores[1], (GetScreenWidth() / 5 *2) - MeasureText(optionshighscores[1], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), GREEN);
+                DrawText(optionshighscores[2], (GetScreenWidth() / 5 *3) - MeasureText(optionshighscores[2], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), VIOLET);
+                DrawText(optionshighscores[3], (GetScreenWidth() / 5 *4) - MeasureText(optionshighscores[3], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4 + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), BLUE);
             }
             else
             {
-                DrawText(TextFormat("%d", i), (GetScreenWidth() / 5 ) - MeasureText(TextFormat("%d", i), 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
-                DrawText(scoresdisplay[12 - ((i-1)*3)], (GetScreenWidth() / 5 *2) - MeasureText(scoresdisplay[12 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
-                DrawText(scoresdisplay[13 - ((i-1)*3)], (GetScreenWidth() / 5 *3) - MeasureText(scoresdisplay[13 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
-                DrawText(scoresdisplay[14 - ((i-1)*3)], (GetScreenWidth() / 5 *4) - MeasureText(scoresdisplay[14 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*(1.0/655)), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*(1.0/655)), 25 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+                DrawText(TextFormat("%d", i), (GetScreenWidth() / 5 ) - MeasureText(TextFormat("%d", i), 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), settings->lettercolor);
+                DrawText(scoresdisplay[12 - ((i-1)*3)], (GetScreenWidth() / 5 *2) - MeasureText(scoresdisplay[12 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), settings->lettercolor);
+                DrawText(scoresdisplay[13 - ((i-1)*3)], (GetScreenWidth() / 5 *3) - MeasureText(scoresdisplay[13 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), settings->lettercolor);
+                DrawText(scoresdisplay[14 - ((i-1)*3)], (GetScreenWidth() / 5 *4) - MeasureText(scoresdisplay[14 - ((i-1)*3)], 25)/2 * (GetScreenHeight()*RATIOY), GetScreenHeight() / 4  + i * 50 * (GetScreenHeight()*RATIOY), 25 * (GetScreenHeight()*RATIOY), settings->lettercolor);
             }
         }
         
-        DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", 20)/2 * (GetScreenHeight()*(1.0/655)), (GetScreenHeight() - GetScreenHeight() / 5), 20 * (GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        DrawText("Back", GetScreenWidth() / 2 - MeasureText("Back", 20)/2 * (GetScreenHeight()*RATIOY), (GetScreenHeight() - GetScreenHeight() / 5), 20 * (GetScreenHeight()*RATIOY), settings->lettercolor);
         
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
@@ -970,16 +970,16 @@ void loadscreen(Setti *settings)
         }
         /***************** RESIZABLE MENU BAR *****************************/
         Rectangle Menu[4] = {
-            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+            (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+            (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+            (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+            (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
         };
 
         /***************** PLAYER DRAWING *****************************/
         Rectangle playerdrawRec = { 
-            GetScreenWidth() / 2 - MeasureText(optionsload[settings->select], 20)/2 *(GetScreenWidth()*(1.0/1010)) - textures.player.width/20 * (GetScreenWidth()*(1.0/1010)), 
-            (GetScreenHeight() - GetScreenHeight() / 5) + 50 * settings->select * (GetScreenHeight()*(1.0/655)), 
+            GetScreenWidth() / 2 - MeasureText(optionsload[settings->select], 20)/2 *(GetScreenWidth()*RATIOX) - textures.player.width/20 * (GetScreenWidth()*RATIOX), 
+            (GetScreenHeight() - GetScreenHeight() / 5) + 50 * settings->select * (GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
         }, bulletdrawRec;
@@ -1017,7 +1017,7 @@ void loadscreen(Setti *settings)
             bullettimer++;
             bulletdrawRec.x += 2;
         }
-        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(optionsload[settings->select], GetFontDefault().baseSize) * (GetScreenWidth()*(1.0/1010)) * 2 )
+        if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( ( GetScreenWidth() * ( 1.0 / 1010 ) ) / 25 ) + playerdrawRec.width / 2 + MeasureText(optionsload[settings->select], GetFontDefault().baseSize) * (GetScreenWidth()*RATIOX) * 2 )
         {
             bulletexplosion.x = bulletdrawRec.x;
             bulletexplosion.y = bulletdrawRec.y + 5;
@@ -1064,21 +1064,21 @@ void loadscreen(Setti *settings)
         for (int i = 0; i < 4; i++)
             DrawRectangleRec( Menu[i] , DARKGRAY ); //Creates grey bars
         //* Texts
-        DrawText( "LOADGAME", GetScreenWidth() / 2 - MeasureText("LOADGAME", 40)/2 * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , LIME );
+        DrawText( "LOADGAME", GetScreenWidth() / 2 - MeasureText("LOADGAME", 40)/2 * (GetScreenHeight()*RATIOY) , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , LIME );
         
-        DrawText( "Digite o nome do arquivo que quer carregar:", GetScreenWidth() / 2 - MeasureText("Digite o nome do arquivo que quer carregar:", 25)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() / 8 + 50 * 2 * (GetScreenHeight()*(1.0/655)), 25*(GetScreenHeight()*(1.0/655)), GOLD );
+        DrawText( "Digite o nome do arquivo que quer carregar:", GetScreenWidth() / 2 - MeasureText("Digite o nome do arquivo que quer carregar:", 25)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() / 8 + 50 * 2 * (GetScreenHeight()*RATIOY), 25*(GetScreenHeight()*RATIOY), GOLD );
         
-        DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), settings->lettercolor);
+        DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*RATIOY), 40*(GetScreenHeight()*RATIOY), settings->lettercolor);
         
         if (letterCount < 20)
         {
-            DrawText("_", GetScreenWidth()/2 + 8 * (GetScreenWidth()*(1.0/1010)) + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*(1.0/655)), 40*(GetScreenHeight()*(1.0/655)), settings->lettercolor);
+            DrawText("_", GetScreenWidth()/2 + 8 * (GetScreenWidth()*RATIOX) + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * (GetScreenHeight()*RATIOY), 40*(GetScreenHeight()*RATIOY), settings->lettercolor);
         }
         else
             strcpy(settings->error, "Numero Maximo de Caracteres");
         
         for (int i = 0; i < optionsnumberload; i++)
-            DrawText( &optionsload[i][0], GetScreenWidth() / 2 - MeasureText(&optionsload[i][0], 25)/2*(GetScreenHeight()*(1.0/655)), (GetScreenHeight() - GetScreenHeight() / 5) + 50 * i * (GetScreenHeight()*(1.0/655)), 25*(GetScreenHeight()*(1.0/655)), settings->lettercolor );
+            DrawText( &optionsload[i][0], GetScreenWidth() / 2 - MeasureText(&optionsload[i][0], 25)/2*(GetScreenHeight()*RATIOY), (GetScreenHeight() - GetScreenHeight() / 5) + 50 * i * (GetScreenHeight()*RATIOY), 25*(GetScreenHeight()*RATIOY), settings->lettercolor );
 
         /*************** FOR ANIMATIONS ****************/
         DrawTexturePro( textures.player , (Rectangle){ 0 , 0 , textures.player.width , textures.player.height } , playerdrawRec , (Vector2){ 0 , 0 } , 90 , WHITE );
@@ -1095,7 +1095,7 @@ void loadscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("%s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", settings->error), 15)/2*(GetScreenHeight()*(1.0/655)), GetScreenHeight() - GetScreenHeight() / 3 + 100*(GetScreenHeight()*(1/655)), 15*(GetScreenHeight()*(1.0/655)), RED);
+            DrawText(TextFormat("%s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("%s", settings->error), 15)/2*(GetScreenHeight()*RATIOY), GetScreenHeight() - GetScreenHeight() / 3 + 100*(GetScreenHeight()*(1/655)), 15*(GetScreenHeight()*RATIOY), RED);
             if (GetTime() > error + 2)
                 strcpy(settings->error, " ");
         }

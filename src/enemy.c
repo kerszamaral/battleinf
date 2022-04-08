@@ -9,8 +9,8 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrai
         spawn->colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
         spawn->pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( 5 * (GetScreenWidth()*(1.0/1010)) , GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) - spawn->cen.x*2 ), 
-            GetRandomValue( 50 * (GetScreenHeight()*(1.0/655)) , GetScreenHeight() - 5 * (GetScreenHeight()*(1.0/655)) - spawn->cen.y*2 ) 
+            GetRandomValue( 5 * (GetScreenWidth()*RATIOX) , GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) - spawn->cen.x*2 ), 
+            GetRandomValue( 50 * (GetScreenHeight()*RATIOY) , GetScreenHeight() - 5 * (GetScreenHeight()*RATIOY) - spawn->cen.y*2 ) 
         };
         //Updates draw position
         spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; 

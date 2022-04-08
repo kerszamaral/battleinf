@@ -50,10 +50,10 @@ void jogo(Setti *settings)
     ClearWindowState(FLAG_WINDOW_RESIZABLE);
     //Rectangles for collision and drawing (dest rectangles need to be in while loop)
     Rectangle Menu[4] = {
-    (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*(1.0/655)) }, //Rectangle for the ingame menu
-    (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*(1.0/655)) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
-    (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*(1.0/1010)), GetScreenHeight() }, //Rectangle for left border
-    (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*(1.0/1010)) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
+    (Rectangle){ 0 , 0 , GetScreenWidth() , 50 * (GetScreenHeight()*RATIOY) }, //Rectangle for the ingame menu
+    (Rectangle){ 0 , GetScreenHeight() - 5*(GetScreenHeight()*RATIOY) , GetScreenWidth(), GetScreenHeight()}, //Rectangle for bottom border
+    (Rectangle){ 0 , 0 , 5 * (GetScreenWidth()*RATIOX), GetScreenHeight() }, //Rectangle for left border
+    (Rectangle){ GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) , 0 , GetScreenWidth() , GetScreenHeight()}   //Rectangle for right border
     };
 
     /********************** PLAYER VARIABELS *******************************/
@@ -74,7 +74,7 @@ void jogo(Setti *settings)
             0, //Score
             0, //Time
             0, //Death
-            2*(GetScreenHeight()*(1.0/655)), //Speed
+            2*(GetScreenHeight()*RATIOY), //Speed
             false, //Ammo
             (Rectangle){ 0 , 0 , textures.player.width , textures.player.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -124,7 +124,7 @@ void jogo(Setti *settings)
             0, //Score
             0, //Time
             0, //Death
-            1*(GetScreenHeight()*(1.0/655)), //Speed
+            1*(GetScreenHeight()*RATIOY), //Speed
             false, //Ammo
             (Rectangle){ 0 , 0 , textures.enemy.width , textures.enemy.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -159,7 +159,7 @@ void jogo(Setti *settings)
             0, //Score
             0, //Time
             0, //Death
-            3*(GetScreenHeight()*(1.0/655)), //Speed
+            3*(GetScreenHeight()*RATIOY), //Speed
             true, //Ammo
             (Rectangle){ 0 , 0 , textures.bullet.width , textures.bullet.height }, //sourceRec
             (Rectangle){ 0 , 0 , 0 , 0 }, //colRec for object collision, created here, updated in loop
@@ -263,15 +263,15 @@ void jogo(Setti *settings)
         for (int p = 0; p < settings->players; p++)
             score += player[p].score;
         //Text 
-        DrawText( TextFormat( "Fase %d" , settings->level ) , GetScreenWidth() / 2 - MeasureText(TextFormat( "Fase %d" , settings->level ), GetFontDefault().baseSize) * (GetScreenHeight()*(1.0/655)) , 10*(GetScreenHeight()*(1.0/655)) , 40*(GetScreenHeight()*(1.0/655)) , YELLOW );
-        DrawText( TextFormat( "Pontuação: %d", score ), GetScreenWidth() - MeasureText(TextFormat( "Pontuação: %d", score ), GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*(1.0/655)) , 13 * (GetScreenHeight()*(1.0/655)) , 32*(GetScreenHeight()*(1.0/655)) , RED );
+        DrawText( TextFormat( "Fase %d" , settings->level ) , GetScreenWidth() / 2 - MeasureText(TextFormat( "Fase %d" , settings->level ), GetFontDefault().baseSize) * (GetScreenHeight()*RATIOY) , 10*(GetScreenHeight()*RATIOY) , 40*(GetScreenHeight()*RATIOY) , YELLOW );
+        DrawText( TextFormat( "Pontuação: %d", score ), GetScreenWidth() - MeasureText(TextFormat( "Pontuação: %d", score ), GetFontDefault().baseSize) * 3.2 * (GetScreenHeight()*RATIOY) , 13 * (GetScreenHeight()*RATIOY) , 32*(GetScreenHeight()*RATIOY) , RED );
         DrawText( TextFormat( "Inimigos restantes: %d/%d", settings->level - (score - settings->score) / 800 , settings->level ),
-        MeasureText(TextFormat( "Inimigos restantes: %d/%d", settings->level - (score - settings->score) / 800 , settings->level ), GetFontDefault().baseSize)*(GetScreenHeight()*(1.0/655)) + 10 , 15 * (GetScreenHeight()*(1.0/655)) , 24*(GetScreenHeight()*(1.0/655)) , BLUE );
+        MeasureText(TextFormat( "Inimigos restantes: %d/%d", settings->level - (score - settings->score) / 800 , settings->level ), GetFontDefault().baseSize)*(GetScreenHeight()*RATIOY) + 10 , 15 * (GetScreenHeight()*RATIOY) , 24*(GetScreenHeight()*RATIOY) , BLUE );
         //Draws player health for health remaining            spacing from image size x * scaling
-        for (int p = 0, healthy = 10; p < settings->players; p++, healthy += (45 * (GetScreenHeight()*(1.0/655)))/settings->players )
+        for (int p = 0, healthy = 10; p < settings->players; p++, healthy += (45 * (GetScreenHeight()*RATIOY))/settings->players )
         {    
-            for ( int i = 0, healthx = 5 ; i < player[p].health ; i++ , healthx += (35 * (GetScreenHeight()*(1.0/655)))/settings->players )
-                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.05 * (GetScreenHeight()*(1.0/655)))/settings->players, player[p].color );
+            for ( int i = 0, healthx = 5 ; i < player[p].health ; i++ , healthx += (35 * (GetScreenHeight()*RATIOY))/settings->players )
+                DrawTextureEx( textures.health , (Vector2){ healthx , healthy } , 0 , (0.05 * (GetScreenHeight()*RATIOY))/settings->players, player[p].color );
         }
 
         /********************** ENERGY DRAWING/COLLISION *******************************/
