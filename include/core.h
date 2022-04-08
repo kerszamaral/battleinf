@@ -12,7 +12,7 @@
 
 //#define (50) 50 //Size for the terrain blocks
 
-typedef struct  //struct for the interactable objects in the game
+typedef struct Obj //struct for the interactable objects in the game
 {
     int id; //id of the object
     Vector2 pos; //Vector2 for position, has x and y
@@ -36,7 +36,7 @@ typedef struct  //struct for the interactable objects in the game
     int deathtimer; //For death animation timing
 } Obj;
 
-typedef struct  //struct for the interchangable settings in the game
+typedef struct Setti //struct for the interchangable settings in the game
 {
     int players;
     int level;
@@ -58,7 +58,7 @@ typedef struct  //struct for the interchangable settings in the game
     char loadgamename[100]; //For loading game name 
 } Setti;
 
-typedef struct  //struct for the textures in the game
+typedef struct Textus  //struct for the textures in the game
 {
     Texture2D player;  //Texture for the player tank
     Texture2D enemy; //Texture for the enemy tank
@@ -72,7 +72,7 @@ typedef struct  //struct for the textures in the game
     //Texture2D terrain; //Terrain texture
 } Textus;
 
-typedef struct  //struct for the sounds in the game
+typedef struct SFX //struct for the sounds in the game
 {
     Sound gamestart;  //Sound for the start of the game
     Sound gameend; //Sound for the end of the game
