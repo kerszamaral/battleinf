@@ -47,6 +47,7 @@ int main(void)
         {
         case 0:
             settings.loadgame = false;
+            remove("saves/savegame.txt");
 
             do{
                 jogo( &settings );
@@ -58,7 +59,7 @@ int main(void)
             if (!IsWindowFullscreen())
                 SetWindowState(FLAG_WINDOW_RESIZABLE);
             SetExitKey(KEY_ESCAPE);
-            if (settings.score > lowscore && !settings.quit)
+            if (settings.score > lowscore && !settings.quit && !settings.exitgame)
                 nome( &settings );
 
             settings.exitgame = false;
@@ -87,7 +88,7 @@ int main(void)
                 if (!IsWindowFullscreen())
                     SetWindowState(FLAG_WINDOW_RESIZABLE);
                 SetExitKey(KEY_ESCAPE);
-                if (settings.score > lowscore && !settings.quit)
+                if (settings.score > lowscore && !settings.quit && !settings.exitgame)
                     nome( &settings );
                 
                 settings.exitgame = false;

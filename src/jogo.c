@@ -482,6 +482,7 @@ void jogo(Setti *settings)
             if ( player[0].time == 60 * 2 )
             {
                 PlaySound(sounds.gameend);
+                remove("saves/savegame.txt");
                 break;
             }
         }

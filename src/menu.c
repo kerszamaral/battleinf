@@ -36,6 +36,7 @@ void startscreen(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    Rectangle bulletdrawRec = { 0, 0, 0, 0 };
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     char terrainspacestar[ 15 * 41 ];   //15x41 terrain space 
@@ -60,7 +61,7 @@ void startscreen(Setti *settings)
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec = { 0, 0, 0, 0 };
+        };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -221,6 +222,7 @@ void nome(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    Rectangle bulletdrawRec = { 0, 0, 0, 0 };
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     char terrainspacestar[ 15 * 41 ];   //15x41 terrain space 
@@ -265,7 +267,7 @@ void nome(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec = { 0, 0, 0, 0 };
+        };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -444,6 +446,7 @@ void settingscreen(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    Rectangle bulletdrawRec = { 0, 0, 0, 0 };
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     char terrainspaceset[ 15 * 41 ];   //15x41 terrain space 
@@ -468,7 +471,7 @@ void settingscreen(Setti *settings)
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec = {0,0,0,0};
+        };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -705,12 +708,16 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
             break;
         case 1:
             saving(settings, terrainspace, player, enemy, energy, bullet, terrainarray);
+            settings->exitgame = true;
+            settings->pause = false;
             break;
         case 2:
+            remove("saves/savegame.txt");
             settings->exitgame = true;
             settings->pause = false;
             break;
         case 3:
+            remove("saves/savegame.txt");
             settings->quit = true;
             settings->exitgame = true;
             settings->pause = false;
@@ -720,7 +727,7 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
 
     char pauseoptions[4][100] = {
         "Resume\0",
-        "Save\0",
+        "Save and Exit\0",
         "Main Menu\0",
         "Quit Game\0"
     };
@@ -769,6 +776,7 @@ void highscorescreen(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    Rectangle bulletdrawRec = { 0, 0, 0, 0 };
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     char terrainspacesco[ 15 * 41 ];   //15x41 terrain space 
@@ -793,7 +801,7 @@ void highscorescreen(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec = {0,0,0,0};
+        };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time3 + 0.5)
@@ -942,6 +950,7 @@ void loadscreen(Setti *settings)
     bool bulletdying = false;
     Vector2 bulletexplosion = {0,0};
     int bulletdeathtimer = 0, bulletsmoke = 0, bullettimer = 0;
+    Rectangle bulletdrawRec = { 0, 0, 0, 0 };
     //!MAP ART
     Rectangle sourceWall = { 0 , 0 , textures.wall.width , textures.wall.height }; //Rectangle with size of original image
     char terrainspacestar[ 15 * 41 ];   //15x41 terrain space 
@@ -985,7 +994,7 @@ void loadscreen(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) + 50 * settings->select * (GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec = { 0 , 0 , 0 , 0 };
+        };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
