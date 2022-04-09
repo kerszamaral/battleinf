@@ -575,19 +575,24 @@ void settingscreen(Setti *settings)
                     {
                     case 0:
                         SetWindowSize( 1010, 655 );
+                        loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, terrainarrayset, terrainspaceset, 1 );
                         break;
                     case 1:
                         SetWindowSize( 800, 450 );
+                        loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, terrainarrayset, terrainspaceset, 1 );
                         break;
                     case 2:
                         SetWindowSize( 1920, 1080 );
+                        loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, terrainarrayset, terrainspaceset, 1 );
                         break;
                     case 3:
                         SetWindowSize( 1280, 720 );
+                        loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, terrainarrayset, terrainspaceset, 1 );
                         break;
                     case 4:
                         SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
                         ToggleFullscreen();
+                        loading( "assets/settingsscreen", settings, playerset, enemyset, &energyset, terrainarrayset, terrainspaceset, 1 );
                         break;
                     }
                     submenu = false;
