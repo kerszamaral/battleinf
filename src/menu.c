@@ -60,7 +60,7 @@ void startscreen(Setti *settings)
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec;
+        }, bulletdrawRec = { 0, 0, 0, 0 };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -265,7 +265,7 @@ void nome(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec;
+        }, bulletdrawRec = { 0, 0, 0, 0 };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -372,13 +372,16 @@ void nome(Setti *settings)
         }
     }
     /************** UNLOADING AREA ********************/
-    int id = 5 - ranking;
-    FILE *highscoreswrite = fopen("assets/highscores.bin", "wb");
-    sprintf(scores[id*3], "%d", settings->score);
-    strcpy(scores[id*3+1], name);
-    sprintf(scores[id*3+2], "%d", settings->level);
-    fwrite(scores, sizeof(scores), 1, highscoreswrite);
-    fclose(highscoreswrite);
+    if (!settings->quit)
+    {
+        int id = 5 - ranking;
+        FILE *highscoreswrite = fopen("assets/highscores.bin", "wb");
+        sprintf(scores[id*3], "%d", settings->score);
+        strcpy(scores[id*3+1], name);
+        sprintf(scores[id*3+2], "%d", settings->level);
+        fwrite(scores, sizeof(scores), 1, highscoreswrite);
+        fclose(highscoreswrite);
+    }
 
     StopSoundMulti();
     UnloadTexture(textures.player);  //Texture for the player tank
@@ -465,7 +468,7 @@ void settingscreen(Setti *settings)
             GetScreenHeight() / 4 + 50 * settings->select * (GetScreenHeight()*RATIOY) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec;
+        }, bulletdrawRec = {0,0,0,0};
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
@@ -790,7 +793,7 @@ void highscorescreen(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) - 5*(GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec;
+        }, bulletdrawRec = {0,0,0,0};
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time3 + 0.5)
@@ -982,7 +985,7 @@ void loadscreen(Setti *settings)
             (GetScreenHeight() - GetScreenHeight() / 5) + 50 * settings->select * (GetScreenHeight()*RATIOY), 
             textures.player.width * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ), 
             ( textures.player.height * textures.player.width / textures.player.height ) * ( ( GetScreenHeight() * ( 1.0 / 655 ) ) / 10 ) 
-        }, bulletdrawRec;
+        }, bulletdrawRec = { 0 , 0 , 0 , 0 };
 
         /***************** MENU OPTIONS *****************************/
         if( !selected && !shoot && !bulletdying && GetTime() > time + 0.5)
