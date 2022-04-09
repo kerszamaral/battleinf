@@ -34,6 +34,8 @@ typedef struct Obj //struct for the interactable objects in the game
     bool dying; //For seeing if game should play death animation
     Vector2 deathpos; //For death animation position
     int deathtimer; //For death animation timing
+    Sound soundEffect; //For soundeffect debugging
+    Sound soundEffect2; //For soundeffect debugging
 } Obj;
 
 typedef struct Setti //struct for the interchangable settings in the game

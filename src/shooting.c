@@ -2,7 +2,7 @@
 #include "core.h"
 
 //Uses shooter posint and rotation to start bullet shooting
-void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds )
+void shoot( Obj *Shooter , Obj *Bullet )
 {
     //Shooting setup
     Bullet->ammo = false; //Sets ammo to false
@@ -32,10 +32,10 @@ void shoot( Obj *Shooter , Obj *Bullet , SFX *Sounds )
         Bullet->pos.y -= Bullet->cen.y;
         break;
     }
-    PlaySoundMulti(Sounds->shoot); //Plays the shoot sound
+    PlaySound(Bullet->soundEffect); //Plays the shoot sound
 }
 
-void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], SFX *Sounds , char terrainspace[], Rectangle terrainarray[] , Textus *textures )
+void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , Obj enemy[] , Rectangle Menu[], char terrainspace[], Rectangle terrainarray[] , Textus *textures )
 {
     //Draw position and draw rectangle updates
     //Sets player.draw to be player.pos + offset
@@ -71,7 +71,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
             Bullet->health = 0;
             Bullet->pos = (Vector2){0,GetScreenHeight()*2};
             Bullet->time = 0;
-            PlaySoundMulti(Sounds->bulletmiss); //Plays the bullet miss sound
+            PlaySound(Bullet->soundEffect2); //Plays the bullet miss sound
         }
         
         //Moves Bullet based on position and speed
@@ -143,7 +143,7 @@ void shooting(Setti *settings , Obj *Bullet, Obj otherBullets[], Obj Player[] , 
                             enemy[k].dying = true;
                             Player->score += 800;
                             enemy[k].pos = (Vector2){ GetScreenWidth() , GetScreenHeight()*2 };
-                            PlaySoundMulti(Sounds->explosion);
+                            PlaySound(enemy[k].soundEffect);
                         }   
                     }
     }

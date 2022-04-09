@@ -31,8 +31,8 @@ void jogo(Setti *settings)
     SFX sounds = {
         LoadSound("assets/gamestartSFX.wav"),  //Sound for the start of the game
         LoadSound("assets/gameendSFX.wav"), //Sound for the end of the game
-        LoadSound("assets/explosionVehicleSFX.wav"), //Sound for the explosion
-        LoadSound("assets/BulletShotSFX.wav"), //Sound for the shoot
+        LoadSound("assets/explosionVehicleSFX.wav"), //Sound for the explosion //! MOVED TO OBJECT
+        LoadSound("assets/BulletShotSFX.wav"), //Sound for the shoot //! MOVED TO OBJECT
         LoadSound("assets/playerpassiveSFX.wav"), //Sound for the player //! Disabled for now because it's too annoying
         LoadSound("assets/BulletMissSFX.wav"), //Sound for the bullet miss
         LoadSound("assets/TerrainHitSFX.wav") //Sound for the terrain hit
@@ -83,8 +83,11 @@ void jogo(Setti *settings)
             WHITE, //Color for enemy difficulty and mutliplayer
             false, //dying
             (Vector2){ 0 , 0 }, //deathpos
-            0 //deathtimer
+            0, //deathtimer
+            LoadSound("assets/explosionVehicleSFX.wav"), //Sound for the explosion
+            LoadSound("assets/gamestartSFX.wav")  //! just for not complaining
         };
+        SetSoundVolume(player[i].soundEffect, 0.02);
         switch (player[i].id)
         {
             case 1:
@@ -133,8 +136,11 @@ void jogo(Setti *settings)
             WHITE, //Color for enemy difficulty and mutliplayer
             false, //dying
             (Vector2){ 0 , 0 }, //deathpos
-            0 //deathtimer
+            0, //deathtimer
+            LoadSound("assets/explosionVehicleSFX.wav"), //Sound for the explosion
+            LoadSound("assets/gamestartSFX.wav")  //! just for not complaining
         };
+        SetSoundVolume(enemy[i].soundEffect, 0.02);
         if (!GetRandomValue( 0 , 15 )) //sets enemy difficulty and color
             enemy[i].color = RED;
         else
@@ -168,8 +174,12 @@ void jogo(Setti *settings)
             WHITE, //Color for enemy difficulty and mutliplayer
             false, //dying
             (Vector2){ 0 , 0 }, //deathpos
-            0 //deathtimer
+            0, //deathtimer
+            LoadSound("assets/BulletShotSFX.wav"), //Sound for firing
+            LoadSound("assets/BulletMissSFX.wav") //Sound for missing
         };
+        SetSoundVolume(bullet[i].soundEffect, 0.02);
+        SetSoundVolume(bullet[i].soundEffect2, 0.02);
     };
 
     /********************** ENERGY VARIABELS *******************************/
@@ -195,7 +205,9 @@ void jogo(Setti *settings)
         WHITE, //Color for enemy difficulty and mutliplayer
         false, //dying
         (Vector2){ 0 , 0 }, //deathpos
-        0 //deathtimer
+        0, //deathtimer
+        LoadSound("assets/gamestartSFX.wav"),  //! just for not complaining
+        LoadSound("assets/gamestartSFX.wav")  //! just for not complaining
     };
     
     /********************** TERRAIN VARIABELS *******************************/
@@ -337,7 +349,7 @@ void jogo(Setti *settings)
             {
                 if (!player[p].dying && player[p].health != -100)
                 {                
-                    PlaySoundMulti(sounds.explosion);
+                    PlaySound(player[p].soundEffect);
                     player[p].deathpos = player[p].draw;
                     player[p].dying = true;
                 }
@@ -378,7 +390,7 @@ void jogo(Setti *settings)
             /********************** PLAYER BULLET SHOOTING *******************************/
             if (!settings->pause)
                 playershoot( &player[p] , &bullet[p] , settings , &sounds);
-            shooting( settings , &bullet[p] , bullet, player , enemy , Menu , &sounds , terrainspace, terrainarray , &textures );
+            shooting( settings, &bullet[p], bullet, player, enemy, Menu, terrainspace, terrainarray, &textures );
         }
 
         /********************** MULTIPLE ENEMIES *******************************/
@@ -433,8 +445,8 @@ void jogo(Setti *settings)
             }
             /********************** ENEMY BULLET SHOOTING *******************************/
             if (!GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1 && !settings->pause) //Verify if enemy[k] has ammo
-                shoot( &enemy[k], &bullet[settings->players + k] , &sounds );
-            shooting( settings , &bullet[settings->players + k] , bullet , player , enemy , Menu, &sounds , terrainspace, terrainarray , &textures);
+                shoot( &enemy[k], &bullet[settings->players + k] );
+            shooting( settings, &bullet[settings->players + k], bullet, player, enemy, Menu, terrainspace, terrainarray, &textures);
         }
 
         if (settings->pause)
@@ -473,7 +485,7 @@ void jogo(Setti *settings)
                 break;
             }
         }
-        
+
         EndDrawing();
     }
     /********************** END GAME *******************************/
@@ -492,6 +504,24 @@ void jogo(Setti *settings)
     UnloadSound(sounds.playerpassive); //Sound for the player
     UnloadSound(sounds.bulletmiss); //Sound for the bullet miss
     UnloadSound(sounds.terrainhit); //Sound for the terrain hit
+    //*For solving audio buffer issues
+    UnloadSound(energy.soundEffect);
+    UnloadSound(energy.soundEffect2);
+    for (int i = 0; i < settings->players; i++)
+    {
+        UnloadSound(player[i].soundEffect); //Sound for the player
+        UnloadSound(player[i].soundEffect2); //Sound for the player
+    }
+    for (int i = 0; i < settings->level; i++)
+    {
+        UnloadSound(enemy[i].soundEffect); //Sound for the player
+        UnloadSound(enemy[i].soundEffect2); //Sound for the player
+    }
+    for (int i = 0; i < settings->players + settings->level ; i++)
+    {
+        UnloadSound(bullet[i].soundEffect); //Sound for the player
+        UnloadSound(bullet[i].soundEffect2); //Sound for the player
+    }
 
     UnloadTexture(textures.player);  //Texture for the player tank
     UnloadTexture(textures.enemy); //Texture for the enemy tank
