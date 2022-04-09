@@ -7,8 +7,6 @@ void startscreen(Setti *settings);
 
 void nome(Setti *settings);
 
-bool IsAnyKeyPressed();
-
 void settingscreen(Setti *settings);
 
 void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] );

@@ -395,18 +395,6 @@ void nome(Setti *settings)
     UnloadSound(sounds.bulletmiss); //Sound for explosion
 }
 
-// Check if any key is pressed
-// NOTE: We limit keys check to keys between 32 (KEY_SPACE) and 126
-bool IsAnyKeyPressed()
-{
-    bool keyPressed = false;
-    int key = GetKeyPressed();
-
-    if ((key >= 32) && (key <= 126)) keyPressed = true;
-
-    return keyPressed;
-}
-
 void settingscreen(Setti *settings)
 {
     /***************** MENU OPTIONS *****************************/
