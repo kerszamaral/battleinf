@@ -155,7 +155,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*scaleY(), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*scaleY(), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*scaleY(), GetScreenHeight() - GetScreenHeight() / 4 + 400*scaleY(), 25*scaleY(), RED);
             if (GetTime() > time + 2) //If the error has been displayed for 2 seconds
                 strcpy(settings->error, " "); //Reset the error
         }
@@ -891,7 +891,7 @@ void highscorescreen(Setti *settings)
         if (IsWindowResized())
             if ( FileExists( "assets/highscorescreen.txt" ) )
                 loading( "assets/highscorescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
-        for (int i = 0; i < 15 * 41; i++)
+        for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall, sourceWall, terrainarray[i], (Vector2){ 0 , 0 }, 0, WHITE );
         //* Menu bars

@@ -14,7 +14,7 @@ void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrai
         spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; //Updates object draw position
         
         /**** Collision Testing ****/
-        for (int i = 0; i < 15 * 41; i++) //Checks terrain array
+        for (int i = 0; i < MAPSIZE; i++) //Checks terrain array
                 if ( terrainspace[ i ] == '#' ) //Only checks for collision against place where terrain is
                     collision( spawn, terrainarray[i] , 2); //Tests if the object collides with terrain
         for (int p = 0; p < settings->players; p++) //Tests if the object won't spawn inside the players
