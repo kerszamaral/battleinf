@@ -6,7 +6,7 @@
 
 void startscreen(Setti *settings);
 
-void nome(Setti *settings);
+void namescreen(Setti *settings);
 
 void settingscreen(Setti *settings);
 

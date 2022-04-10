@@ -179,7 +179,7 @@ void startscreen(Setti *settings)
     UnloadSound(sounds.bulletmiss); //Unload the bullet miss sound
 }
 
-void nome(Setti *settings)
+void namescreen(Setti *settings)
 {
     //? ***************** MENU OPTIONS *****************************/
     bool selected = false, shoot = false; //Booleans for animation
@@ -1098,7 +1098,7 @@ void loadscreen(Setti *settings)
                 }
                 else
                 {
-                    strcpy(settings->error, "Arquivo nao existe\0"); //Copy the error message to the settings
+                    strcpy(settings->error, "File doesn't exist\0"); //Copy the error message to the settings
                     error = GetTime(); //Set the error timer
                 }
             }
@@ -1121,7 +1121,7 @@ void loadscreen(Setti *settings)
         //* Texts
         DrawText( "LOADGAME", GetScreenWidth() / 2 - MeasureText("LOADGAME", 40)/2 * scaleY(), 10*scaleY(), 40*scaleY(), LIME );
         
-        DrawText( "Digite o nome do arquivo que quer carregar:", GetScreenWidth() / 2 - MeasureText("Digite o nome do arquivo que quer carregar:", 25)/2*scaleY(), GetScreenHeight() / 8 + 50 * 2 * scaleY(), 25*scaleY(), GOLD );
+        DrawText( "Enter the name of the file:", GetScreenWidth() / 2 - MeasureText("Enter the name of the file:", 25)/2*scaleY(), GetScreenHeight() / 8 + 50 * 2 * scaleY(), 25*scaleY(), GOLD );
         
         DrawText(name, GetScreenWidth()/2 - MeasureText(name, 40)/2, GetScreenHeight() / 8 + 50 * 5 * scaleY(), 40*scaleY(), settings->lettercolor);
         
@@ -1130,7 +1130,7 @@ void loadscreen(Setti *settings)
             DrawText("_", GetScreenWidth()/2 + 8 * scaleX() + MeasureText(name, 40)/2,  GetScreenHeight() / 8 + 50 * 5 * scaleY(), 40*scaleY(), settings->lettercolor);
         }
         else
-            strcpy(settings->error, "Numero Maximo de Caracteres");
+            strcpy(settings->error, "Max Number of Chars Reached\0");
         
         for (int i = 0; i < optionsnumber; i++)
             DrawText( &options[i][0], GetScreenWidth() / 2 - MeasureText(&options[i][0], 25)/2*scaleY(), (GetScreenHeight() - GetScreenHeight() / 5) + 50 * i * scaleY(), 25*scaleY(), settings->lettercolor );

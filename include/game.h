@@ -1,5 +1,5 @@
-#ifndef jogo_H_
-#define jogo_H_
+#ifndef game_H_
+#define game_H_
 
 #include "core.h"
 #include "terrain.h"
@@ -9,6 +9,6 @@
 #include "shooting.h"
 #include "menu.h"
 
-void jogo(Setti *settings);
+void game(Setti *settings);
 
 #endif

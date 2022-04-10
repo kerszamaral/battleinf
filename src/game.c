@@ -1,7 +1,7 @@
-#include "jogo.h"
+#include "game.h"
 
 //Game
-void jogo( Setti *settings )
+void game( Setti *settings )
 {
     SetExitKey(0); //Set the exit key to 0, ESC is now pause
     ClearWindowState( FLAG_WINDOW_RESIZABLE ); //Disable resizing

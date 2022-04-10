@@ -5,7 +5,7 @@ BattleInf Jogo de tanquezinho lá do NES
 /**** Libraries used on main ****/
 #include "core.h"
 #include "menu.h"
-#include "jogo.h"
+#include "game.h"
 
 int main(void)
 {
@@ -54,7 +54,7 @@ int main(void)
             remove("saves/savegame.txt"); //Removes the savegame file, to avoid savescumming
 
             do{ //Starts the game loop
-                jogo( &settings ); //Runs the jogo function
+                game( &settings ); //Runs the game function
                 settings.foundplayerposition = 0; //Resets the foundplayerposition variable, for reading multiple level files
                 settings.enemiesremaining = 0; //Resets the enemiesremaining variable, for reading multiple level files
                 settings.level++; //Increases the level variable
@@ -64,7 +64,7 @@ int main(void)
                 SetWindowState( FLAG_WINDOW_RESIZABLE ); //Set the window to be resizable again, avoids having changing ingame size
             SetExitKey( KEY_ESCAPE ); //restores the exit key to escape
             if ( settings.score > settings.lowscore && !settings.quit && !settings.exitgame ) //If the player has a highscore and is not exiting the game
-                nome( &settings ); //Runs the nome function
+                namescreen( &settings ); //Runs the namescreen function
 
             settings.exitgame = false; //Resets the exitgame variable
             settings.level = 1; //Resets the level variable
@@ -81,7 +81,7 @@ int main(void)
                 strcpy( settings.loadgamename, "savegame" ); //Sets the loadgamename variable to savegame
 
                 do{ //Starts the game loop
-                    jogo( &settings ); //Runs the jogo function
+                    game( &settings ); //Runs the game function
                     settings.foundplayerposition = 0; //Resets the foundplayerposition variable, for reading multiple level files
                     settings.enemiesremaining = 0; //Resets the enemiesremaining variable, for reading multiple level files
                     settings.loadgame = false; //Sets the loadgame variable to false, the game is now able to generate and load new level files
@@ -92,14 +92,14 @@ int main(void)
                     SetWindowState( FLAG_WINDOW_RESIZABLE ); //Set the window to be resizable again, avoids having changing ingame size
                 SetExitKey( KEY_ESCAPE ); //restores the exit key to escape
                 if ( settings.score > settings.lowscore && !settings.quit && !settings.exitgame ) //If the player has a highscore and is not exiting the game
-                    nome( &settings ); //Runs the nome function
+                    namescreen( &settings ); //Runs the namescreen function
                 
                 settings.exitgame = false; //Resets the exitgame variable
                 settings.level = 1; //Resets the level variable
                 settings.score = 0; //Resets the score variable
             }
             else //If the file doesn't exist
-                strcpy( settings.error, "Não há nenhum jogo salvo!" ); //Sets the error string to "Não há nenhum jogo salvo!" and return to startscreen
+                strcpy( settings.error, "No saved game!" ); //Sets the error string to ""No saved game!" and return to startscreen
             break; //Ends the switch
         case 2: //Load
             loadscreen( &settings ); //Runs the loadscreen function
@@ -107,7 +107,7 @@ int main(void)
             {
                 settings.loadgame = true; //Sets the loadgame variable to true
                 do{ //Starts the game loop
-                    jogo( &settings ); //Runs the jogo function
+                    game( &settings ); //Runs the game function
                     settings.foundplayerposition = 0; //Resets the foundplayerposition variable, for reading multiple level files
                     settings.enemiesremaining = 0; //Resets the enemiesremaining variable, for reading multiple level files
                     settings.level++; //Increases the level variable
