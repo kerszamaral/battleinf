@@ -1,129 +1,87 @@
-#include "collision.h"
-#include "core.h"
+#include "enemy.h"
 
-//Random starting position
+//Function for spawning any object in a random valid location
 void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj enemy[])
 {
-    do
+    do //Starts loop to find suitable location
     {
-        spawn->colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection
+        spawn->colSide = (Vector4){ 0 , 0 , 0 , 0 }; //Resets collision detection of the object for the next position test
         spawn->pos = (Vector2) //Tries to get a random position to spawn
         {
-            GetRandomValue( 5 * (GetScreenWidth()*RATIOX) , GetScreenWidth() - 5 * (GetScreenWidth()*RATIOX) - spawn->cen.x*2 ), 
-            GetRandomValue( 50 * (GetScreenHeight()*RATIOY) , GetScreenHeight() - 5 * (GetScreenHeight()*RATIOY) - spawn->cen.y*2 ) 
+            GetRandomValue( 5*scaleX() , GetScreenWidth() - 5*scaleX() - spawn->cen.x*2 ), //The X position needs to be inside the map
+            GetRandomValue( 50*scaleY() , GetScreenHeight() - 5*scaleY() - spawn->cen.y*2 ) //The Y position needs to be inside the map
         };
-        //Updates draw position
-        spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; 
-
-        //Checks if the position is valid
-        for (int i = 0; i < 15 * 41; i++)
-                if ( terrainspace[ i ] == '#' )
-                    collision( spawn, terrainarray[i] , 2); //Tests if it collides with terrain
+        spawn->draw = (Vector2){ spawn->pos.x + spawn->cen.x , spawn->pos.y + spawn->cen.y }; //Updates object draw position
         
-        for (int p = 0; p < settings->players; p++)
+        /**** Collision Testing ****/
+        for (int i = 0; i < 15 * 41; i++) //Checks terrain array
+                if ( terrainspace[ i ] == '#' ) //Only checks for collision against place where terrain is
+                    collision( spawn, terrainarray[i] , 2); //Tests if the object collides with terrain
+        for (int p = 0; p < settings->players; p++) //Tests if the object won't spawn inside the players
             collision( spawn, player[p].colRec , 2);
-        for (int i = 0; i < settings->level; i++)
+        for (int i = 0; i < settings->level; i++) //Tests if the object won't spawn inside the enemies
             collision( spawn , enemy[i].colRec , 2 );
-    //Tests while it doesn't find a suitable match
-    } while ( spawn->colSide.x || spawn->colSide.y || spawn->colSide.z || spawn->colSide.w );
-    //If it does, returns to game with starting position
+    } while ( spawn->colSide.x || spawn->colSide.y || spawn->colSide.z || spawn->colSide.w ); //Tests until the object is not colliding with anything
 }
 
+//Function for spawning the enemies in the level
 void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj otherenemy[] )
 {   
-    if ( !enemy->health && settings->enemiesremaining < settings->level )
+    if ( !enemy->health && settings->enemiesremaining < settings->level ) //If the enemy is dead and there is still enemies that should be spawned
+        enemy->death++; //Increases the death counter
+
+    if ( enemy->death > 60*5 && !enemy->health && !GetRandomValue(0,60)) //If deathcounter is 5 seconds, the enemy is dead and the random number is 0
     {
-        enemy->death++;
-    }
-    if ( enemy->death > 60*5 && enemy->health == 0 && !GetRandomValue(0,60)) //If enemy is dead and 5 seconds have passed spawns enemy at random position
-    {
-        if (ColorToInt(enemy->color) == ColorToInt(RED)) //Switches don't work here unfortunately
-            enemy->health = 2; //Controls enemy health based on colors
-        else
-            enemy->health = 1;
-        settings->enemiesremaining++;
-        spawn( settings , enemy , terrainspace , terrainarray, player , otherenemy );
+        if (ColorToInt(enemy->color) == ColorToInt(RED)) //Checks the enemy color, if it's red
+            enemy->health = 2; //Sets the enemy health to 2 
+        else //If the enemy is not red
+            enemy->health = 1; //Sets the enemy health to 1
+        settings->enemiesremaining++; //Increases the enemies remaining counter
+        spawn( settings , enemy , terrainspace , terrainarray, player , otherenemy ); //Spawns the enemy in a random location
     }
 }
 
+//Logic for the enemy movement
 void enemymove( Setti *settings , Obj *enemy, Obj player[] )
 {   
-    /********************** ENEMY MOVEMENT *******************************/
-    //Checks for all players
-    bool up = 0 , down = 0 , left = 0 , right = 0;
-    for (int p = 0; p < settings->players; p++)
+    bool up = 0 , down = 0 , left = 0 , right = 0; //Variable to see which direction the player
+    for (int p = 0; p < settings->players; p++) //Checks for all the players
     {   //Casts a ray every direction from the enemy, if it hits a player, move towards them \ detection range size
         if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , 0} , player[p].cen.x/2 ))
-            up = true;
+            up = true; //Boolean for the player side
         if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){enemy->pos.x , GetScreenHeight()} , player[p].cen.x/2 ))
-            down = true;
+            down = true; //Boolean for the player side
         if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){ 0, enemy->pos.y} , player[p].cen.y/2 ))
-            left = true;
+            left = true; //Boolean for the player side
         if ( CheckCollisionPointLine( player[p].pos , enemy->pos , (Vector2){GetScreenWidth() , enemy->pos.y} , player[p].cen.y/2 ))
-            right = true;
+            right = true; //Boolean for the player side
     }
-    //Chase logic
-    if ( up )
-    {   
-        if ( !enemy->colSide.x )
-            enemy->pos.y -= enemy->speed;
-        enemy->rot = 0; //Sets enemy rotation to up
-    }
-    else if ( down )
-    {   
-        if ( !enemy->colSide.z )
-            enemy->pos.y += enemy->speed;
-        enemy->rot = 180; //Sets enemy rotation to down
-    }
-    else if ( left )
-    {   
-        if ( !enemy->colSide.w )
-            enemy->pos.x -= enemy->speed;
-        enemy->rot = 270; //Sets enemy rotation to left
-    }
-    else if( right )
-    {   
-        if ( !enemy->colSide.y )
-            enemy->pos.x += enemy->speed;
-        enemy->rot = 90; //Sets enemy rotation to right
-    }
-    else
-    {   //Test if its not detecting a player or colliding with the player
-        if( enemy->time % 30 == 0 )  
-        {   //Only gets a new number every half a second
-            enemy->score = GetRandomValue(0,4);
-            enemy->time = 0;
+
+    //* Chase logic
+    if ( up ) //Player direction in relation to the enemy
+        moveUp( enemy ); //Moves the enemy up
+    else if ( down ) //Player direction in relation to the enemy
+        moveDown( enemy ); //Moves the enemy down
+    else if ( left ) //Player direction in relation to the enemy
+        moveLeft( enemy ); //Moves the enemy left
+    else if( right ) //Player direction in relation to the enemy
+        moveRight( enemy ); //Moves the enemy right
+    else //* Random movement Logic, if no player is found
+    {  
+        if( enemy->time % 30 == 0 ) //Only gets a new number every half a second
+        {   
+            enemy->score = GetRandomValue(0,4); //gets a random number between 0 and 4
+            enemy->time = 0; //Resets the time counter
         }  
-        if (  enemy->score == 0 )
-        {   //If the number is 0 and it's not going out of bounds, move in that direction
-            if ( !enemy->colSide.x )
-                enemy->pos.y -= enemy->speed;
-            enemy->rot = 0; //Sets enemy rotation to up
-        }
-        else if ( enemy->score == 1 )
-        {   //If the number is 1 and it's not going out of bounds, move in that direction
-            if( !enemy->colSide.z )
-                enemy->pos.y += enemy->speed;
-            enemy->rot = 180; //Sets enemy rotation to down
-        }
-        if ( enemy->score == 2 )
-        {   //If the number is 2 and it's not going out of bounds, move in that direction
-            if( !enemy->colSide.w )
-                enemy->pos.x -= enemy->speed;
-            enemy->rot = 270; //Sets enemy rotation to left
-        }
-        if ( enemy->score == 3 )
-        {   //If the number is 3 and it's not going out of bounds, move in that direction
-            if( !enemy->colSide.y )
-                enemy->pos.x += enemy->speed;
-            enemy->rot = 90; //Sets enemy rotation to right
-        }  
-        if ( enemy->score == 4) //stay still
-        {   //If the number is 4 and it's not going out of bounds, stay still
-            enemy->pos.x = enemy->pos.x;
-            enemy->pos.y = enemy->pos.y;
-            enemy->rot = enemy->rot;
-        }
+        if (  enemy->score == 0 ) //If the number is 0
+            moveUp( enemy ); //Moves the enemy up
+        else if ( enemy->score == 1 ) //If the number is 1
+            moveDown( enemy ); //Moves the enemy down
+        if ( enemy->score == 2 ) //If the number is 2
+            moveLeft( enemy ); //Moves the enemy left
+        if ( enemy->score == 3 ) //If the number is 3
+            moveRight( enemy ); //Moves the enemy right
+        //If the number is 4, does nothing, makes the enemies seem more "alive"
     }
-    enemy->time++;
+    enemy->time++; //Increases the time counter
 }

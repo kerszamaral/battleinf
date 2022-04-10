@@ -2,6 +2,7 @@
 #define shooting_H_
 
 #include "core.h"
+#include "collision.h"
 
 void shoot( Obj *Shooter , Obj *Bullet );
 

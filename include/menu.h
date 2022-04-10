@@ -2,6 +2,7 @@
 #define menu_H_
 
 #include "core.h"
+#include "saveload.h"
 
 void startscreen(Setti *settings);
 
@@ -9,7 +10,7 @@ void nome(Setti *settings);
 
 void settingscreen(Setti *settings);
 
-void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Obj bullet[], Rectangle terrainarray[] );
+void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Obj *energy, Rectangle terrainarray[] );
 
 void highscorescreen(Setti *settings);
 

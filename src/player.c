@@ -1,148 +1,92 @@
-#include "core.h"
-#include "shooting.h"
+#include "player.h"
 
+//Player Movement
 void moveplayer( Obj *player , Setti *settings )
 {
-    /********************** PLAYER MOVEMENT *******************************/
-    //When pointers are implemente, should be moved to move.c file and reference the data through pointers
     //Movement logic 
-    if ( settings->players == 1 && player->health > 0 )
+    if ( player->health > 0) //Only move if the player is alive
     {
-        if ( IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) )
-        {   //Checks player is colliding up
-            if( !player->colSide.x )
-                player->pos.y -= player->speed;
-            player->rot = 0; //Sets players rotation to up
+        if ( settings->players == 1 ) // makes the controlls work for any key if there's only one player
+        {
+            if ( IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) )
+                moveUp( player ); //Moves the player up
+            else if ( IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) )
+                moveDown( player ); //Moves the player down
+            else if ( IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) )
+                moveLeft( player ); //Moves the player left
+            else if ( IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) )
+                moveRight( player ); //Moves the player right
         }
-        else if ( IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) )
-        {   //Checks player is colliding down
-            if( !player->colSide.z )
-                player->pos.y += player->speed;
-            player->rot = 180; //Sets player rotation to down
-        }
-        else if ( IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) )
-        {   //Checks player is colliding left
-            if( !player->colSide.w )
-                player->pos.x -= player->speed;
-            player->rot = 270; //Sets player rotation to left
-        }
-        else if ( IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) )
-        {   //Checks player is colliding right
-            if( !player->colSide.y )
-                player->pos.x += player->speed;
-            player->rot = 90; //Sets player rotation to right
+        else if ( settings->players != 1 ) //If multiplayer is enabled
+        {
+            switch ( player->id ) //Tests the player id
+            {
+            case 0: //Player 0 is mapped to WASD
+                if ( IsKeyDown(KEY_W) )
+                    moveUp( player ); //Moves the player up
+                else if ( IsKeyDown(KEY_S) )
+                    moveDown( player ); //Moves the player down
+                else if ( IsKeyDown(KEY_A) )
+                    moveLeft( player ); //Moves the player left
+                else if ( IsKeyDown(KEY_D) )
+                    moveRight( player ); //Moves the player right
+                break;
+            case 1: //PLAYER 1 is mapped to arrow keys
+                if ( IsKeyDown(KEY_UP) )
+                    moveUp( player ); //Moves the player up
+                else if ( IsKeyDown(KEY_DOWN) )
+                    moveDown( player ); //Moves the player down
+                else if ( IsKeyDown(KEY_LEFT) )
+                    moveLeft( player ); //Moves the player left
+                else if ( IsKeyDown(KEY_RIGHT) )
+                    moveRight( player ); //Moves the player right
+                break;
+            }
+            /*** Controller Support ***/
+            //Moves the player ID equal to the controller ID, offset by the extended play variable
+            if ( IsGamepadButtonDown( player->id - settings->extended, 1 ) || GetGamepadAxisMovement( player->id - settings->extended, 1 ) < -0.5 )
+                moveUp( player ); //Moves the player up
+            else if ( IsGamepadButtonDown( player->id - settings->extended, 3 ) || GetGamepadAxisMovement( player->id - settings->extended, 1 ) > 0.5 )
+                moveDown( player ); //Moves the player down
+            else if ( IsGamepadButtonDown( player->id - settings->extended, 4 ) || GetGamepadAxisMovement( player->id - settings->extended, 0 ) < -0.5 )
+                moveLeft( player ); //Moves the player left
+            else if ( IsGamepadButtonDown( player->id - settings->extended, 2 ) || GetGamepadAxisMovement( player->id - settings->extended, 0 ) > 0.5 )
+                moveRight( player ); //Moves the player right
         }
     }
-    else if ( player->id == 0 && player->health > 0 )
-    {
-        if ( IsKeyDown(KEY_W) )
-        {   //Checks player is colliding up
-            if( !player->colSide.x )
-                player->pos.y -= player->speed;
-            player->rot = 0; //Sets players rotation to up
-        }
-        else if ( IsKeyDown(KEY_S) )
-        {   //Checks player is colliding down
-            if( !player->colSide.z )
-                player->pos.y += player->speed;
-            player->rot = 180; //Sets player rotation to down
-        }
-        else if ( IsKeyDown(KEY_A) )
-        {   //Checks player is colliding left
-            if( !player->colSide.w )
-                player->pos.x -= player->speed;
-            player->rot = 270; //Sets player rotation to left
-        }
-        else if ( IsKeyDown(KEY_D) )
-        {   //Checks player is colliding right
-            if( !player->colSide.y )
-                player->pos.x += player->speed;
-            player->rot = 90; //Sets player rotation to right
-        }
-    }
-    else if ( player->id == 1 && player->health > 0 )
-    {
-        if ( IsKeyDown(KEY_UP) )
-        {   //Checks player is colliding up
-            if( !player->colSide.x )
-                player->pos.y -= player->speed;
-            player->rot = 0; //Sets players rotation to up
-        }
-        else if ( IsKeyDown(KEY_DOWN) )
-        {   //Checks player is colliding down
-            if( !player->colSide.z )
-                player->pos.y += player->speed;
-            player->rot = 180; //Sets player rotation to down
-        }
-        else if ( IsKeyDown(KEY_LEFT) )
-        {   //Checks player is colliding left
-            if( !player->colSide.w )
-                player->pos.x -= player->speed;
-            player->rot = 270; //Sets player rotation to left
-        }
-        else if ( IsKeyDown(KEY_RIGHT) )
-        {   //Checks player is colliding right
-            if( !player->colSide.y )
-                player->pos.x += player->speed;
-            player->rot = 90; //Sets player rotation to right
-        }
-    }
-
-    if (player->health > 0)
-    {
-        if ( IsGamepadButtonDown( player->id - settings->extended , 1 ) || GetGamepadAxisMovement(player->id - settings->extended  , 1) < -0.5 )
-        {   //Checks player is colliding up
-            if( !player->colSide.x )
-                player->pos.y -= player->speed;
-            player->rot = 0; //Sets players rotation to up
-        }
-        else if ( IsGamepadButtonDown(player->id - settings->extended , 3) || GetGamepadAxisMovement( player->id - settings->extended  , 1 ) > 0.5 )
-        {   //Checks player is colliding down
-            if( !player->colSide.z )
-                player->pos.y += player->speed;
-            player->rot = 180; //Sets player rotation to down
-        }
-        else if ( IsGamepadButtonDown(player->id - settings->extended , 4) || GetGamepadAxisMovement(player->id - settings->extended  , 0) < -0.5 )
-        {   //Checks player is colliding left
-            if( !player->colSide.w )
-                player->pos.x -= player->speed;
-            player->rot = 270; //Sets player rotation to left
-        }
-        else if ( IsGamepadButtonDown(player->id - settings->extended , 2) || GetGamepadAxisMovement(player->id - settings->extended  , 0) > 0.5 )
-        {   //Checks player is colliding right
-            if( !player->colSide.y )
-                player->pos.x += player->speed;
-            player->rot = 90; //Sets player rotation to right
-        }
-    }
-    
 }
 
-void playershoot( Obj *player, Obj *Bullet , Setti *settings, SFX *Sounds)
+//Player Shooting
+void playershoot( Obj *player, Obj *Bullet , Setti *settings )
 {
-    if (settings->players == 1 && player->health > 0 )
-    {
-        if ( IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_J) )  
-            if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet, Sounds);
-    }
-    else if ( player->id == 0 && player->health > 0 )
-    {
-        if ( IsKeyPressed(KEY_J) )  
-            if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet, Sounds);
-    }
-    else if ( player->id == 1 && player->health > 0 )
-    {
-        if ( IsKeyPressed(KEY_SPACE) )  
-            if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet, Sounds);
-    }
-
     if ( player->health > 0 )
     {
-         if ( IsGamepadButtonPressed(player->id - settings->extended , 7) || IsGamepadButtonPressed(player->id - settings->extended , 12) )  
-            if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
-                shoot( player , Bullet, Sounds);
+        if ( settings->players == 1 ) // makes the controlls work for any key if there's only one player
+        {
+            if ( IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_J) )  
+                if ( Bullet->ammo ) //Verify if player(it's stored on bullet) has ammo
+                    shoot( player, Bullet );
+        }
+        else if ( settings->players != 1 ) //If multiplayer is enabled
+        {
+            switch ( player->id )
+            {
+            case 0: //Player 0 is mapped to J
+                if ( IsKeyPressed(KEY_J) )  
+                    if (Bullet->ammo) //Verify if player(it's stored on bullet) has ammo
+                        shoot( player , Bullet );
+                break;
+            case 1: //Player 1 is mapped to SPACE
+                if ( IsKeyPressed(KEY_SPACE) )  
+                    if (Bullet->ammo) //Verify if player(it's stored on bullet) has ammo
+                        shoot( player , Bullet );
+                break;
+            }
+            /*** Controller Support ***/
+            //Moves the player ID equal to the controller ID, offset by the extended play variable
+            if ( IsGamepadButtonPressed(player->id - settings->extended , 7) || IsGamepadButtonPressed(player->id - settings->extended , 12) )  
+                if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
+                    shoot( player , Bullet );
+        }
     }
 }

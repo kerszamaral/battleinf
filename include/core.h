@@ -1,17 +1,22 @@
 #ifndef core_H_
 #define core_H_
 
+/********** Shared Libraries ***********/
 #include "raylib.h"
+#include "raymath.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/********* Common Values *************/
 #define SCREENWIDTH 1010 //Screen size x 1010
 #define SCREENHEIGHT 655 //Screen size y 655
-#define RATIOX (1.0 / SCREENWIDTH)
-#define RATIOY (1.0 / SCREENHEIGHT)
+#define RATIOX (1.0 / SCREENWIDTH) //Ratio on x axis for object and text scaling
+#define RATIOY (1.0 / SCREENHEIGHT) //Ratio on y axis for object and text scaling
+#define MAPSIZE 15*41 //Map size
 
+/******** Structs used in the game *********/
 typedef struct Obj //struct for the interactable objects in the game
 {
     int id; //id of the object
@@ -34,29 +39,30 @@ typedef struct Obj //struct for the interactable objects in the game
     bool dying; //For seeing if game should play death animation
     Vector2 deathpos; //For death animation position
     int deathtimer; //For death animation timing
-    Sound soundEffect; //For soundeffect debugging
-    Sound soundEffect2; //For soundeffect debugging
+    Sound soundEffect; //For first soundeffect (fixes multichannel overflow bug)
+    Sound soundEffect2; //For second soundeffect (fixes multichannel overflow bug)
 } Obj;
 
 typedef struct Setti //struct for the interchangable settings in the game
 {
-    int players;
-    int level;
-    int score;
-    int select;
-    bool won;
-    bool quit;
-    Color theme;
-    Color lettercolor;
-    int extended;
-    bool pause;
-    bool exitgame;
-    int pauseselect;
-    bool loadgame;
-    int foundplayerposition;
-    int enemiesremaining;
-    bool filenamefound;
-    char error[100];
+    int players; //Used for multiplayer (know how many players are playing)
+    int level; //Used for loading, saving, enemies number and display level
+    int score; //Used for loading, saving, and display score
+    int select; //Used for most select menus in the game
+    bool won; //Boolean for if the player has won the game
+    bool quit; //Boolean for if the player has pressed ESC or quit the game
+    Color theme; //Color for the background of the game
+    Color lettercolor; //Color for the letters in the game, matches the theme for easier reading
+    int extended; //Used for extended play variable for more players in multiplayer
+    bool pause; //Boolean for if the game is paused
+    bool exitgame; //Boolean for if the player want to go to the main menu
+    int pauseselect; //Used for pause menu selection
+    bool loadgame; //Boolean to know if the game should load a savegame
+    int foundplayerposition; //Used to know if the game has found the position of all players in the save, if not, it will choose at random
+    int enemiesremaining; //Used to know how many enemies are left in the level
+    bool filenamefound; //Used to know if the game has found the filename of the loadgame
+    int lowscore; //Used to know if the game has found the lowest score in the highscores
+    char error[100]; //Used to display error messages
     char loadgamename[100]; //For loading game name 
 } Setti;
 
@@ -71,20 +77,28 @@ typedef struct Textus  //struct for the textures in the game
     Texture2D health; //Health texture
     Texture2D energy; //Energy texture
     Texture2D explosionVehicles; //Texture for the explosion of vehicles
-    //Texture2D terrain; //Terrain texture
 } Textus;
 
 typedef struct SFX //struct for the sounds in the game
 {
     Sound gamestart;  //Sound for the start of the game
     Sound gameend; //Sound for the end of the game
-    Sound explosion; //Sound for the explosion
     Sound shoot; //Sound for the shoot
-    Sound playerpassive; //Sound for the player
     Sound bulletmiss; //Sound for the bullet miss
     Sound terrainhit; //Sound for the terrain hit
-    //Sound hit; //Sound for the hit
-    //Sound death; //Sound for the death
 } SFX;
+
+/********* Common Functions *************/
+void moveUp( Obj *object );
+
+void moveDown( Obj *object );
+
+void moveLeft( Obj *object );
+
+void moveRight( Obj *object );
+
+double scaleX( void ); //for text and object scaling
+
+double scaleY( void ); //for text and object scaling
 
 #endif

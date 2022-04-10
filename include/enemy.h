@@ -2,6 +2,7 @@
 #define enemy_H_
 
 #include "core.h"
+#include "collision.h"
 
 void spawn( Setti *settings , Obj *spawn , char terrainspace[], Rectangle terrainarray[] , Obj player[] , Obj enemy[]);
 
