@@ -450,6 +450,13 @@ void game( Setti *settings )
         }
 
         EndDrawing();
+
+        if( WindowShouldClose() ) //If the window should close
+        {
+            settings->select = 5; //Set the select to 5
+            settings->quit = true; //Set the quit boolean to true
+            settings->exitgame = true; //Set the exitgame boolean to true
+        }
     }
 
     //? ********************** VARIABLE STORING *******************************/
