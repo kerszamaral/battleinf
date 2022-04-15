@@ -734,9 +734,12 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
             settings->pause = false;
             break;
         case 1: //Saves the game and exits
-            saving(settings, terrainspace, player, enemy, energy, terrainarray);
-            settings->exitgame = true;
-            settings->pause = false;
+            if(!settings->loadgame)
+            {
+                saving(settings, terrainspace, player, enemy, energy, terrainarray);
+                settings->exitgame = true;
+                settings->pause = false;
+            }
             break;
         case 2: //Exits to the main menu
             remove("saves/savegame.txt");
