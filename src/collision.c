@@ -59,13 +59,13 @@ void collision( Obj *object , Rectangle colRec , int sens)
             if(CheckCollisionPointRec(Points[i],colRec))
                 up++;
         if (i >= 9 && i <= 18)
-             if(CheckCollisionPointRec(Points[i],colRec))
+            if(CheckCollisionPointRec(Points[i],colRec))
                 right++;
         if (i >= 18 && i <= 27)
-             if(CheckCollisionPointRec(Points[i],colRec))
+            if(CheckCollisionPointRec(Points[i],colRec))
                 down++;
         if ((i >= 27 && i <= 35) || i == 0 )
-             if(CheckCollisionPointRec(Points[i],colRec))
+            if(CheckCollisionPointRec(Points[i],colRec))
                 left++;
     }
     //If the side is hitting equal or more points than the sensitivity, it's considered hitting and stores it in the object
