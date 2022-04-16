@@ -740,6 +740,11 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
                 settings->exitgame = true;
                 settings->pause = false;
             }
+            else
+            {
+                strcpy(settings->error, TextFormat("Unable to save on a loaded game!\0", settings->players));
+                settings->errortime = GetTime();
+            }
             break;
         case 2: //Exits to the main menu
             remove("saves/savegame.txt");
@@ -770,6 +775,14 @@ void pausescreen(Setti *settings, char terrainspace[], Obj player[], Obj enemy[]
         else                
             DrawText( &pauseoptions[i][0], GetScreenWidth() / 2 - MeasureText(&pauseoptions[i][0], 20*scaleY())/2, GetScreenHeight() / 4 + 100*scaleY() + 50 * i * scaleY(), 20*scaleY(), settings->lettercolor );  
     }
+    //*Error displaying
+    if ( strcmp(settings->error, " ") )
+    {
+        DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2 * scaleY(), GetScreenHeight() - GetScreenHeight() / 4 + 400*(GetScreenHeight()*(1/655)), 25*scaleY(), RED);
+        if (GetTime() > settings->errortime + 2) //If the error has been displayed for 2 seconds
+            strcpy(settings->error, " "); //Reset the error
+    }
+
 }
 
 void highscorescreen(Setti *settings)

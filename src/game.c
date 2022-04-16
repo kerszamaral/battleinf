@@ -244,8 +244,10 @@ void game( Setti *settings )
         ClearBackground( settings->theme ); //Background color
         
         if (IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed( 0 , 15) ) //Ends game if esc is pressed
+        {
             settings->pause = !settings->pause; //Toggles pause
-
+            strcpy(settings->error, " "); //Reset the error
+        }
         /********************** TERRAIN CREATION *******************************/
         for (int i = 0; i < MAPSIZE; i++) //Loop for drawing the terrain
                 if ( terrainspace[i] == '#' ) //Checks only for places where the char array says there's a wall

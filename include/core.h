@@ -62,6 +62,7 @@ typedef struct Setti //struct for the interchangable settings in the game
     int enemiesremaining; //Used to know how many enemies are left in the level
     bool filenamefound; //Used to know if the game has found the filename of the loadgame
     int lowscore; //Used to know if the game has found the lowest score in the highscores
+    unsigned long errortime; //used for the time to wipe the error from the screen
     char error[100]; //Used to display error messages
     char loadgamename[100]; //For loading game name 
 } Setti;
