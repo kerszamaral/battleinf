@@ -64,7 +64,7 @@ void playershoot( Obj *player, Obj *Bullet , Setti *settings )
         if ( settings->players == 1 ) // makes the controlls work for any key if there's only one player
         {
             if ( IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_J) )  
-                if ( Bullet->ammo ) //Verify if player(it's stored on bullet) has ammo
+                if ( Bullet->ammo && GetTime() > Bullet->realTime + SHOOTINGDELAY)  //Verify if player(it's stored on bullet) has ammo
                     shoot( player, Bullet );
         }
         else if ( settings->players != 1 ) //If multiplayer is enabled
@@ -73,19 +73,19 @@ void playershoot( Obj *player, Obj *Bullet , Setti *settings )
             {
             case 0: //Player 0 is mapped to J
                 if ( IsKeyPressed(KEY_J) )  
-                    if (Bullet->ammo) //Verify if player(it's stored on bullet) has ammo
+                    if ( Bullet->ammo && GetTime() > Bullet->realTime + SHOOTINGDELAY)  //Verify if player(it's stored on bullet) has ammo
                         shoot( player , Bullet );
                 break;
             case 1: //Player 1 is mapped to SPACE
                 if ( IsKeyPressed(KEY_SPACE) )  
-                    if (Bullet->ammo) //Verify if player(it's stored on bullet) has ammo
+                    if ( Bullet->ammo && GetTime() > Bullet->realTime + SHOOTINGDELAY)  //Verify if player(it's stored on bullet) has ammo
                         shoot( player , Bullet );
                 break;
             }
             /*** Controller Support ***/
             //Moves the player ID equal to the controller ID, offset by the extended play variable
             if ( IsGamepadButtonPressed(player->id - settings->extended , 7) || IsGamepadButtonPressed(player->id - settings->extended , 12) )  
-                if (Bullet->ammo) //Verify if player(it's store on bullet) has ammo
+                if ( Bullet->ammo && GetTime() > Bullet->realTime + SHOOTINGDELAY)  //Verify if player(it's store on bullet) has ammo
                     shoot( player , Bullet );
         }
     }

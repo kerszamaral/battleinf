@@ -15,6 +15,7 @@
 #define RATIOX (1.0 / SCREENWIDTH) //Ratio on x axis for object and text scaling
 #define RATIOY (1.0 / SCREENHEIGHT) //Ratio on y axis for object and text scaling
 #define MAPSIZE 15*41 //Map size
+#define SHOOTINGDELAY 1.3 //Delay between shots
 
 /******** Structs used in the game *********/
 typedef struct Obj //struct for the interactable objects in the game
@@ -41,6 +42,7 @@ typedef struct Obj //struct for the interactable objects in the game
     int deathtimer; //For death animation timing
     Sound soundEffect; //For first soundeffect (fixes multichannel overflow bug)
     Sound soundEffect2; //For second soundeffect (fixes multichannel overflow bug)
+    double realTime; //For real time
 } Obj;
 
 typedef struct Setti //struct for the interchangable settings in the game

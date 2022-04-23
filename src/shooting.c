@@ -9,6 +9,7 @@ void shoot( Obj *Shooter, Obj *Bullet )
     Bullet->rot = Shooter->rot; //Stores the Shooter rotation when Bullet fires
     Bullet->pos.x = Shooter->draw.x; //Stores the Shooter x postion when Bullet
     Bullet->pos.y = Shooter->draw.y; //Stores the Shooter y postion when Bullet
+    Bullet->realTime = GetTime(); //Stores the current time when Bullet fires
 
     switch (Bullet->rot) //Offsets for each rotation to fire from center and end of barrel
     {

@@ -76,7 +76,8 @@ void game( Setti *settings )
             (Vector2){ 0, 0 }, //deathpos
             0, //deathtimer
             LoadSound( "assets/explosionVehicleSFX.wav" ), //Sound for the explosion
-            LoadSound( "assets/gamestartSFX.wav" )  //! just for not complaining
+            LoadSound( "assets/gamestartSFX.wav" ),  //! just for not complaining
+            GetTime() - SHOOTINGDELAY //For realTime
         };
         SetSoundVolume( player[i].soundEffect, 0.02 ); //Sound effect volume
 
@@ -129,7 +130,8 @@ void game( Setti *settings )
             (Vector2){ 0 , 0 }, //deathpos
             0, //deathtimer
             LoadSound( "assets/explosionVehicleSFX.wav" ), //Sound for the explosion
-            LoadSound( "assets/gamestartSFX.wav" )  //! just for not complaining
+            LoadSound( "assets/gamestartSFX.wav" ),  //! just for not complaining
+            GetTime() - SHOOTINGDELAY //For realTime
         };
         SetSoundVolume(enemy[i].soundEffect, 0.02); //Sound effect volume
 
@@ -168,7 +170,8 @@ void game( Setti *settings )
             (Vector2){ 0, 0 }, //deathpos
             0, //deathtimer
             LoadSound( "assets/BulletShotSFX.wav" ), //Sound for firing
-            LoadSound( "assets/BulletMissSFX.wav" ) //Sound for missing
+            LoadSound( "assets/BulletMissSFX.wav" ), //Sound for missing
+            GetTime() - SHOOTINGDELAY //For realTime
         };
         SetSoundVolume(bullet[i].soundEffect, 0.02); //Sound effect volume
         SetSoundVolume(bullet[i].soundEffect2, 0.02); //Sound effect2 volume
@@ -199,7 +202,8 @@ void game( Setti *settings )
         (Vector2){ 0, 0 }, //deathpos
         0, //deathtimer
         LoadSound("assets/gamestartSFX.wav"),  //! just for not complaining
-        LoadSound("assets/gamestartSFX.wav")  //! just for not complaining
+        LoadSound("assets/gamestartSFX.wav"),  //! just for not complaining
+        GetTime() - SHOOTINGDELAY //For realTime
     };
     
     /********************** TERRAIN VARIABELS *******************************/
@@ -408,7 +412,7 @@ void game( Setti *settings )
             if ( enemy[k].health >= 1 && !settings->pause) //If the enemy is alive and the game is not paused
                 enemymove( settings, &enemy[k], player ); //Move the enemy
             //*Shooting
-            if ( !GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1 && !settings->pause ) //If the enemy is alive and the game is not paused and the enemy can shoot
+            if ( !GetRandomValue(0,15) && bullet[settings->players + k].ammo == true && enemy[k].health >= 1 && !settings->pause && GetTime() > bullet[settings->players + k].realTime + SHOOTINGDELAY ) //If the enemy is alive and the game is not paused and the enemy can shoot
                 shoot( &enemy[k], &bullet[settings->players + k] ); //The enemy will shoot
             shooting( settings, &bullet[settings->players + k], bullet, player, enemy, Menu, terrainspace, terrainarray, &textures); //Shoot the bullet
         }
