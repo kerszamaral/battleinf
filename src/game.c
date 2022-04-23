@@ -223,23 +223,22 @@ void game( Setti *settings )
         }
     //Random Map Generator 
     if ( !levelfilefound && !settings->loadgame ) //If the level file was not found and the game is not loading a game
-            terraincreate( terrainspace ); //Creates a random map
-        
-    //*Placing
-    if ( !levelfilefound && !settings->loadgame ) //If the level file was not found and the game is not loading a game
-        terrainplace( terrainarray, terrainspace ); //Places the char array onto the rectangle arrray
+    {
+        terraincreate( terrainspace ); //Creates a random map
+        terrainplace( terrainarray, terrainspace );//Places the char array onto the rectangle arrray
+    }
     
     if ( settings->loadgame ) //If the game is loading a game
         strcpy( filename, TextFormat( "saves/%s", settings->loadgamename ) ); //Copies the name of the file to the filename with the path
     
     if ( levelfilefound || settings->loadgame ) //If the level file was found or the game is loading a game
         loading( filename, settings, player, enemy, &energy, terrainarray, terrainspace, 1 ); //Loads the level and the game position for everything
-    
+
     //Random player starting position
     if ( settings->foundplayerposition <= settings->players ) //If the player position was not found for all players
         for (int p = settings->foundplayerposition; p < settings->players; p++) //Loop for finding the player position for all players remaining
             spawn( settings, &player[p], terrainspace, terrainarray, player, enemy); //Spawns the player in a random position
-    
+
     PlaySound( sounds.gamestart ); //Plays the game start sound
 
     //!Main game loop
