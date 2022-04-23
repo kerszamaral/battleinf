@@ -30,13 +30,14 @@ void enemyspawn( Setti *settings , Obj *enemy , char terrainspace[], Rectangle t
     if ( !enemy->health && settings->enemiesremaining < settings->level ) //If the enemy is dead and there is still enemies that should be spawned
         enemy->death++; //Increases the death counter
 
-    if ( enemy->death > 60*5 && !enemy->health && !GetRandomValue(0,60)) //If deathcounter is 5 seconds, the enemy is dead and the random number is 0
+    if ( enemy->death > 60*5 && !enemy->health && !GetRandomValue(0,60) && GetTime() > settings->realTime + 1.5) //If deathcounter is 5 seconds, the enemy is dead and the random number is 0
     {
         if (ColorToInt(enemy->color) == ColorToInt(RED)) //Checks the enemy color, if it's red
             enemy->health = 2; //Sets the enemy health to 2 
         else //If the enemy is not red
             enemy->health = 1; //Sets the enemy health to 1
         settings->enemiesremaining++; //Increases the enemies remaining counter
+        settings->realTime = GetTime(); //Sets the real time to the current time
         spawn( settings , enemy , terrainspace , terrainarray, player , otherenemy ); //Spawns the enemy in a random location
     }
 }

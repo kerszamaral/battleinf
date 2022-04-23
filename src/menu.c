@@ -98,7 +98,7 @@ void startscreen(Setti *settings)
                 bulletsmoke++;
             bullettimer++;
             //*Bullet animation
-            bulletdrawRec.x += 2;
+            bulletdrawRec.x += 2*scaleX();
         }
         if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width*scaleX()/25 + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], 40*scaleX())/2 ) //If the bullet has reached the end of the word
         {
@@ -311,7 +311,7 @@ void namescreen(Setti *settings)
                 bulletsmoke++;
             bullettimer++;
             //*Bullet animation
-            bulletdrawRec.x += 2;
+            bulletdrawRec.x += 2*scaleX();
         }
         if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width*scaleX()/25 + playerdrawRec.width / 2 + MeasureText("Next", GetFontDefault().baseSize)*scaleX()*2 ) //If the bullet has reached the end of the word
         {
@@ -528,7 +528,7 @@ void settingscreen(Setti *settings)
                 bulletsmoke++;
             bullettimer++;
             //*Bullet animation
-            bulletdrawRec.x += 2;
+            bulletdrawRec.x += 2*scaleX();
         }
         if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width*scaleX()/25 + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], 20*scaleX()) ) //If the bullet has reached the end of the word
         {
@@ -880,7 +880,7 @@ void highscorescreen(Setti *settings)
                 bulletsmoke++;
             bullettimer++;
             //*Bullet animation
-            bulletdrawRec.x += 2;
+            bulletdrawRec.x += 2*scaleX();
         }
         if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width * ( scaleX() / 25 ) + playerdrawRec.width / 2 + MeasureText("Back", 25*scaleY()) )
         {
@@ -1086,7 +1086,7 @@ void loadscreen(Setti *settings)
                 bulletsmoke++;
             bullettimer++;
             //*Bullet animation
-            bulletdrawRec.x += 2;
+            bulletdrawRec.x += 2*scaleX();
         }
         if( bulletdrawRec.x >= playerdrawRec.x + textures.bullet.width*scaleX()/25 + playerdrawRec.width / 2 + MeasureText(&options[settings->select][0], 40*scaleX())/2 ) //If the bullet has reached the end of the word
         {
