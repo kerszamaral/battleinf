@@ -387,7 +387,7 @@ void namescreen(Setti *settings)
 
         EndDrawing();
 
-        if( WindowShouldClose() ) //If the window should close
+        if( WindowShouldClose() || IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed(0, 6) ) //If the window should close
         {
             settings->select = 5; //Set the select to 5
             settings->quit = true; //Set the quit boolean to true
@@ -704,6 +704,16 @@ void settingscreen(Setti *settings)
         
         EndDrawing();
 
+        if( IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed(0, 6) ) //If the escape key is pressed
+        {
+            if ( submenu ) //If the submenu is active
+            {
+                submenu = false; //Deactivate the submenu
+            }
+            else
+                break; //Exit the screen
+        }
+
         if( WindowShouldClose() ) //If the window should close
         {
             settings->select = 5; //Set the select to 5
@@ -956,6 +966,11 @@ void highscorescreen(Setti *settings)
         
         EndDrawing();
 
+        if( IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed(0, 6) ) //If the escape key is pressed
+        {
+            break; //Exit the screen
+        }
+
         if( WindowShouldClose() ) //If the window should close
         {
             settings->select = 5; //Set the select to 5
@@ -1179,6 +1194,11 @@ void loadscreen(Setti *settings)
         }
 
         EndDrawing();
+
+        if( IsKeyPressed(KEY_ESCAPE) || IsGamepadButtonPressed(0, 6) ) //If the escape key is pressed
+        {
+            break; //Exit the screen
+        }
 
         if( WindowShouldClose() ) //If the window should close
         {
