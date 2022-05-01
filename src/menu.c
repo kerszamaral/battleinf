@@ -40,8 +40,8 @@ void startscreen(Setti *settings)
     Rectangle terrainarray[MAPSIZE];
     //*FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy; //Objects for the fake player, enemy and energy
-    if ( FileExists( "assets/startscreen.txt" ) )
-        loading( "assets/startscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
+    if ( FileExists( "saves/startscreen.txt" ) )
+        loading( "saves/startscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
 
     while ( !settings->quit )
     {
@@ -123,8 +123,8 @@ void startscreen(Setti *settings)
         ClearBackground( settings->theme ); //Background color
         //* Map art
         if (IsWindowResized())
-            if ( FileExists( "assets/startscreen.txt" ) )
-                loading( "assets/startscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 ); //For the mapart to be resizable
+            if ( FileExists( "saves/startscreen.txt" ) )
+                loading( "saves/startscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 ); //For the mapart to be resizable
         for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE ); //Draw the wall
@@ -240,8 +240,8 @@ void namescreen(Setti *settings)
     Rectangle terrainarray[MAPSIZE];
     //*FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy;
-    if ( FileExists( "assets/namescreen.txt" ) )
-        loading( "assets/namescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
+    if ( FileExists( "saves/namescreen.txt" ) )
+        loading( "saves/namescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
 
     while ( !settings->quit )
     {
@@ -339,8 +339,8 @@ void namescreen(Setti *settings)
         ClearBackground( settings->theme );
         //* Map art
         if (IsWindowResized())
-            if (FileExists("assets/namescreen.txt"))
-                loading("assets/namescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 ); //For the mapart to be resizable
+            if (FileExists("saves/namescreen.txt"))
+                loading("saves/namescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 ); //For the mapart to be resizable
         for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -464,8 +464,8 @@ void settingscreen(Setti *settings)
     Rectangle terrainarray[MAPSIZE];
     //*FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy; //Objects for the fake player, enemy and energy
-    if (FileExists( "assets/settingsscreen.txt" ))
-        loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
+    if (FileExists( "saves/settingsscreen.txt" ))
+        loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
 
     while ( !settings->quit )
     {
@@ -555,8 +555,8 @@ void settingscreen(Setti *settings)
         ClearBackground( settings->theme ); //Background color
         //* Map art
         if (IsWindowResized())
-            if (FileExists( "assets/settingsscreen.txt" ))
-                loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+            if (FileExists( "saves/settingsscreen.txt" ))
+                loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
         for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
@@ -592,29 +592,29 @@ void settingscreen(Setti *settings)
                     {
                     case 0:
                         SetWindowSize( 1010, 655 );
-                        if (FileExists( "assets/settingsscreen.txt" ))
-                            loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+                        if (FileExists( "saves/settingsscreen.txt" ))
+                            loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
                         break;
                     case 1:
                         SetWindowSize( 800, 450 );
-                        if (FileExists( "assets/settingsscreen.txt" ))
-                            loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+                        if (FileExists( "saves/settingsscreen.txt" ))
+                            loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
                         break;
                     case 2:
                         SetWindowSize( 1920, 1080 );
-                        if (FileExists( "assets/settingsscreen.txt" ))
-                            loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+                        if (FileExists( "saves/settingsscreen.txt" ))
+                            loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
                         break;
                     case 3:
                         SetWindowSize( 1280, 720 );
-                        if (FileExists( "assets/settingsscreen.txt" ))
-                            loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+                        if (FileExists( "saves/settingsscreen.txt" ))
+                            loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
                         break;
                     case 4:
                         SetWindowSize(GetMonitorWidth(GetCurrentMonitor()),GetMonitorHeight(GetCurrentMonitor()));
                         ToggleFullscreen();
-                        if (FileExists( "assets/settingsscreen.txt" ))
-                            loading( "assets/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+                        if (FileExists( "saves/settingsscreen.txt" ))
+                            loading( "saves/settingsscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
                         break;
                     }
                     submenu = false; //Reset the submenu
@@ -832,8 +832,8 @@ void highscorescreen(Setti *settings)
     Rectangle terrainarray[MAPSIZE];
     //*FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy; //Objects for the fake player, enemy and energy
-    if ( FileExists( "assets/highscorescreen.txt" ) )
-        loading( "assets/highscorescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
+    if ( FileExists( "saves/highscorescreen.txt" ) )
+        loading( "saves/highscorescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
 
     while ( !settings->quit )
     {
@@ -909,8 +909,8 @@ void highscorescreen(Setti *settings)
         ClearBackground( settings->theme ); //Background color
         //* Map art
         if (IsWindowResized())
-            if ( FileExists( "assets/highscorescreen.txt" ) )
-                loading( "assets/highscorescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+            if ( FileExists( "saves/highscorescreen.txt" ) )
+                loading( "saves/highscorescreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
         for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall, sourceWall, terrainarray[i], (Vector2){ 0 , 0 }, 0, WHITE );
@@ -1012,8 +1012,8 @@ void loadscreen(Setti *settings)
     Rectangle terrainarray[MAPSIZE];
     //*FOR FAKING LOADING A MAP
     Obj player[1], enemy[1], energy; //Objects for the fake player, enemy and energy
-    if ( FileExists( "assets/loadscreen.txt" ) )
-        loading( "assets/loadscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
+    if ( FileExists( "saves/loadscreen.txt" ) )
+        loading( "saves/loadscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 1 );
 
     while ( !settings->quit )
     {
@@ -1130,8 +1130,8 @@ void loadscreen(Setti *settings)
         ClearBackground( settings->theme ); //Background color
         //* Map art
         if (IsWindowResized())
-            if ( FileExists( "assets/loadscreen.txt" ) )
-                loading( "assets/loadscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
+            if ( FileExists( "saves/loadscreen.txt" ) )
+                loading( "saves/loadscreen", settings, player, enemy, &energy, terrainarray, terrainspace, 0 );
         for (int i = 0; i < MAPSIZE; i++)
                 if (terrainspace[i] == '#')
                     DrawTexturePro( textures.wall , sourceWall , terrainarray[i] , (Vector2){ 0 , 0 } , 0 , WHITE );
