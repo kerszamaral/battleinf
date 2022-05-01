@@ -155,7 +155,7 @@ void startscreen(Setti *settings)
         //*Error displaying
         if ( strcmp(settings->error, " ") )
         {
-            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*scaleY(), GetScreenHeight() - GetScreenHeight() / 4 + 400*scaleY(), 25*scaleY(), RED);
+            DrawText(TextFormat("Error: %s", settings->error), GetScreenWidth() / 2 - MeasureText(TextFormat("Error: %s", settings->error), 25)/2*scaleY(), GetScreenHeight() / 4 - 50 * scaleY(), 25*scaleY(), RED);
             if (GetTime() > time + 2) //If the error has been displayed for 2 seconds
                 strcpy(settings->error, " "); //Reset the error
         }
