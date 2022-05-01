@@ -3,7 +3,6 @@
 //Game
 void game( Setti *settings )
 {
-    SetExitKey(0); //Set the exit key to 0, ESC is now pause
     ClearWindowState( FLAG_WINDOW_RESIZABLE ); //Disable resizing
     settings->realTime = GetTime(); //Get the current time
 

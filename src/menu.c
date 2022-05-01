@@ -186,6 +186,8 @@ void namescreen(Setti *settings)
     settings->select = 0; //Reset selection
     double time = GetTime(); //Time for animation
     int ranking = 6; //Ranking for the player, starts at 6
+
+    highscoresCrashFix(); //Fix the highscores file
     
     FILE *highscoresread = fopen("assets/highscores.bin", "rb"); //Opens the highscores file
     char scores[15][100] = {0}; //Array for the highscores
@@ -800,6 +802,8 @@ void highscorescreen(Setti *settings)
         "Level\0"
     };
 
+    highscoresCrashFix(); //Fix the highscores file
+
     FILE *highscoresdisplay = fopen("assets/highscores.bin", "rb"); //Opens the highscores file
     char scoresdisplay[15][100] = {0}; //Array for the highscores
     fread(scoresdisplay, sizeof(scoresdisplay), 1, highscoresdisplay); //Reads the highscores
@@ -1192,4 +1196,25 @@ void loadscreen(Setti *settings)
     UnloadTexture(textures.wall); //Unload the wall texture
     UnloadSound(sounds.shoot); //Unload the shoot sound
     UnloadSound(sounds.bulletmiss); //Unload the bullet miss sound
+}
+
+void highscoresCrashFix(void)
+{
+    //!Highscores crash fix
+    //If it doesn't find the highscores file, it will create it, avoids crashing
+    if ( !FileExists( "assets/highscores.bin" ) )
+    {
+        FILE *noscores = fopen( "assets/highscores.bin", "wb" ); //Create highscores file
+        char madeupscores[15][100] = //Creates a preselected array with madeup scores
+        {
+            //score     name            level
+            "4000\0",   "Marcelo\0",    "3\0",
+            "8000\0",   "Pedro\0",      "5\0",
+            "8800\0",   "Felipe\0",     "5\0",
+            "19200\0",  "Artur\0",      "7\0",
+            "46400\0",  "Ian\0",        "11\0"
+        };
+        fwrite( madeupscores, sizeof( madeupscores ), 1, noscores ); //Writes the madeup scores to the file
+        fclose( noscores ); //Close the file
+    }
 }

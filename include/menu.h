@@ -16,4 +16,6 @@ void highscorescreen(Setti *settings);
 
 void loadscreen(Setti *settings);
 
+void highscoresCrashFix(void);
+
 #endif

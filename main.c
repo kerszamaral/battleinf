@@ -15,27 +15,13 @@ int main(void)
     strcpy( settings.loadgamename, " " ); //Initialize loadgamename string to nothing
     InitWindow( SCREENWIDTH, SCREENHEIGHT, "BattleINF" ); //Initialize window with default size and name
     InitAudioDevice(); //Initialize audio device
-    SetWindowIcon( LoadImage( "assets/player.png" ) ); //Set window icon
+    Image logo = LoadImage( "assets/player.png" ); //Load player image
+    SetWindowIcon( logo ); //Set window icon
     SetTargetFPS( 60 ); //Set target FPS to 60
     SetWindowState( FLAG_WINDOW_RESIZABLE ); //Set window to be resizable
     
     //!Highscores crash fix
-    //If it doesn't find the highscores file, it will create it, avoids crashing
-    if ( fopen( "assets/highscores.bin", "rb" ) == NULL )
-    {
-        FILE *noscores = fopen( "assets/highscores.bin", "wb" ); //Create highscores file
-        char madeupscores[15][100] = //Creates a preselected array with madeup scores
-        {
-            //score     name            level
-            "4000\0",   "Marcelo\0",    "3\0",
-            "8000\0",   "Pedro\0",      "5\0",
-            "8800\0",   "Felipe\0",     "5\0",
-            "19200\0",  "Artur\0",      "7\0",
-            "46400\0",  "Ian\0",        "11\0"
-        };
-        fwrite( madeupscores, sizeof( madeupscores ), 1, noscores ); //Writes the madeup scores to the file
-        fclose( noscores ); //Close the file
-    }
+    highscoresCrashFix();
 
     //Opens the highscore file and reads it, to be used later for checking if the player has a highscore
     FILE *highscorescheck = fopen( "assets/highscores.bin", "rb" ); //Opens the highscore file in read mode
@@ -46,7 +32,9 @@ int main(void)
 
     while ( !settings.quit ) //Main game loop, doesn't close the window until the player wants it to
     {
+        SetExitKey( KEY_ESCAPE ); //restores the exit key to escape
         startscreen( &settings ); //Runs the startscreen function, always comes back here
+        SetExitKey(0); //Set the exit key to 0
         switch ( settings.select ) //Switch for the selected function in the startscreen
         {
         case 0: //Start
@@ -62,7 +50,6 @@ int main(void)
             
             if ( !IsWindowFullscreen() ) //If the window is not fullscreen
                 SetWindowState( FLAG_WINDOW_RESIZABLE ); //Set the window to be resizable again, avoids having changing ingame size
-            SetExitKey( KEY_ESCAPE ); //restores the exit key to escape
             if ( settings.score > settings.lowscore && !settings.quit && !settings.exitgame ) //If the player has a highscore and is not exiting the game
                 namescreen( &settings ); //Runs the namescreen function
 
@@ -90,7 +77,7 @@ int main(void)
                 
                 if ( !IsWindowFullscreen() ) //If the window is not fullscreen
                     SetWindowState( FLAG_WINDOW_RESIZABLE ); //Set the window to be resizable again, avoids having changing ingame size
-                SetExitKey( KEY_ESCAPE ); //restores the exit key to escape
+                
                 if ( settings.score > settings.lowscore && !settings.quit && !settings.exitgame ) //If the player has a highscore and is not exiting the game
                     namescreen( &settings ); //Runs the namescreen function
                 
@@ -140,6 +127,7 @@ int main(void)
         }
     }
 
+    UnloadImage( logo ); //Unloads the logo image
     CloseAudioDevice(); //Closes the audio device
     CloseWindow(); //Closes the window
 

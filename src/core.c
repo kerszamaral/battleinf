@@ -34,14 +34,10 @@ void moveRight( Obj *object )
 
 double scaleX( void ) //for text and object scaling
 {
-    double scale;
-    scale = GetScreenWidth()*RATIOX;
-    return scale;
+    return GetScreenWidth()*RATIOX;
 }
 
 double scaleY( void ) //for text and object scaling
 {
-    double scale;
-    scale = GetScreenHeight()*RATIOY;
-    return scale;
+    return GetScreenHeight()*RATIOY;
 }
