@@ -6,7 +6,7 @@ void saving(Setti *settings, char terrainspace[], Obj player[], Obj enemy[] , Ob
     //? ***************************** VARIABLES *****************************/
     int savescore = 0, lives = 0; //Initialize variables for storing score and lives
     char savegame[ MAPSIZE + 20], terrainspace2[MAPSIZE]; //Initialize arrays for map
-    Rectangle terrainarraycomp[MAPSIZE]; //Initialize array for terrain comparassion
+    Rectangle terrainarraycomp[MAPSIZE]; //Initialize array for terrain comparison
     strcpy(terrainspace2, terrainspace); //Copy map onto new array for modifications
     
     float terrainx = 5*scaleX(), terrainy = 50*scaleY(); //Sets the starting x and y position of the terrain
