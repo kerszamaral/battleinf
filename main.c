@@ -1,5 +1,5 @@
-/* Ian Kersz - Cartão UFRGS: 00338368
-18.03.22
+/* Ian Kersz - Cartão UFRGS: 00338368 // Lucca Claus - Cartão UFRGS: 00334988
+Start: 18.03.22 End: 01.05.22
 BattleInf Jogo de tanquezinho lá do NES
 */
 /**** Libraries used on main ****/
