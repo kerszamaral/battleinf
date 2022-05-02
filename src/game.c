@@ -215,10 +215,10 @@ void game( Setti *settings )
     //*Creating
     //Load Map
     if ( !settings->loadgame ) //If the game is not loading a game
-        if ( FileExists( TextFormat( "saves/nivel%d.txt", settings->level ) ) ) //If the file with the level name exists
+        if ( FileExists( TextFormat( "saves/level%d.txt", settings->level ) ) ) //If the file with the level name exists
         {
             levelfilefound = true;
-            strcpy( filename, TextFormat( "saves/nivel%d", settings->level ) );
+            strcpy( filename, TextFormat( "saves/level%d", settings->level ) );
         }
     //Random Map Generator 
     if ( !levelfilefound && !settings->loadgame ) //If the level file was not found and the game is not loading a game
