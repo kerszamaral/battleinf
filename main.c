@@ -6,9 +6,14 @@ BattleInf Jogo de tanquezinho lá do NES
 #include "core.h"
 #include "menu.h"
 #include "game.h"
+#include "portable.h"
 
 int main(void)
 {
+    //!Portable Mode
+    createPortableAssets();
+    createPortableSaves();
+
     //Initialize game most settings
     Setti settings = { 1 , 1 , 0 , 0 , false , false, BLACK, RAYWHITE, 0, false, 0, false, 0, 0, 0, 0 };
     strcpy( settings.error, " " ); //Initialize error string to nothing
